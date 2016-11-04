@@ -6,7 +6,7 @@
     version="3.0">
     <context-param>
         <param-name>BootsFaces_USETHEME</param-name>
-        <param-value>true</param-value>
+        <param-value>custom</param-value>	
     </context-param>
     <welcome-file-list>
         <welcome-file>index.jsf</welcome-file>
