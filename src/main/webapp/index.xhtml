@@ -7,17 +7,30 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:r="http://xmlns.jcp.org/jsf/composite/realdolmen"
 	xmlns:b="http://bootsfaces.net/ui">
-<ui:composition template="WEB-INF/templates/common.xhtml"> 
+<ui:composition template="WEB-INF/templates/common.xhtml">
 	<!-- TODO replace content here -->
 	<ui:define name="title">
 	Home</ui:define>
 
 	<ui:define name="content">
-		This is the homepage
-		Registered Users:
-<b:button value="bootfaces button"></b:button>
-		<h:button value="Financial Data" />
-		<h:button value="Register"/>
+		<h:form>
+		<h:outputLabel value="# of seats"> </h:outputLabel><p:spinner id="minMax" value="#{spinnerView.number3}" min="0" max="100" />
+		<br/><h:outputLabel value="Select Class"/>
+		<b:selectOneMenu styleClass="datePicker">
+			<f:selectItem itemValue="Economy" itemLabel="Economy" />
+   			<f:selectItem itemValue="Business" itemLabel="Business" />
+		</b:selectOneMenu>
+		<h:outputLabel value="Prefered Airline"/>
+		<b:selectOneMenu styleClass="datePicker">
+			<f:selectItem itemValue="CrashFlights" itemLabel="CrashFlights" />
+   			<f:selectItem itemValue="AirTerror" itemLabel="AirTerror" />
+		</b:selectOneMenu>
+		<h:outputLabel value="Select Day Of Departure"></h:outputLabel>	
+			<b:dateTimePicker mode="popup" show-date="true" show-time="false" styleClass="datePicker"/>
+		<h:outputLabel value="Select Day Of Return"></h:outputLabel>	
+			<b:dateTimePicker mode="popup" show-date="true" show-time="false" styleClass="datePicker"/>
+		<b:button value="bootfaces button"></b:button>
+		</h:form>
 	</ui:define>
 </ui:composition>
 </html>
