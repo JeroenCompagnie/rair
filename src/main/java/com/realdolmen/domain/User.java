@@ -12,7 +12,11 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS) // TODO dit nog eens nakijken naar andere inheritancetypes
 public class User implements Serializable{
 
-	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2945389852701706104L;
+
 	@NotEmpty
 	protected String firstName;
 	
@@ -30,7 +34,7 @@ public class User implements Serializable{
 	}
 	
 	public User(String firstName, String lastName, String hashedPassword, String userName) {
-		super();
+//		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.hashedPassword = hashedPassword;

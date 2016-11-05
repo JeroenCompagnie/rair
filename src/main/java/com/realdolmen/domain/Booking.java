@@ -78,5 +78,9 @@ public class Booking implements Serializable{
 		return id;
 	}
 	
+	public void addBookingOfFlight(BookingOfFlight bf){
+		bookingOfFlightList.add(bf);
+	}
+	
 	
 }

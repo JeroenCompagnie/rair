@@ -9,10 +9,17 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
 public class Flight implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6851290785176539664L;
+
 	/**
 	 * TODO: params
 	 */
@@ -20,6 +27,8 @@ public class Flight implements Serializable{
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
+	@ManyToOne
+	@JoinColumn(name="partner_id", nullable=false)
 	private Partner partner;
 	
 	//TODO cascadetypes nakijken
@@ -31,7 +40,6 @@ public class Flight implements Serializable{
 	}
 	
 	public Flight(Partner partner, List<BookingOfFlight> bookingOfFlightList) {
-		super();
 		this.partner = partner;
 		this.bookingOfFlightList = bookingOfFlightList;
 	}

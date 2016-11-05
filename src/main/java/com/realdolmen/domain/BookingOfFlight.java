@@ -18,7 +18,7 @@ public class BookingOfFlight implements Serializable{
 	private Long id;
 	
 	@NotNull
-	private float price;
+	private double price;
 	
 	@NotNull
 	@ManyToOne
@@ -34,18 +34,14 @@ public class BookingOfFlight implements Serializable{
 		
 	}
 
-	public BookingOfFlight(float price, Flight flight) {
-		super();
+	public BookingOfFlight(double price, Flight flight, Booking booking) {
 		this.price = price;
 		this.flight = flight;
+		this.booking = booking;
 	}
 
-	public float getPrice() {
+	public double getPrice() {
 		return price;
-	}
-
-	public void setPrice(float price) {
-		this.price = price;
 	}
 
 	public Flight getFlight() {

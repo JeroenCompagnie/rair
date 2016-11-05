@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -16,11 +17,17 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Entity
 public class Customer extends User{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -289701417497673496L;
+
 	@Id 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	protected Long id;
 	
 	@NotNull
+	@OneToOne
 	protected Address address;
 	
 	@NotEmpty
@@ -35,7 +42,7 @@ public class Customer extends User{
 
 	public Customer(Address address, String email, String firstName,
 			String lastName, String password, String userName) {
-		super();
+		super(firstName, lastName, password, userName);
 		this.address = address;
 		this.email = email;
 	}
