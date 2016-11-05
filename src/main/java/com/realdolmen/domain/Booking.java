@@ -16,6 +16,11 @@ import javax.persistence.OneToMany;
 @Entity
 public class Booking implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4490556795691845585L;
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;

@@ -10,6 +10,11 @@ import javax.persistence.Id;
 @Entity
 public class Address implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2509009105722160450L;
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
