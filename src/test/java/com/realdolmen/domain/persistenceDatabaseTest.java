@@ -14,6 +14,7 @@ import com.realdolmen.domain.flight.BookingOfFlight;
 import com.realdolmen.domain.flight.Flight;
 import com.realdolmen.domain.flight.GlobalRegion;
 import com.realdolmen.domain.flight.Location;
+import com.realdolmen.domain.flight.PaymentStatus;
 import com.realdolmen.domain.flight.Seat;
 import com.realdolmen.domain.flight.SeatType;
 import com.realdolmen.domain.user.Address;
@@ -107,7 +108,7 @@ public class persistenceDatabaseTest extends JpaPersistenceTest{
 		assertEquals("BryanAir", persistedFlight.getPartner().getUserName());
 		
 		// Make Booking b, persist and check Id for null
-		Booking b = new Booking("Payed", c, Calendar.getInstance());
+		Booking b = new Booking(PaymentStatus.PENDING, c, Calendar.getInstance());
 		em.persist(b);
 		assertNotNull(b.getId());
 		

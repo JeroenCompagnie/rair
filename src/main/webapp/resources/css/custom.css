@@ -2,3 +2,7 @@
 	min-width: 25%;
 	max-width: 35%;
 }
+
+.alert {
+		color:red;
+}

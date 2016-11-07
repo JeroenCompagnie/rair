@@ -28,7 +28,7 @@ public class Booking implements Serializable{
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
-	private String paymentStatus; //TODO: dit een enum mss
+	private PaymentStatus paymentStatus; //TODO: dit een enum mss
 	
 	@ManyToOne
 	@JoinColumn(name="customer_id", nullable=false)
@@ -51,18 +51,17 @@ public class Booking implements Serializable{
 		
 	}
 	
-	public Booking(String paymentStatus, Customer customer, Calendar dateOfReservation) {
-		super();
+	public Booking(PaymentStatus paymentStatus, Customer customer, Calendar dateOfReservation) {
 		this.paymentStatus = paymentStatus;
 		this.customer = customer;
 		this.dateOfReservation = dateOfReservation;
 	}
 
-	public String getPaymentStatus() {
+	public PaymentStatus getPaymentStatus() {
 		return paymentStatus;
 	}
 
-	public void setPaymentStatus(String paymentStatus) {
+	public void setPaymentStatus(PaymentStatus paymentStatus) {
 		this.paymentStatus = paymentStatus;
 	}
 
