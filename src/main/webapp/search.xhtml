@@ -12,29 +12,16 @@
 	Home</ui:define>
 
 	<ui:define name="content">
-		<h:outputLabel value="#{flights.message}"/>
-		<h:form>
-			<h:outputLabel for="minMax" value="# of seats">
-			</h:outputLabel>
-			<p:spinner id="minMax" value="1" min="0"
-				max="100" />
-			<br/>
-			<h:outputLabel for="flightClass" value="Select Class" />
-			<b:selectOneMenu id="flightClass" value="#{flights.selectedFlightclass}" styleClass="datePicker">
-				<f:selectItems value="#{flights.flightclasses}" />
-			</b:selectOneMenu>
-			<h:outputLabel for="preferedAirline"  value="Prefered Airline" />
-			<b:selectOneMenu id="preferedAirline" value="#{flights.selectedAirline}" styleClass="datePicker">
-					<f:selectItems value="#{flights.airlines}" />
-			</b:selectOneMenu>
-			<h:outputLabel for="departure" value="Select Day Of Departure"></h:outputLabel>
-			<b:dateTimePicker value="#{flights.dateOfDeparture}" id="departure" mode="popup" show-date="true" show-time="false"
-				styleClass="datePicker" />
-			<h:outputLabel  for="return" value="Select Day Of Return"></h:outputLabel>
-			<b:dateTimePicker value="#{flights.dateOfReturn}" id="return" mode="popup" show-date="true" show-time="false"
-				styleClass="datePicker" />
-			<b:commandButton value="Book now" action="booking"></b:commandButton>
-		</h:form>
+		<b:dataTable value="#{search.flights}" var="flight" id="flight"
+			fixedHeader="true" scroll-size="400px" scroll-x="false"
+			responsive="true" searching="false">
+			<h:column value="#{flight.id}" />
+			<h:column value="#{flight.partner.name}" />
+			<h:column value="#{flight.partner.name}" />
+			<h:column value="#{flight.departureLocation.airportName}" />
+			<h:column value="#{flight.destinationLocation.airportName}" />
+			<h:column value="#{flight.dateOfDeparture}" />
+</b:dataTable>
 	</ui:define>
 </ui:composition>
 </html>

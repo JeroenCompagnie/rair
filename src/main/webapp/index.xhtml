@@ -1,18 +1,17 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:b="http://bootsfaces.net/ui">
-<ui:composition template="WEB-INF/templates/common.xhtml">
+	xmlns:b="http://bootsfaces.net/ui"
+	template="WEB-INF/templates/common.xhtml">
+	
 	<!-- TODO replace content here -->
 	<ui:define name="title">
 	Home</ui:define>
 
 	<ui:define name="content">
-		<h:outputLabel value="#{flights.message}"/>
 		<h:form>
 			<h:outputLabel for="minMax" value="# of seats">
 			</h:outputLabel>
@@ -37,4 +36,3 @@
 		</h:form>
 	</ui:define>
 </ui:composition>
-</html>
