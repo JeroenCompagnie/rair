@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -64,7 +65,7 @@ public class Flight implements Serializable{
 	)
 	private List<Seat> seatList = new ArrayList<>();
 	
-	private Calendar dateOfDeparture;
+	private Date dateOfDeparture;
 	
 	private Duration flightDuration;
 	
@@ -80,7 +81,7 @@ public class Flight implements Serializable{
 	
 	public Flight(Partner partner, List<BookingOfFlight> bookingOfFlightList,
 			Location departureLocation, Location destinationLocation,
-			Calendar dateOfDeparture, Duration flightDuration) {
+			Date dateOfDeparture, Duration flightDuration) {
 		this.partner = partner;
 		this.bookingOfFlightList = bookingOfFlightList;
 		this.departureLocation = departureLocation;
@@ -133,11 +134,11 @@ public class Flight implements Serializable{
 		this.seatList = seatList;
 	}
 	
-	public Calendar getDateOfDeparture() {
+	public Date getDateOfDeparture() {
 		return dateOfDeparture;
 	}
 
-	public void setDateOfDeparture(Calendar dateOfDeparture) {
+	public void setDateOfDeparture(Date dateOfDeparture) {
 		this.dateOfDeparture = dateOfDeparture;
 	}
 
@@ -185,12 +186,9 @@ public class Flight implements Serializable{
 		return this.discountsListPartner.remove(d);
 	}
 	
-	public Calendar getLandingTime(){
+	public Date getLandingTime(){
 		this.getDateOfDeparture();
 		this.getFlightDuration();
-		Calendar c = Calendar.getInstance();
-		c.setTime(dateOfDeparture.getTime());
-		c.add(Calendar.MINUTE, Math.toIntExact(flightDuration.toMinutes()));
-		return c;
+		return new Date(getDateOfDeparture().getTime()+60000*getFlightDuration().toMillis());
 	}
 }
