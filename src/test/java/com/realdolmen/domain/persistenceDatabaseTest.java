@@ -9,6 +9,16 @@ import javax.persistence.EntityManager;
 import org.junit.Test;
 
 import com.realdolmen.course.utilities.persistence.JpaPersistenceTest;
+import com.realdolmen.domain.flight.Booking;
+import com.realdolmen.domain.flight.BookingOfFlight;
+import com.realdolmen.domain.flight.Flight;
+import com.realdolmen.domain.flight.GlobalRegion;
+import com.realdolmen.domain.flight.Location;
+import com.realdolmen.domain.flight.Seat;
+import com.realdolmen.domain.flight.SeatType;
+import com.realdolmen.domain.user.Address;
+import com.realdolmen.domain.user.Customer;
+import com.realdolmen.domain.user.Partner;
 
 public class persistenceDatabaseTest extends JpaPersistenceTest{
 	

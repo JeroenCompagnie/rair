@@ -1,10 +1,9 @@
-package com.realdolmen.domain;
+package com.realdolmen.domain.flight;
 
 import java.io.Serializable;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -17,6 +16,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import com.realdolmen.domain.user.Partner;
 
 @Entity
 public class Flight implements Serializable{

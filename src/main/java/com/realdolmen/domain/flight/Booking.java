@@ -1,4 +1,4 @@
-package com.realdolmen.domain;
+package com.realdolmen.domain.flight;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
+import com.realdolmen.domain.user.Customer;
 
 @Entity
 public class Booking implements Serializable{

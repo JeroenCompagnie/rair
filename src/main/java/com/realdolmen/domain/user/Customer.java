@@ -1,4 +1,4 @@
-package com.realdolmen.domain;
+package com.realdolmen.domain.user;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +13,8 @@ import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.realdolmen.domain.flight.Booking;
 
 @Entity
 public class Customer extends User{

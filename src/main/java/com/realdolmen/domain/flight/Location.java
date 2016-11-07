@@ -1,4 +1,4 @@
-package com.realdolmen.domain;
+package com.realdolmen.domain.flight;
 
 import java.io.Serializable;
 
