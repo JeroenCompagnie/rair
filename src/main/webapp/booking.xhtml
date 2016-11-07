@@ -8,8 +8,6 @@
 	xmlns:r="http://xmlns.jcp.org/jsf/composite/realdolmen"
 	xmlns:b="http://bootsfaces.net/ui">
 <ui:composition template="WEB-INF/templates/common.xhtml">
-		<h:outputStylesheet library="css" name="template.css"/>
-		<h:outputStylesheet library="css" name="custom.css"/>
 	<!-- TODO replace content here -->
 	<ui:define name="title">
 			Booking</ui:define>
@@ -34,7 +32,7 @@
 			<br />
 		</b:jumbotron>
 		<h:form>
-			<h:outputLabel value="Please make sure the data above is correct"/><br/>
+			<h:outputLabel styleClass="alert" value="Please make sure the data above is correct"/><br/>
 			<h:outputLabel value="Select a payment method"/>
 			<h:selectOneMenu>
 				<f:selectItem itemValue="Credit card" itemLabel="Credit card"></f:selectItem>

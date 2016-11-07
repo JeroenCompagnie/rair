@@ -5,7 +5,6 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:r="http://xmlns.jcp.org/jsf/composite/realdolmen"
 	xmlns:b="http://bootsfaces.net/ui">
 <ui:composition template="WEB-INF/templates/common.xhtml">
 	<!-- TODO replace content here -->
@@ -14,22 +13,27 @@
 
 	<ui:define name="content">
 		<h:form>
-		<h:outputLabel value="# of seats"> </h:outputLabel><p:spinner id="minMax" value="#{spinnerView.number3}" min="0" max="100" />
-		<br/><h:outputLabel value="Select Class"/>
-		<b:selectOneMenu styleClass="datePicker">
-			<f:selectItem itemValue="Economy" itemLabel="Economy" />
-   			<f:selectItem itemValue="Business" itemLabel="Business" />
-		</b:selectOneMenu>
-		<h:outputLabel value="Prefered Airline"/>
-		<b:selectOneMenu styleClass="datePicker">
-			<f:selectItem itemValue="CrashFlights" itemLabel="CrashFlights" />
-   			<f:selectItem itemValue="AirTerror" itemLabel="AirTerror" />
-		</b:selectOneMenu>
-		<h:outputLabel value="Select Day Of Departure"></h:outputLabel>	
-			<b:dateTimePicker mode="popup" show-date="true" show-time="false" styleClass="datePicker"/>
-		<h:outputLabel value="Select Day Of Return"></h:outputLabel>	
-			<b:dateTimePicker mode="popup" show-date="true" show-time="false" styleClass="datePicker"/>
-		<b:button value="Book now" outcome="booking"></b:button>
+			<h:outputLabel for="minMax" value="# of seats">
+			</h:outputLabel>
+			<p:spinner id="minMax" value="1" min="0"
+				max="100" />
+			<br />
+			<h:outputLabel for="flightClass" value="Select Class" />
+			<b:selectOneMenu id="flightClass" value="#{selectFlighBean}" styleClass="datePicker">
+				<f:selectItem value="{selectFlightBean}.flightCases" />
+				
+			</b:selectOneMenu>
+			<h:outputLabel for="preferedAirline"  value="Prefered Airline" />
+			<b:selectOneMenu id="preferedAirline" value="#{selectFlighBean}" styleClass="datePicker">
+					<f:selectItem value="{selectFlighBean}.airlines" />
+			</b:selectOneMenu>
+			<h:outputLabel for="departure" value="Select Day Of Departure"></h:outputLabel>
+			<b:dateTimePicker id="departure" mode="popup" show-date="true" show-time="false"
+				styleClass="datePicker" />
+			<h:outputLabel  for="return" value="Select Day Of Return"></h:outputLabel>
+			<b:dateTimePicker id="return" mode="popup" show-date="true" show-time="false"
+				styleClass="datePicker" />
+			<b:button value="Book now" outcome="booking"></b:button>
 		</h:form>
 	</ui:define>
 </ui:composition>
