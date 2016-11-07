@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -34,8 +35,16 @@ public class Booking implements Serializable{
 	private Customer customer;
 	
 	private Calendar dateOfReservation; //TODO: calendar of iets anders?
-	
-	@OneToMany(mappedBy="booking")
+
+	@OneToMany
+	@JoinTable(
+			joinColumns = @JoinColumn(table = "booking",
+		            name="booking_id",
+		            referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(table = "bookingOfFlight",
+            name="bookingOfFlight_id",
+            referencedColumnName = "id")
+	)
 	private List<BookingOfFlight> bookingOfFlightList = new ArrayList<>();
 	
 	public Booking(){

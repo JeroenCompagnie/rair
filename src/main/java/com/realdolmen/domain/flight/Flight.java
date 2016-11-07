@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -37,8 +38,16 @@ public class Flight implements Serializable{
 	@JoinColumn(name="partner_id", nullable=false)
 	private Partner partner;
 	
-	//TODO cascadetypes nakijken
-	@OneToMany(cascade=CascadeType.ALL,mappedBy="flight")
+	//TODO cascadetype hier oppassen! bookingOfFlight hoort bij zowel een Booking als een Flight
+	@OneToMany()
+	@JoinTable(
+			joinColumns = @JoinColumn(table = "flight",
+		            name="flight_id",
+		            referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(table = "bookingOfFlight",
+            name="bookingOfFlight_id",
+            referencedColumnName = "id")
+	)
 	private List<BookingOfFlight> bookingOfFlightList = new ArrayList<>();
 	
 	@OneToOne(cascade=CascadeType.ALL)
@@ -48,6 +57,11 @@ public class Flight implements Serializable{
 	private Location destinationLocation;
 	
 	@OneToMany(cascade=CascadeType.ALL)
+	@JoinTable(
+			inverseJoinColumns = @JoinColumn(table = "seat",
+            name="seat_id",
+            referencedColumnName = "id")
+	)
 	private List<Seat> seatList = new ArrayList<>();
 	
 	private Calendar dateOfDeparture;

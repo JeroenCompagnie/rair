@@ -61,6 +61,14 @@ public class persistenceDatabaseTest extends JpaPersistenceTest{
 				Calendar.getInstance(), Duration.ofMinutes(120));
 		em.persist(f);
 		assertNotNull(f.getId());
+		assertEquals(120, em.find(Flight.class, 1000L).getFlightDuration().toMinutes());
+		
+		Seat seat = new Seat(SeatType.Business, 999.99);
+		em.persist(seat);
+		assertNotNull(seat.getId());
+		f.addSeat(seat);
+				
+		assertEquals("Business", em.find(Flight.class, 1000L).getSeatList().get(0).getType().toString());
 		
 		// Find persistedFlight and check if l1 and l2 are linked 
 		// 	through globalRegion, this way the enum is also tested
@@ -110,6 +118,8 @@ public class persistenceDatabaseTest extends JpaPersistenceTest{
 		assertNotNull(bf.getId());
 		b.addBookingOfFlight(bf);
 		em.merge(b);
+		
+		assertEquals(999.99, em.find(Booking.class, b.getId()).getBookingOfFlightList().get(0).getPrice(),0.01);
 		
 		// Check if the Booking and Flight link is good
 		// Check if the Booking and Customer link is good

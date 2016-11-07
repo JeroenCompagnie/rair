@@ -27,12 +27,12 @@ public class BookingOfFlight implements Serializable{
 	
 	@NotNull
 	@ManyToOne
-	@JoinColumn(name="flight_id", nullable=false)
+	@JoinColumn(name="flight_id")
 	private Flight flight;
 	
 	@NotNull
 	@ManyToOne
-	@JoinColumn(name="booking_id", nullable=false)
+	@JoinColumn(name="booking_id")
 	private Booking booking;
 	
 	public BookingOfFlight(){
