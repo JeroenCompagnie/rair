@@ -12,6 +12,7 @@
 	Home</ui:define>
 
 	<ui:define name="content">
+		<h:outputLabel value="#{flights.message}"/>
 		<h:form>
 			<h:outputLabel for="minMax" value="# of seats">
 			</h:outputLabel>
@@ -19,21 +20,20 @@
 				max="100" />
 			<br />
 			<h:outputLabel for="flightClass" value="Select Class" />
-			<b:selectOneMenu id="flightClass" value="#{selectFlighBean}" styleClass="datePicker">
-				<f:selectItem value="{selectFlightBean}.flightCases" />
-				
+			<b:selectOneMenu id="flightClass" value="#{flights}" styleClass="datePicker">
+				<f:selectItems value="#{flights.flightclasses}" />
 			</b:selectOneMenu>
 			<h:outputLabel for="preferedAirline"  value="Prefered Airline" />
-			<b:selectOneMenu id="preferedAirline" value="#{selectFlighBean}" styleClass="datePicker">
-					<f:selectItem value="{selectFlighBean}.airlines" />
+			<b:selectOneMenu id="preferedAirline" value="#{flights}" styleClass="datePicker">
+					<f:selectItems value="#{flights.airlines}" />
 			</b:selectOneMenu>
 			<h:outputLabel for="departure" value="Select Day Of Departure"></h:outputLabel>
-			<b:dateTimePicker id="departure" mode="popup" show-date="true" show-time="false"
+			<b:dateTimePicker value="#{flights.dateOfDeparture}" id="departure" mode="popup" show-date="true" show-time="false"
 				styleClass="datePicker" />
 			<h:outputLabel  for="return" value="Select Day Of Return"></h:outputLabel>
-			<b:dateTimePicker id="return" mode="popup" show-date="true" show-time="false"
+			<b:dateTimePicker value="#{flights.dateOfReturn}" id="return" mode="popup" show-date="true" show-time="false"
 				styleClass="datePicker" />
-			<b:button value="Book now" outcome="booking"></b:button>
+			<b:commandButton value="Book now" action="booking"></b:commandButton>
 		</h:form>
 	</ui:define>
 </ui:composition>

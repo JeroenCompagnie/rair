@@ -1,21 +1,77 @@
 package com.realdolmen.domain.beans;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
-import javax.annotation.ManagedBean;
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.bean.ManagedProperty;
+import javax.inject.Named;
 
-@ManagedBean
+@Named("flights")
 @SessionScoped
 public class SelectFlightBean implements Serializable {
-	@ManagedProperty("#{flightclasses}")
+	// @ManagedProperty("#{flightclasses}")
 	private List<String> flightclasses;
-	@ManagedProperty("#{airlines}")
+	// @ManagedProperty("#{airlines}")
 	private List<String> airlines;
+
+	private String selectedAirline;
+
+	private String selectedFlightClass;
+
+	public String getSelectedAirline() {
+		return selectedAirline;
+	}
 	
+	private Calendar dateOfDeparture;
 	
+	public Calendar getDateOfDeparture() {
+		return dateOfDeparture;
+	}
+
+	public void setDateOfDeparture(Calendar dateOfDeparture) {
+		this.dateOfDeparture = dateOfDeparture;
+	}
+
+	public Calendar getDateOfReturn() {
+		return dateOfReturn;
+	}
+
+	public void setDateOfReturn(Calendar dateOfReturn) {
+		this.dateOfReturn = dateOfReturn;
+	}
+
+	private Calendar dateOfReturn;
+
+	public void setSelectedAirline(String selectedAirline) {
+		this.selectedAirline = selectedAirline;
+	}
+
+	public String getSelectedFlightclass() {
+		return selectedFlightClass;
+	}
+
+	public void setSelectedFlightclass(String selectedFlightclass) {
+		this.selectedFlightClass = selectedFlightClass;
+	}
+
+	private String message = "testing bean";
+
+	public String getMessage() {
+		return message;
+	}
+
+	@PostConstruct
+	public void init() {
+		flightclasses = new ArrayList<String>();
+		airlines = new ArrayList<String>();
+		flightclasses.add("Economy");
+		flightclasses.add("Business");
+		airlines.add("AirTerror");
+		airlines.add("CrashAirline");
+	}
 
 	public List<String> getFlightclasses() {
 		return flightclasses;
@@ -32,6 +88,5 @@ public class SelectFlightBean implements Serializable {
 	public void setAirlines(List<String> airlines) {
 		this.airlines = airlines;
 	}
-	
-	
+
 }

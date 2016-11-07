@@ -5,7 +5,6 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:r="http://xmlns.jcp.org/jsf/composite/realdolmen"
 	xmlns:b="http://bootsfaces.net/ui">
 <ui:composition template="WEB-INF/templates/common.xhtml">
 	<!-- TODO replace content here -->
@@ -19,16 +18,16 @@
 			<h:outputText value=" 3">3</h:outputText>
 			<br />
 			<h:outputLabel value="Selected Class:" />
-			<h:outputText value=" Economy"></h:outputText>
+			<h:outputText value="#{flights.selectedFlightclass}"></h:outputText>
 			<br />
 			<h:outputLabel value="Prefered Airline:" />
-			<h:outputText value=" AirTerror">AirTerror</h:outputText>
+			<h:outputText value="#{flights.selectedAirline}">AirTerror</h:outputText>
 			<br />
 			<h:outputLabel value="Selected Day Of Departure:"></h:outputLabel>
-			<h:outputText value=" 24/08/17"></h:outputText>
+			<h:outputText value="#{flights.dateOfDeparture}"></h:outputText>
 			<br />
 			<h:outputLabel value="Selected Day Of Return:"></h:outputLabel>
-			<h:outputText value=" 24/08/17"></h:outputText>
+			<h:outputText value="#{flights.dateOfReturn}"></h:outputText>
 			<br />
 		</b:jumbotron>
 		<h:form>
