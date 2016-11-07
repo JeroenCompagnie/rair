@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:r="http://xmlns.jcp.org/jsf/composite/realdolmen"
+	xmlns:b="http://bootsfaces.net/ui">
+<ui:composition template="WEB-INF/templates/common.xhtml">
+		<h:outputStylesheet library="css" name="template.css"/>
+		<h:outputStylesheet library="css" name="custom.css"/>
+	<!-- TODO replace content here -->
+	<ui:define name="title">
+			Booking</ui:define>
+
+	<ui:define name="content">
+		<b:jumbotron>
+			<h:outputLabel value="# of seats:">
+			</h:outputLabel>
+			<h:outputText value=" 3">3</h:outputText>
+			<br />
+			<h:outputLabel value="Selected Class:" />
+			<h:outputText value=" Economy"></h:outputText>
+			<br />
+			<h:outputLabel value="Prefered Airline:" />
+			<h:outputText value=" AirTerror">AirTerror</h:outputText>
+			<br />
+			<h:outputLabel value="Selected Day Of Departure:"></h:outputLabel>
+			<h:outputText value=" 24/08/17"></h:outputText>
+			<br />
+			<h:outputLabel value="Selected Day Of Return:"></h:outputLabel>
+			<h:outputText value=" 24/08/17"></h:outputText>
+			<br />
+		</b:jumbotron>
+		<h:form>
+			<h:outputLabel value="Please make sure the data above is correct"/><br/>
+			<h:outputLabel value="Select a payment method"/>
+			<h:selectOneMenu>
+				<f:selectItem itemValue="Credit card" itemLabel="Credit card"></f:selectItem>
+				<f:selectItem itemValue="Endorsement" itemLabel="Endorsement"></f:selectItem>
+			</h:selectOneMenu><br/>
+			<b:commandButton value="Book" action="thankyou?faces-redirect=true"></b:commandButton>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>
