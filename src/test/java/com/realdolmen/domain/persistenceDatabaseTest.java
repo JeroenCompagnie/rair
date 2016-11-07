@@ -3,6 +3,7 @@ package com.realdolmen.domain;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.persistence.EntityManager;
 
@@ -59,7 +60,7 @@ public class persistenceDatabaseTest extends JpaPersistenceTest{
 
 		// Make Fligt f with l1 and l2, persist and check Id for null
 		Flight f = new Flight(p, new ArrayList<BookingOfFlight>(), l1, l2,
-				Calendar.getInstance(), Duration.ofMinutes(120));
+				new Date(), Duration.ofMinutes(120));
 		em.persist(f);
 		assertNotNull(f.getId());
 		assertEquals(120, em.find(Flight.class, 1000L).getFlightDuration().toMinutes());
@@ -85,11 +86,11 @@ public class persistenceDatabaseTest extends JpaPersistenceTest{
 		//		and dateOfDeparture minus the flight duration equals zero
 		assertTrue(Calendar.getInstance().after(persistedFlight.getDateOfDeparture()));
 		assertEquals(120, persistedFlight.getFlightDuration().toMinutes());
-		System.err.println("Date of departure: " + f.getDateOfDeparture().getTime().toString());
+		System.err.println("Date of departure: " + f.getDateOfDeparture().toString());
 		System.err.println("Flight duration " + f.getFlightDuration().toMinutes());
-		System.err.println("Date of landing: " + f.getLandingTime().getTime().toString());
-		assertEquals(0, (int)((f.getLandingTime().getTime().getTime()/60000) 
-				- (f.getDateOfDeparture().getTime().getTime()/60000))
+		System.err.println("Date of landing: " + f.getLandingTime().toString());
+		assertEquals(0, (int)((f.getLandingTime().getTime()/60000) 
+				- (f.getDateOfDeparture().getTime()/60000))
 				- f.getFlightDuration().toMinutes());
 		
 		// Make Seat s, persist and check Id for Null

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui">
+<ui:composition template="WEB-INF/templates/common.xhtml">
+	<!-- TODO replace content here -->
+	<ui:define name="title">
+	User Registration</ui:define>
+
+	<ui:define name="content">
+		<h:form>
+			<h:outputLabel for="firstName" value="First name:">
+			</h:outputLabel>
+			<b:inputText styleClass="datePicker"  id="firstName" ></b:inputText>
+			<h:outputLabel for="lastName" value="Last name:">
+			</h:outputLabel>
+			<b:inputText styleClass="datePicker"  id="lastName" ></b:inputText>
+			<h:outputLabel for="userName" value="Username:">
+			</h:outputLabel>
+			<b:inputText styleClass="datePicker"  id="userName" ></b:inputText>
+			<h:outputLabel for="password" value="Password:" />
+			<b:inputText styleClass="datePicker"  id="password"></b:inputText>
+			<h:outputLabel for="email" value="Email:" />
+			<b:inputText styleClass="datePicker"  id="email"></b:inputText>
+			<h:outputLabel for="street" value="Street:" />
+			<b:inputText styleClass="datePicker"  id="street"></b:inputText>
+			<h:outputLabel for="number" value="Number:" />
+			<b:inputText styleClass="datePicker"  id="number"></b:inputText>
+			<h:outputLabel for="postalCode" value="Postal code:" />
+			<b:inputText styleClass="datePicker"  id="postalCode"></b:inputText>
+			<h:outputLabel for="country" value="Country:" />
+			<b:inputText styleClass="datePicker"  id="country"></b:inputText>
+			
+			
+			<b:commandButton value="Book now" action="booking"></b:commandButton>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>
