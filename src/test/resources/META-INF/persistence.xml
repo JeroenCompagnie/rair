@@ -64,6 +64,11 @@
         <class>com.realdolmen.domain.user.Partner</class>
         <class>com.realdolmen.domain.flight.Seat</class>
         <class>com.realdolmen.domain.user.User</class>
+        
+        <class>com.realdolmen.domain.flight.GlobalRegion</class>
+        <class>com.realdolmen.domain.flight.PaymentStatus</class>
+        <class>com.realdolmen.domain.flight.SeatType</class>
+        
 	
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />

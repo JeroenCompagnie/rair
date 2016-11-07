@@ -2,9 +2,6 @@ package com.realdolmen.domain.flight;
 
 import java.io.Serializable;
 
-import javax.persistence.Entity;
-
-@Entity
 public enum GlobalRegion implements Serializable{
 	WesternEurope, EasternEurope, SouthernEurope, NorthernEurope, 
 	MiddleEast,

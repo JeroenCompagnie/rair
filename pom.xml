@@ -126,6 +126,11 @@
 			<artifactId>jbcrypt</artifactId>
 			<version>0.3m</version>
 		</dependency>
+		<dependency>
+			<groupId>org.jboss.modules</groupId>
+			<artifactId>jboss-modules</artifactId>
+			<version>1.5.2.Final</version>
+		</dependency>
 	</dependencies>
 
 	<build>
