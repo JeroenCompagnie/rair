@@ -1,4 +1,4 @@
-package com.realdolmen.domain;
+package com.realdolmen.domain.user;
 
 import java.io.Serializable;
 
