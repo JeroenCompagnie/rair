@@ -5,7 +5,6 @@ import java.io.Serializable;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.inject.Named;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -20,6 +19,11 @@ import com.realdolmen.repository.UserRepository;
 @ManagedBean
 @SessionScoped
 public class RegisterCustomerBean implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6755111819514599581L;
+
 	@EJB
     UserRepository userRepository;
 	
@@ -94,12 +98,11 @@ public class RegisterCustomerBean implements Serializable{
 	}
 	
 	public String register(){
-		System.err.println("TEST123: " + firstName);
 		Customer c = new Customer(address, email, firstName,
 				lastName, unhashedPassword, userName);
-		Customer c2 = userRepository.saveCustomer(c);
+		userRepository.saveCustomer(c);
+		// Refresh address, otherwise address has an ID and can't be registred again
 		address = new Address();
-		System.err.println(c2.getId());
 		
 		return "registrationSuccessful.xhtml";
 	}
