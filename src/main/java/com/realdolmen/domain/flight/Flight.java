@@ -88,6 +88,21 @@ public class Flight implements Serializable{
 		
 	}
 	
+	public int numberOfSeatForType(SeatType st)
+	{
+		int count = 0;
+		System.out.println(seatList.size());
+		for(int i=1;i<seatList.size();i++)
+		{
+			if (seatList.get(i).getType().equals(st))
+			{
+				count++;
+			}
+			
+		}
+		return count;
+	}
+	
 	public Flight(Partner partner, List<BookingOfFlight> bookingOfFlightList,
 			Location departureLocation, Location destinationLocation,
 			Date dateOfDeparture, Duration flightDuration) {

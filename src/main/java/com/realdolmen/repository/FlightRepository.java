@@ -1,5 +1,6 @@
 package com.realdolmen.repository;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.ParameterExpression;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.slf4j.Logger;
@@ -56,8 +58,23 @@ public class FlightRepository {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Flight> cq = cb.createQuery(Flight.class);
 		Root<Flight> flight = cq.from(Flight.class);
-		ParameterExpression<Partner> p = cb.parameter(Partner.class);
-		cq.select(flight).where(cb.equal(flight.get("partner"), partner));
+		List<Predicate> predicates = new ArrayList<Predicate>();
+
+	    //Adding predicates in case of parameter not being null
+	    if (t != null) {
+	        predicates.add(
+	                cb.equal(flight.get("seatList").get("type"), t));
+	    }
+	    if (partner != null) {
+	        predicates.add(
+	                cb.equal(flight.get("partner"), partner));
+	    }
+	    if (departureDate!= null) {
+	        predicates.add(
+	                cb.equal(flight.get("dateOfDeparture"), departureDate));
+	    }
+	    cq.select(flight)
+        .where(predicates.toArray(new Predicate[]{}));
 		return em.createQuery(cq).getResultList();
 	}
 
