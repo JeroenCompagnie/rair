@@ -31,7 +31,7 @@ public class persistenceDatabaseTest extends JpaPersistenceTest{
 		EntityManager em = entityManager();
 		
 		//Make Address a, persist for Id and check if Id exists
-		Address a = new Address("DummyStraat", 42, 9999, "Belgium");
+		Address a = new Address("DummyStraat", 42, 9999, "DummyCity", "Belgium");
 		em.persist(a);
 		assertNotNull(a.getId());
 		
@@ -84,13 +84,13 @@ public class persistenceDatabaseTest extends JpaPersistenceTest{
 		//	- check the print versions...
 		//	- check if the time between landingtime (calculated by getLandingTime()) 
 		//		and dateOfDeparture minus the flight duration equals zero
-		assertTrue(Calendar.getInstance().after(persistedFlight.getDateOfDeparture()));
+		assertTrue(new Date().after(persistedFlight.getDateOfDeparture()));
 		assertEquals(120, persistedFlight.getFlightDuration().toMinutes());
 		System.err.println("Date of departure: " + f.getDateOfDeparture().toString());
 		System.err.println("Flight duration " + f.getFlightDuration().toMinutes());
 		System.err.println("Date of landing: " + f.getLandingTime().toString());
-		assertEquals(0, (int)((f.getLandingTime().getTime()/60000) 
-				- (f.getDateOfDeparture().getTime()/60000))
+		assertEquals(0, (int)((f.getLandingTime().getTime()) 
+				- f.getDateOfDeparture().getTime())/60000
 				- f.getFlightDuration().toMinutes());
 		
 		// Make Seat s, persist and check Id for Null

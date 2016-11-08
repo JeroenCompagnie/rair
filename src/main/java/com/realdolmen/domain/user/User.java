@@ -7,6 +7,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.MappedSuperclass;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.mindrot.jbcrypt.BCrypt;
 
 @MappedSuperclass
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS) // TODO dit nog eens nakijken naar andere inheritancetypes
@@ -24,7 +25,7 @@ public class User implements Serializable{
 	protected String lastName;
 	
 	@NotEmpty
-	protected String hashedPassword; //TODO: hashing toevoegen
+	protected String hashedPassword;
 	
 	@NotEmpty
 	protected String userName;
@@ -33,11 +34,11 @@ public class User implements Serializable{
 		
 	}
 	
-	public User(String firstName, String lastName, String hashedPassword, String userName) {
+	public User(String firstName, String lastName, String unhashedPassword, String userName) {
 //		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.hashedPassword = hashedPassword;
+		setHashedPassword(unhashedPassword);
 		this.userName = userName;
 	}
 
@@ -59,12 +60,12 @@ public class User implements Serializable{
 		this.lastName = lastName;
 	}
 
-	public String getHashedPassword() {
-		return hashedPassword;
-	}
+//	public String getHashedPassword() {
+//		return hashedPassword;
+//	}
 
-	public void setHashedPassword(String hashedPassword) {
-		this.hashedPassword = hashedPassword;
+	public void setHashedPassword(String unhashedPassword) {
+		this.hashedPassword = BCrypt.hashpw(unhashedPassword, BCrypt.gensalt(12));
 	}
 
 	public String getUserName() {
@@ -75,6 +76,15 @@ public class User implements Serializable{
 		this.userName = userName;
 	}
 	
-	
+	public Boolean checkPassword(String candidate){
+		if (BCrypt.checkpw(candidate, hashedPassword)){
+			System.out.println("It matches");
+			return true;
+		}
+		else{
+			System.out.println("It does not match");
+			return false;
+		}
+	}
 
 }
