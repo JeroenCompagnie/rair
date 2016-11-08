@@ -5,6 +5,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,5 +55,11 @@ public class UserRepository {
 	public void remove(long userId) {
 		logger.info("Removing user with id " + userId);
 		em.remove(em.getReference(User.class, userId));
+	}
+
+	public User findCustomer(String userName) {
+		TypedQuery<User> query = em.createQuery("select u from User u where u.userName=:arg1", User.class);
+		query.setParameter("arg1", userName);
+		return query.getSingleResult();
 	}
 }

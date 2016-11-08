@@ -8,7 +8,7 @@
 	xmlns:b="http://bootsfaces.net/ui">
 <ui:composition template="WEB-INF/templates/common.xhtml">
 	<!-- TODO replace content here -->
-	<ui:define name="title">User Registration</ui:define>
+	<ui:define name="title">Login</ui:define>
 
 	<ui:define name="content">
 		<h:form>
@@ -21,7 +21,7 @@
 			<b:message for="password" styleClass="error"/>
 			
 			
-			<b:commandButton value="Register" action="#{registerCustomerBean.register}"/>
+			<b:commandButton value="Login" action="#{loginBean.login}"/>
 			<b:messages />
 		</h:form>
 	</ui:define>
