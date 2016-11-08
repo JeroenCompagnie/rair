@@ -12,6 +12,7 @@ import com.realdolmen.domain.flight.Booking;
 import com.realdolmen.domain.flight.PaymentStatus;
 import com.realdolmen.domain.user.Address;
 import com.realdolmen.domain.user.Customer;
+import com.realdolmen.domain.user.Employee;
 
 public class BookingTest {
 	
@@ -19,6 +20,7 @@ public class BookingTest {
 	Address a;
 	Customer c;
 	Date d;
+	//Employee e;
 	@Before
 	public void init()
 	{
@@ -27,7 +29,7 @@ public class BookingTest {
 		c = new Customer(a,"email@address.com","firstName","lastName","password","userName");
 		d = new Date();
 		b  = new Booking(PaymentStatus.PENDING,c,d);
-		
+		//e = new Employee("firstName","lastName","password","username");
 	}
 
 	@Test
@@ -37,7 +39,7 @@ public class BookingTest {
 		assertEquals(a,b.getCustomer().getAddress());//Test address
 		assertEquals(c,b.getCustomer());//Test Customer
 		assertEquals(d,b.getDateOfReservation());//Test reservationDate
-		//assertEquals(b,new Booking(PaymentStatus.PENDING,c,d));//Test booking
+		assertNotEquals(b,new Booking(PaymentStatus.PENDING,c,d));//Test Id
 		
 		
 		

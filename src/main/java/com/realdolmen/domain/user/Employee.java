@@ -19,4 +19,10 @@ public class Employee extends User{
 	public Employee(){
 		
 	}
+	
+	public Employee(String firstName,String lastName,String password,String userName)
+	{
+		super(firstName,lastName,password,userName);
+	}
+	
 }
