@@ -2,10 +2,10 @@ package com.realdolmen.domain.flight;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -16,6 +16,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.GenericGenerator;
 
 import com.realdolmen.domain.user.Customer;
 
@@ -28,8 +30,9 @@ public class Booking implements Serializable{
 	private static final long serialVersionUID = -4490556795691845585L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
+	@GenericGenerator(name = "uuid", strategy = "uuid2")
+	@GeneratedValue(generator = "uuid")
+	private String id;
 	
 	@Enumerated(EnumType.STRING)
 	private PaymentStatus paymentStatus; //TODO: dit een enum mss
@@ -93,7 +96,7 @@ public class Booking implements Serializable{
 		this.bookingOfFlightList = bookingOfFlightList;
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 	

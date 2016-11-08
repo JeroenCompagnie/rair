@@ -79,4 +79,8 @@ public class Customer extends User{
 		return id;
 	}
 	
+	public void addBooking(Booking b){
+		bookingsList.add(b);
+	}
+	
 }

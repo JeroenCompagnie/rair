@@ -43,8 +43,10 @@ public class UserRepository {
 			em.persist(b);
 			for(int i = 0; i < 3; i++){
 				BookingOfFlight bf = new BookingOfFlight(100.0, em.find(Flight.class, 1000L), b);
+				em.persist(bf);
 				b.addBookingOfFlight(bf);
 			}
+			c.addBooking(b);
 		}
 	}
 
