@@ -1,7 +1,7 @@
 <dataset>
 
-	<address id = "1000" country="North" street="NorthStreet" number="42" postalcode="9999" />
-	<address id = "1001" country="Belgium" street="Straat" number="42" postalcode="9999" />
+	<address id = "1000" country="North" street="NorthStreet" city="NorthCity" number="42" postalcode="9999" />
+	<address id = "1001" country="Belgium" street="Straat" city="Stad" number="42" postalcode="9999" />
 	
 	<customer id="1000" firstName="Jon" lastName="Snow" userName="KingOfTheNorth" hashedPassword="toHash" email="jon.snow@gmail.com" address_id="1000"/>
 	<customer id="1001" firstName="User" lastName="Customer" userName="Customer" hashedPassword="toHash" email="user.customer@gmail.com" address_id="1001"/>

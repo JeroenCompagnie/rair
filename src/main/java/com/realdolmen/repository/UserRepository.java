@@ -25,6 +25,12 @@ public class UserRepository {
 		return user;
 	}
 
+	public Customer saveCustomer(Customer c) {
+		em.persist(c.getAddress());
+		em.persist(c);
+		return c;
+	}
+
 	public User findById(Long id) {
 		return em.find(User.class, id);
 	}

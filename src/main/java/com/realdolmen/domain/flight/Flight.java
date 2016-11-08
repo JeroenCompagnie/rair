@@ -188,6 +188,6 @@ public class Flight implements Serializable{
 	public Date getLandingTime(){
 		this.getDateOfDeparture();
 		this.getFlightDuration();
-		return new Date(getDateOfDeparture().getTime()+60000*getFlightDuration().toMillis());
+		return new Date(getDateOfDeparture().getTime()+getFlightDuration().toMillis());
 	}
 }

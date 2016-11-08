@@ -25,17 +25,21 @@ public class Address implements Serializable{
 	
 	private int postalCode;
 	
-	private String Country;
+	private String city;
+	
+	private String country;
 	
 	public Address(){
 		
 	}
 
-	public Address(String street, int number, int postalCode, String country) {
+	public Address(String street, int number, int postalCode, String city, String country) {
+
 		this.street = street;
 		this.number = number;
 		this.postalCode = postalCode;
-		Country = country;
+		this.city = city;
+		this.country = country;
 	}
 
 	public Long getId() {
@@ -71,11 +75,18 @@ public class Address implements Serializable{
 	}
 
 	public String getCountry() {
-		return Country;
+		return country;
 	}
 
 	public void setCountry(String country) {
-		Country = country;
+		this.country = country;
 	}
-	
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}	
 }

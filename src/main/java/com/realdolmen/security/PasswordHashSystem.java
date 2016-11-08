@@ -2,6 +2,12 @@ package com.realdolmen.security;
 
 import org.mindrot.jbcrypt.BCrypt;
 
+/**
+ * 
+ * @author JCPBB69
+ *	
+ * Class only used to test the hashpw and checkpw of BCrypt
+ */
 public class PasswordHashSystem {
 
 	public PasswordHashSystem(){
