@@ -6,12 +6,13 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 import javax.validation.constraints.NotNull;
 
 @Named("flights")
-@SessionScoped
+@RequestScoped
 public class SelectFlightBean implements Serializable {
 	// @ManagedProperty("#{flightclasses}")
 	private List<String> flightclasses;

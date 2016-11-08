@@ -15,10 +15,19 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.realdolmen.domain.user.Partner;
+
+@NamedQueries
+(@NamedQuery(name=Flight.findAll,query="SELECT f FROM Flight f")
+		)
+
+	
+	
 
 @Entity
 public class Flight implements Serializable{
@@ -26,6 +35,7 @@ public class Flight implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = -6851290785176539664L;
+	public static final String findAll = "Flight.findAll";
 
 	/**
 	 * TODO: params
@@ -76,6 +86,21 @@ public class Flight implements Serializable{
 	
 	public Flight(){
 		
+	}
+	
+	public int numberOfSeatForType(SeatType st)
+	{
+		int count = 0;
+		System.out.println(seatList.size());
+		for(int i=1;i<seatList.size();i++)
+		{
+			if (seatList.get(i).getType().equals(st))
+			{
+				count++;
+			}
+			
+		}
+		return count;
 	}
 	
 	public Flight(Partner partner, List<BookingOfFlight> bookingOfFlightList,

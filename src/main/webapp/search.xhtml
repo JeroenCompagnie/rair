@@ -9,10 +9,10 @@
 <ui:composition template="WEB-INF/templates/common.xhtml">
 	<!-- TODO replace content here -->
 	<ui:define name="title">
-	Home</ui:define>
+	Search Results</ui:define>
 
 	<ui:define name="content">
-		<b:dataTable value="#{search.flights}" var="flight" id="flight"
+		<b:dataTable value="#{search.flights2}" var="flight" id="flight"
 			fixedHeader="true" scroll-size="400px" scroll-x="false"
 			responsive="true" searching="false">
 			<h:column value="#{flight.id}" />
