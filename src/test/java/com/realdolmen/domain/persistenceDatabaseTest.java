@@ -38,18 +38,18 @@ public class persistenceDatabaseTest extends JpaPersistenceTest{
 		assertNotNull(a.getId());
 		
 		//Make Customer c, persist, check Id for null and check if link with Address a is there
-		Customer c = new Customer(a, "jon.snow@gmail.com", 
-				"Jon", "Snow", "iknownothing", "KingOfTheNorth");
+		Customer c = new Customer(a, "jon.neige@gmail.com", 
+				"Jon", "Snow", "iknownothing", "jonneige");
 		em.persist(c);
 		assertNotNull(c.getId());
 		assertEquals("DummyStraat", em.find(Customer.class, c.getId()).getAddress().getStreet());
 		
 		
 		//Make Partner p, persist, check Id for null and check if a String field checks out
-		Partner p = new Partner("BryanAir", "fName", "lName", "BryanAir", "pass");
+		Partner p = new Partner("KLM", "fName", "lName", "KLM", "pass");
 		em.persist(p);
 		assertNotNull(p.getId());
-		assertEquals("BryanAir", em.find(Partner.class, p.getId()).getName());
+		assertEquals("KLM", em.find(Partner.class, p.getId()).getName());
 		
 		
 		// Make two Location objects l1 and l2, persist both and check Ids for null
@@ -65,14 +65,14 @@ public class persistenceDatabaseTest extends JpaPersistenceTest{
 				new Date(), Duration.ofMinutes(120));
 		em.persist(f);
 		assertNotNull(f.getId());
-		assertEquals(120, em.find(Flight.class, 1000L).getFlightDuration().toMinutes());
+		assertEquals(120, em.find(Flight.class, f.getId()).getFlightDuration().toMinutes());
 		
 		Seat seat = new Seat(SeatType.Business, 999.99);
 		em.persist(seat);
 		assertNotNull(seat.getId());
 		f.addSeat(seat);
 				
-		assertEquals("Business", em.find(Flight.class, 1000L).getSeatList().get(0).getType().toString());
+		assertEquals("Business", em.find(Flight.class, f.getId()).getSeatList().get(0).getType().toString());
 		
 		// Find persistedFlight and check if l1 and l2 are linked 
 		// 	through globalRegion, this way the enum is also tested
@@ -108,7 +108,7 @@ public class persistenceDatabaseTest extends JpaPersistenceTest{
 		
 		// Partner with Flight linkt test
 		p.addFlight(f);
-		assertEquals("BryanAir", persistedFlight.getPartner().getUserName());
+		assertEquals("KLM", persistedFlight.getPartner().getUserName());
 		
 		// Make Booking b, persist and check Id for null
 		Booking b = new Booking(PaymentStatus.PENDING, c, new Date());
@@ -123,6 +123,11 @@ public class persistenceDatabaseTest extends JpaPersistenceTest{
 		b.addBookingOfFlight(bf);
 		em.merge(b);
 		
+		c.addBooking(b);
+		em.merge(c);
+		assertEquals(PaymentStatus.PENDING, em.find(Customer.class, c.getId())
+				.getBookingsList().get(0).getPaymentStatus());
+		
 		assertEquals(999.99, em.find(Booking.class, b.getId()).getBookingOfFlightList().get(0).getPrice(),0.01);
 		
 		// Check if the Booking and Flight link is good
@@ -131,6 +136,8 @@ public class persistenceDatabaseTest extends JpaPersistenceTest{
 				em.find(Booking.class, b.getId()).getBookingOfFlightList().get(0).getFlight().getId());
 		assertEquals("Jon", 
 				em.find(Booking.class, b.getId()).getCustomer().getFirstName());
+		
+		
 		
 	}
 	
