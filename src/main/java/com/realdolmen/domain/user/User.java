@@ -59,7 +59,7 @@ public class User implements Serializable{
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-
+//TODO vragen of dit protected mag zijn... (Hoe anders testen?)
 //	public String getHashedPassword() {
 //		return hashedPassword;
 //	}
