@@ -4,7 +4,7 @@
 	<address id = "1001" country="Belgium" street="Straat" city="Stad" number="42" postalcode="9999" />
 	
 	<customer id="1000" firstName="Jon" lastName="Snow" userName="KingOfTheNorth" hashedPassword="toHash" email="jon.snow@gmail.com" address_id="1000"/>
-	<customer id="1001" firstName="User" lastName="Customer" userName="Customer" hashedPassword="toHash" email="user.customer@gmail.com" address_id="1001"/>
+	<customer id="1001" firstName="User" lastName="User" userName="User" hashedPassword="toHash" email="user@gmail.com" address_id="1001"/>
 	
 	<partner id="1000" firstName="Bryan" lastName="Air" userName="BryanAir" name="BryanAir" hashedPassword="toHash"/>
 	

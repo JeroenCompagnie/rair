@@ -1,15 +1,23 @@
 package com.realdolmen.repository;
 
+import java.util.Date;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.realdolmen.domain.flight.Booking;
+import com.realdolmen.domain.flight.BookingOfFlight;
+import com.realdolmen.domain.flight.Flight;
+import com.realdolmen.domain.flight.PaymentStatus;
+import com.realdolmen.domain.user.Address;
 import com.realdolmen.domain.user.Customer;
 import com.realdolmen.domain.user.User;
 
@@ -19,7 +27,26 @@ public class UserRepository {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@PersistenceContext
-	EntityManager em;
+	private EntityManager em;
+	
+	@PostConstruct
+	public void init(){
+		try{
+			em.createQuery("select c from Customer c where c.userName = :arg", Customer.class).setParameter("arg","customer").getSingleResult();
+		}
+		catch (NoResultException e){
+			System.err.println("no result exception caught");
+			Customer c = new Customer(new Address("Street", 42, 4242, "City", "Country"), 
+					"cust@mail.com", "Cust", "Omer", "customer", "customer");
+			saveCustomer(c);
+			Booking b = new Booking(PaymentStatus.SUCCESS, c, new Date());
+			em.persist(b);
+			for(int i = 0; i < 3; i++){
+				BookingOfFlight bf = new BookingOfFlight(100.0, em.find(Flight.class, 1000L), b);
+				b.addBookingOfFlight(bf);
+			}
+		}
+	}
 
 	public User save(User user) {
 		em.persist(user);
@@ -57,9 +84,19 @@ public class UserRepository {
 		em.remove(em.getReference(User.class, userId));
 	}
 
-	public User findCustomer(String userName) {
-		TypedQuery<User> query = em.createQuery("select u from User u where u.userName=:arg1", User.class);
+	public Customer findCustomer(String userName) {
+//		System.err.println("In findCustomer");
+//		System.err.println("username: " + userName);
+//		//TypedQuery<Customer> q = em.createQuery("select c from Customer c ", Customer.class);
+////		query.setParameter("arg1", userName);
+//		System.err.println("test if em = null: ");
+//		System.err.println(em == null);
+//		System.err.println("test if em = null: end");
+//		return (Customer) em.createQuery("SELECT c FROM Customer c").getResultList().get(0);
+		
+		TypedQuery<Customer> query = em.createQuery("select c from Customer c where c.userName = :arg1", Customer.class);
 		query.setParameter("arg1", userName);
+		
 		return query.getSingleResult();
 	}
 }

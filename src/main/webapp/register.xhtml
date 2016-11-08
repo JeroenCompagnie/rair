@@ -25,7 +25,7 @@
 			<b:message for="userName" styleClass="error"/>
 			
 			<h:outputLabel for="password" value="Password:" />
-			<b:inputText styleClass="datePicker"  id="password" value="#{registerCustomerBean.unhashedPassword}"></b:inputText>
+			<b:inputSecret styleClass="datePicker"  id="password" value="#{registerCustomerBean.unhashedPassword}"/>
 			<b:message for="password" styleClass="error"/>
 			
 			<h:outputLabel for="email" value="Email:" />

@@ -2,6 +2,7 @@ package com.realdolmen.domain.user;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.MappedSuperclass;
@@ -28,6 +29,7 @@ public class User implements Serializable{
 	protected String hashedPassword;
 	
 	@NotEmpty
+	@Column(unique=true)
 	protected String userName;
 	
 	public User(){

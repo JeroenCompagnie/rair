@@ -10,16 +10,17 @@
 		<f:facet name="last">
 
 			<h:outputStylesheet library="css" name="custom.css" />
-						<h:outputStylesheet library="css" name="template.css" />
+			<h:outputStylesheet library="css" name="template.css" />
 		</f:facet>
 		<title><ui:insert name="title">Placeholder</ui:insert></title>
 	</h:head>
 	<h:body>
-		<b:navBar brand="RAir" brandHref="index.xhtml">
+		<b:navBar>
 			<b:navbarLinks>
-				<b:navLink value="Search Flight" href="#"></b:navLink>
-				<b:navLink value="Book Flight" href="#"></b:navLink>
-				<b:navLink value="Login" href="login.xhmtl"></b:navLink>
+				<b:navLink value="Rair" href="index.xhtml" iconAwesome="plane" />
+				<b:navLink value="Search Flight" href="#" iconAwesome="search"></b:navLink>
+				<b:navLink value="Book Flight" href="#" iconAwesome="book"></b:navLink>
+
 				<!-- <b:dropMenu value="Dropdown" iconAwesome="birthday-cake">
 					<b:navLink value="Action" href="#"></b:navLink>
 					<b:navLink value="Another action" href="#"></b:navLink>
@@ -50,7 +51,21 @@
 				<b:navLink value="    " href="#"></b:navLink>
 			</b:navbarLinks>
 			<b:navbarLinks pull="right" styleClass="hidden-xs">
-				<b:navLink value="Register" href="register.xhtml"></b:navLink>
+				<b:navLink value="Login" href="login.xhtml" iconAwesome="user"
+					rendered="#{loginBean.isUserNull}"></b:navLink>
+				<b:navLink value="Register" href="register.xhtml"
+					iconAwesome="list-alt" rendered="#{loginBean.isUserNull}"></b:navLink>
+
+			</b:navbarLinks>
+			
+			<!-- logout button must be in form and out of navbarLinks -->
+			<h:form class="navbar-form navbar-right hidden-md hidden-sm hidden-xs"
+				role="submit">
+				<b:commandButton value="Logout" action="#{loginBean.logout}" iconAwesome="user" rendered="#{not loginBean.isUserNull}" ></b:commandButton>
+			</h:form>
+			
+			<b:navbarLinks pull="right" styleClass="hidden-xs">
+
 				<b:dropMenu value="Dropdown">
 					<b:navLink value="Action" href="#"></b:navLink>
 					<b:navLink value="Another action" href="#"></b:navLink>

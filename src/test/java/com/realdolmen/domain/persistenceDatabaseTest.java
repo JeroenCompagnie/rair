@@ -21,6 +21,8 @@ import com.realdolmen.domain.flight.SeatType;
 import com.realdolmen.domain.user.Address;
 import com.realdolmen.domain.user.Customer;
 import com.realdolmen.domain.user.Partner;
+import com.realdolmen.domain.user.User;
+import com.realdolmen.repository.UserRepository;
 
 public class persistenceDatabaseTest extends JpaPersistenceTest{
 	
@@ -130,5 +132,12 @@ public class persistenceDatabaseTest extends JpaPersistenceTest{
 		assertEquals("Jon", 
 				em.find(Booking.class, b.getId()).getCustomer().getFirstName());
 		
+	}
+	
+	@Test
+	public void testQueryUserRepo(){
+		EntityManager em = entityManager();
+		Customer c = (Customer) em.createQuery("SELECT c FROM Customer c").getResultList().get(0);
+		assertEquals("Jon", c.getFirstName());
 	}
 }
