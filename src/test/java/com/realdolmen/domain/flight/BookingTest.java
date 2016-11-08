@@ -25,7 +25,7 @@ public class BookingTest {
 	public void init()
 	{
 		//b = new Booking(PaymentStatus.PENDING, c, Calendar.getInstance());
-		a = new Address("teststreet",1,3670,"Belgium");
+		a = new Address("teststreet",1,3670,"Hasselt","Belgium");
 		c = new Customer(a,"email@address.com","firstName","lastName","password","userName");
 		d = new Date();
 		b  = new Booking(PaymentStatus.PENDING,c,d);

@@ -14,7 +14,7 @@ public class AddressTest {
 	Address a;
 	@Before
 	public void init() {
-		a = new Address("teststreet",1,3670,"Belgium");
+		a = new Address("teststreet",1,3670,"Hasselt","Belgium");
 	}
 
 	@Test
