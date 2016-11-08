@@ -3,7 +3,6 @@ package com.realdolmen.domain.flight;
 import java.io.Serializable;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 

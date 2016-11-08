@@ -109,7 +109,7 @@ public class persistenceDatabaseTest extends JpaPersistenceTest{
 		assertEquals("BryanAir", persistedFlight.getPartner().getUserName());
 		
 		// Make Booking b, persist and check Id for null
-		Booking b = new Booking(PaymentStatus.PENDING, c, Calendar.getInstance());
+		Booking b = new Booking(PaymentStatus.PENDING, c, new Date());
 		em.persist(b);
 		assertNotNull(b.getId());
 		

@@ -3,6 +3,7 @@ package com.realdolmen.domain.flight;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -37,7 +38,7 @@ public class Booking implements Serializable{
 	@JoinColumn(name="customer_id", nullable=false)
 	private Customer customer;
 	
-	private Calendar dateOfReservation; //TODO: calendar of iets anders?
+	private Date dateOfReservation; //TODO: calendar of iets anders?
 
 	@OneToMany
 	@JoinTable(
@@ -54,7 +55,7 @@ public class Booking implements Serializable{
 		
 	}
 	
-	public Booking(PaymentStatus paymentStatus, Customer customer, Calendar dateOfReservation) {
+	public Booking(PaymentStatus paymentStatus, Customer customer, Date dateOfReservation) {
 		this.paymentStatus = paymentStatus;
 		this.customer = customer;
 		this.dateOfReservation = dateOfReservation;
@@ -76,11 +77,11 @@ public class Booking implements Serializable{
 		this.customer = customer;
 	}
 
-	public Calendar getDateOfReservation() {
+	public Date getDateOfReservation() {
 		return dateOfReservation;
 	}
 
-	public void setDateOfReservation(Calendar dateOfReservation) {
+	public void setDateOfReservation(Date dateOfReservation) {
 		this.dateOfReservation = dateOfReservation;
 	}
 
