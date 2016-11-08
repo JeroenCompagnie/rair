@@ -2,12 +2,13 @@ package com.realdolmen.domain.beans;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
+import javax.validation.constraints.NotNull;
 
 @Named("flights")
 @SessionScoped
@@ -25,25 +26,27 @@ public class SelectFlightBean implements Serializable {
 		return selectedAirline;
 	}
 	
-	private Calendar dateOfDeparture;
 	
-	public Calendar getDateOfDeparture() {
+	private Date dateOfDeparture;
+	
+	@NotNull
+	public Date getDateOfDeparture() {
 		return dateOfDeparture;
 	}
 
-	public void setDateOfDeparture(Calendar dateOfDeparture) {
+	public void setDateOfDeparture(Date dateOfDeparture) {
 		this.dateOfDeparture = dateOfDeparture;
 	}
 
-	public Calendar getDateOfReturn() {
+	public Date getDateOfReturn() {
 		return dateOfReturn;
 	}
 
-	public void setDateOfReturn(Calendar dateOfReturn) {
+	public void setDateOfReturn(Date dateOfReturn) {
 		this.dateOfReturn = dateOfReturn;
 	}
 
-	private Calendar dateOfReturn;
+	private Date dateOfReturn;
 
 	public void setSelectedAirline(String selectedAirline) {
 		this.selectedAirline = selectedAirline;
@@ -54,13 +57,7 @@ public class SelectFlightBean implements Serializable {
 	}
 
 	public void setSelectedFlightclass(String selectedFlightclass) {
-		this.selectedFlightClass = selectedFlightClass;
-	}
-
-	private String message = "testing bean";
-
-	public String getMessage() {
-		return message;
+		this.selectedFlightClass = selectedFlightclass;
 	}
 
 	@PostConstruct
