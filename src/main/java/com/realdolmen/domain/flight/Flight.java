@@ -9,6 +9,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -56,7 +57,7 @@ public class Flight implements Serializable {
 	private Location destinationLocation;
 
 
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(inverseJoinColumns = @JoinColumn(table = "seat", name = "seat_id", referencedColumnName = "id"))
 	private List<Seat> seatList = new ArrayList<>();
 
@@ -171,6 +172,12 @@ public class Flight implements Serializable {
 		this.seatList.add(s);
 	}
 
+	public void addSeats(ArrayList<Seat> seats) {
+		for(Seat s : seats){
+			addSeat(s);
+		}
+	}
+
 	public boolean removeSeat(Seat s) {
 		return this.seatList.remove(s);
 	}
@@ -194,4 +201,5 @@ public class Flight implements Serializable {
 	public Date getLandingTime() {
 		return new Date(getDateOfDeparture().getTime() + getFlightDuration().toMillis());
 	}
+
 }

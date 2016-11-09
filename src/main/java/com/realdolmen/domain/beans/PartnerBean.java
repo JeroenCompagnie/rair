@@ -9,6 +9,8 @@ import java.util.Date;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.validation.constraints.Max;
@@ -20,6 +22,7 @@ import org.junit.Before;
 
 import com.realdolmen.domain.flight.BookingOfFlight;
 import com.realdolmen.domain.flight.Flight;
+import com.realdolmen.domain.flight.GlobalRegion;
 import com.realdolmen.domain.flight.Location;
 import com.realdolmen.domain.user.Partner;
 import com.realdolmen.repository.PartnerRepository;
@@ -167,9 +170,34 @@ public class PartnerBean implements Serializable{
 	public String addFlight(){
 		System.err.println("Tried to add flight");
 		Flight f = new Flight((Partner) loginBean.getUser(), new ArrayList<BookingOfFlight>(), 
-				new Location(), new Location(), dateOfDeparture, Duration.ofMinutes(flightDuration));
+				new Location("1","1","1",GlobalRegion.Africa), 
+				new Location("2","2","2",GlobalRegion.Asia), 
+				dateOfDeparture, Duration.ofMinutes(flightDuration));
 		
+		partnerRepository.addFlight((Partner) loginBean.getUser(), f, 
+				nrBusinessSeats, priceBusinessSeats,
+				nrEconomySeats, priceEconomySeats,
+				nrFirstSeats, priceFirstSeats);
+		
+		String message = "Fligt added!";
+	    FacesContext.getCurrentInstance().addMessage(null, 
+	        new FacesMessage(FacesMessage.SEVERITY_INFO, message, null));
+	    
+	    clearAllInput();
 		return "";
+	}
+
+	private void clearAllInput() {
+		setNrBusinessSeats(0);
+		setNrEconomySeats(0);
+		setNrFirstSeats(0);
+		setPriceBusinessSeats(0.0);
+		setPriceEconomySeats(0.0);
+		setPriceFirstSeats(0.0);
+		setDepartureLocation("");
+		setDestinationLocation("");
+		setFlightDuration(0);
+		setDepartureDate(null);
 	}
 	
 }
