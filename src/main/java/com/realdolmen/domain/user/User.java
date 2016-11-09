@@ -3,21 +3,28 @@ package com.realdolmen.domain.user;
 import java.io.Serializable;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.MappedSuperclass;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.mindrot.jbcrypt.BCrypt;
 
-@MappedSuperclass
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS) // TODO dit nog eens nakijken naar andere inheritancetypes
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE) // TODO dit nog eens nakijken naar andere inheritancetypes
 public class User implements Serializable{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2945389852701706104L;
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	protected long id;
 
 	@NotEmpty
 	protected String firstName;
@@ -44,7 +51,9 @@ public class User implements Serializable{
 		this.userName = userName;
 	}
 
-
+	public long getId() {
+		return id;
+	}
 
 	public String getFirstName() {
 		return firstName;

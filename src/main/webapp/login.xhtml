@@ -17,12 +17,13 @@
 			<b:message for="userName" styleClass="error"/>
 			
 			<h:outputLabel for="password" value="Password:" />
-			<b:inputSecret styleClass="datePicker"  id="password" value="#{loginBean.unhashedPassword}"/>
+			<b:inputSecret styleClass="datePicker" autocomplete="false" id="password" value="#{loginBean.unhashedPassword}"/>
 			<b:message for="password" styleClass="error"/>
 			
+			<b:messages errorClass="datePicker" globalOnly="true" />
 			
-			<b:commandButton value="Login" action="#{loginBean.login}"/>
-			<b:messages />
+			<b:commandButton value="Login" action="#{loginBean.login}" look="success"/>
+			
 		</h:form>
 		
 		<b:alert severity="success" rendered="#{not loginBean.isUserNull}"><strong>Logged in!</strong> You successfully logged in.</b:alert>

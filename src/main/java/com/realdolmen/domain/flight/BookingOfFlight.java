@@ -35,6 +35,9 @@ public class BookingOfFlight implements Serializable{
 	@JoinColumn(name="booking_id")
 	private Booking booking;
 	
+	@NotNull
+	private int numberInBooking;
+	
 	public BookingOfFlight(){
 		
 	}
@@ -59,6 +62,14 @@ public class BookingOfFlight implements Serializable{
 
 	public Long getId() {
 		return id;
+	}
+
+	public int getNumberInBooking() {
+		return numberInBooking;
+	}
+
+	public void setNumberInBooking(int numberInBooking) {
+		this.numberInBooking = numberInBooking;
 	}
 	
 		

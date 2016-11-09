@@ -24,10 +24,6 @@ public class Customer extends User{
 	 * 
 	 */
 	private static final long serialVersionUID = -289701417497673496L;
-
-	@Id 
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected Long id;
 	
 	@NotNull
 	@OneToOne
@@ -39,6 +35,8 @@ public class Customer extends User{
 	
 	@OneToMany(cascade=CascadeType.ALL,mappedBy="customer")
 	protected List<Booking> bookingsList = new ArrayList<>();
+	
+	protected String type = "customer";
 	
 	public Customer(){
 		
@@ -75,12 +73,12 @@ public class Customer extends User{
 		this.bookingsList = bookingsList;
 	}
 	
-	public Long getId(){
-		return id;
-	}
-	
 	public void addBooking(Booking b){
 		bookingsList.add(b);
+	}
+
+	public String getType() {
+		return type;
 	}
 	
 }

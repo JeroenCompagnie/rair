@@ -12,21 +12,62 @@
 
 <ui:composition template="WEB-INF/templates/common.xhtml">
 	<!-- TODO replace content here -->
-	<ui:define name="title">Invoice with code #{bookingBean.urlCode}</ui:define>
+	<ui:define name="title">Invoice</ui:define>
 
 	<ui:define name="content">
-		<h:outputLabel value="Helo" />
-		<br />
-		<h:outputLabel value="#{bookingBean.urlCode}" />
-		<br />
-		<h:outputLabel value="test: #{bookingBean.booking.paymentStatus}" />
-		<br/>
-		<h:outputLabel value="#{bookingBean.bookingIsNull}"/>
-		<b:dataTable value="#{bookingBean.booking.bookingOfFlightList}" var="b" rendered="#{not bookingBean.bookingIsNull}">
-			<b:dataTableColumn value="#{b.flight.partner.name}" label="Flight company"/>
-			<b:dataTableColumn value="#{b.price}" label="Ticket price"/>
+	
+		<h:panelGroup layout="block" rendered="#{bookingBean.bookingIsNull}">
+			<h:outputLabel value ="Something went wrong. Either the code is not correct
+				or the correct user is not logged in!"/>
+		 	<br/>
+		</h:panelGroup>
+		
+		<!--  <h:link outcome="invoicePrint" value = "Print version" includeViewParams="true" rendered="#{not bookingBean.bookingIsNull}"><f:param name="urlCode" value="#{bookingBean.urlCode}"/></h:link> -->
+		
+		<h:panelGroup layout="block" rendered="#{not bookingBean.bookingIsNull}">
+			<h:outputLabel value="Invoice with number #{bookingBean.urlCode}"/>
+			<br/>
+			<h:outputLabel value="Tickets booked:" rendered="#{not bookingBean.bookingIsNull}"/>
+			<b:dataTable value="#{bookingBean.booking.bookingOfFlightList}" var="b">
+				<b:dataTableColumn value="#{b.numberInBooking}" label="#"/>
+				<b:dataTableColumn value="#{b.flight.partner.name}" label="Flight company"/>
+				<b:dataTableColumn value="#{b.price}" label="Ticket price"/>
+				
+			</b:dataTable>
+		</h:panelGroup>
+		
+		<!-- FOR PRINTING -->
+		
+		<script>
+			function printDiv(divName) {
+			     var printContents = document.getElementById(divName).innerHTML;
+			     var originalContents = document.body.innerHTML;
 			
-		</b:dataTable>
+			     document.body.innerHTML = printContents;
+			
+			     window.print();
+			
+			     document.body.innerHTML = originalContents;
+			}
+		</script>
+		
+		<div id="printableArea" style="display: none;">
+			<h:outputLabel
+				value="Something went wrong. Either the code is not correct
+					or the correct user is not logged in!"
+				rendered="#{bookingBean.bookingIsNull}" />
+			<c:forEach items="#{bookingBean.booking.bookingOfFlightList}" var="bof">
+					Ticket number : #{bof.numberInBooking}	 
+					<br />
+					Price: #{bof.price}
+					<br />
+					Flight company: #{bof.flight.partner.name}
+					<br />
+				<br />
+			</c:forEach>
+		</div>
+	
+	<b:button iconAwesome="print" type="button" onclick="printDiv('printableArea')" value="Print this page!" />
 
 	</ui:define>
 </ui:composition>
