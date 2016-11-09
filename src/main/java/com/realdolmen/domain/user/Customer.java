@@ -36,8 +36,6 @@ public class Customer extends User{
 	@OneToMany(cascade=CascadeType.ALL,mappedBy="customer")
 	protected List<Booking> bookingsList = new ArrayList<>();
 	
-	protected String type = "customer";
-	
 	public Customer(){
 		
 	}
@@ -75,10 +73,6 @@ public class Customer extends User{
 	
 	public void addBooking(Booking b){
 		bookingsList.add(b);
-	}
-
-	public String getType() {
-		return type;
 	}
 	
 }

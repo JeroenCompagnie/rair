@@ -12,15 +12,46 @@
 	Search Results</ui:define>
 
 	<ui:define name="content">
+		
+		<b:jumbotron>
+		<f:facet name="heading">
+					<h:outputText
+						value="You have selected the following flight options:" />
+				</f:facet>
+			<b:panelGrid colSpans="6,6" size="xs">
+				
+				<h:panelGroup>
+					<h:outputText span="8" value="The flightClass you selected is " />
+				</h:panelGroup>
+				<h:panelGroup>
+					<b:label text="#{search.selectedFlightclass}" />
+				</h:panelGroup>
+				<h:panelGroup>
+					<h:outputText value="The airline you selected is " />
+				</h:panelGroup>
+				<h:panelGroup>
+					<b:label text="#{search.selectedAirline}" />
+				</h:panelGroup>
+				<h:panelGroup>
+					<h:outputText
+						value="Your date of departure is" />
+				</h:panelGroup>
+				<h:panelGroup>
+					<b:label text="#{search.dateOfDeparture}" />
+				</h:panelGroup>
+			</b:panelGrid>
+		</b:jumbotron>
+
+
 		<b:dataTable value="#{search.flights2}" var="flight" id="flight"
 			fixedHeader="true" scroll-size="400px" scroll-x="false"
 			responsive="true" searching="false">
-			<h:column value="#{flight.id}" />
-			<h:column value="#{flight.partner.name}" />
-			<h:column value="#{flight.partner.name}" />
-			<h:column value="#{flight.departureLocation.airportName}" />
-			<h:column value="#{flight.destinationLocation.airportName}" />
-			<h:column value="#{flight.dateOfDeparture}" />
+			<b:dataTableColumn value="#{flight.id}" />
+			<b:dataTableColumn value="#{flight.partner.name}" />
+			<b:dataTableColumn value="#{flight.departureLocation.airportName}" />
+			<b:dataTableColumn value="#{flight.destinationLocation.airportName}" />
+			<b:dataTableColumn value="#{flight.dateOfDeparture}" />
+			<b:dataTableColumn><h:link value="Go to booking" outcome="booking"/></b:dataTableColumn>
 		</b:dataTable>
 	</ui:define>
 </ui:composition>

@@ -15,28 +15,27 @@
 		<b:jumbotron>
 			<h:outputLabel value="# of seats:">
 			</h:outputLabel>
-			<h:outputText value=" 3">3</h:outputText>
+			<h:outputText value=""></h:outputText>
 			<br />
 			<h:outputLabel value="Selected Class:" />
-			<h:outputText value="#{flights.selectedFlightclass}"></h:outputText>
+			<h:outputText value="#{search.selectedFlightclass}"></h:outputText>
 			<br />
 			<h:outputLabel value="Prefered Airline:" />
-			<h:outputText value="#{flights.selectedAirline}"></h:outputText> 
+			<h:outputText value="#{search.selectedAirline}"></h:outputText> 
 			<br />
 			<h:outputLabel value="Selected Day Of Departure:"></h:outputLabel>
-			<h:outputText value="#{flights.dateOfDeparture}"></h:outputText>
+			<h:outputText value="#{search.dateOfDeparture}"></h:outputText>
 			<br />
 			<h:outputLabel value="Selected Day Of Return:"></h:outputLabel>
-			<h:outputText value="#{flights.dateOfReturn}"></h:outputText>
+			<h:outputText value="#{search.dateOfReturn}"></h:outputText>
 			<br />
 		</b:jumbotron>
 		<h:form>
 			<h:outputLabel styleClass="rair-attention" value="Please make sure the data above is correct"/><br/>
 			<h:outputLabel value="Select a payment method"/>
-			<h:selectOneMenu>
-				<f:selectItem itemValue="Credit card" itemLabel="Credit card"></f:selectItem>
-				<f:selectItem itemValue="Endorsement" itemLabel="Endorsement"></f:selectItem>
-			</h:selectOneMenu><br/>
+			<b:selectOneMenu id="selectedPaymentMethod" value="#{search.selectedPaymentMethod}" styleClass="datePicker">
+				<f:selectItems value="#{search.paymentMethods}" />
+			</b:selectOneMenu><br/>
 			<b:commandButton value="Book" action="thankyou?faces-redirect=true"></b:commandButton>
 		</h:form>
 	</ui:define>

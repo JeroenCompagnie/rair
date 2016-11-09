@@ -2,8 +2,9 @@
 	<address id = "1000" country="North" street="NorthStreet" city="NorthCity" number="42" postalcode="9999" />
 	<address id = "1001" country="Belgium" street="Straat" city="Stad" number="42" postalcode="9999" />
 	
-	<user DTYPE="customer" id="1000" firstName="Jon" lastName="Snow" userName="KingOfTheNorth" hashedPassword="toHash" email="jon.snow@gmail.com" address_id="1000" type="customer"/>
-	<user DTYPE="customer" id="1001" firstName="User" lastName="User" userName="User" hashedPassword="toHash" email="user@gmail.com" address_id="1001" type="customer"/>
+	<user DTYPE="customer" id="1000" firstName="Jon" lastName="Snow" userName="KingOfTheNorth" hashedPassword="toHash" email="jon.snow@gmail.com" address_id="1000"/>
+	<user DTYPE="customer" id="1001" firstName="User" lastName="User" userName="User" hashedPassword="toHash" email="user@gmail.com" address_id="1001"/>
+	
 	
 	<user DTYPE="partner" id="1002" firstName="Bryan" lastName="Air" userName="BryanAir" name="BryanAir" hashedPassword="toHash"/>
 	<user DTYPE="partner" id="1003" firstName="Air" lastName="Terror" userName="AirTerror" name="AirTerror" hashedPassword="toHash"/>
@@ -17,13 +18,13 @@
 	<location id="1004" airportName="Barcelona" airportCountry="Spai" airportInternationalCode="BaSa" globalRegion="SouthernEurope"/>
 	
 	<!-- 120 minutes ~~ 7200000000000 -->
-	<flight id="1000" departureLocation_id="1000" destinationLocation_id="1001" dateOfDeparture="2016-12-12 11:11:11" flightDuration="1200000000000" partner_id="1000"/>
-	<flight id="1001" departureLocation_id="1000" destinationLocation_id="1002" dateOfDeparture="2016-12-20 11:11:11" flightDuration="4200000000000" partner_id="1000"/>
-	<flight id="1002" departureLocation_id="1000" destinationLocation_id="1003" dateOfDeparture="2016-12-14 11:11:11" flightDuration="8200000000000" partner_id="1000"/>
-	<flight id="1003" departureLocation_id="1002" destinationLocation_id="1004" dateOfDeparture="2016-12-02 11:11:11" flightDuration="6200000000000" partner_id="1001"/>
-	<flight id="1004" departureLocation_id="1001" destinationLocation_id="1002" dateOfDeparture="2016-12-28 11:11:11" flightDuration="3200000000000" partner_id="1000"/>
-	<flight id="1005" departureLocation_id="1000" destinationLocation_id="1003" dateOfDeparture="2016-12-27 11:11:11" flightDuration="7000000000000" partner_id="1000"/>
-	<flight id="1006" departureLocation_id="1003" destinationLocation_id="1004" dateOfDeparture="2016-12-26 11:11:11" flightDuration="7800000000000" partner_id="1001"/>
+	<flight id="1000" departureLocation_id="1000" destinationLocation_id="1001" dateOfDeparture="2016-12-12 11:11:11" flightDuration="1200000000000" partner_id="1002"/>
+	<flight id="1001" departureLocation_id="1000" destinationLocation_id="1002" dateOfDeparture="2016-12-20 11:11:11" flightDuration="4200000000000" partner_id="1003"/>
+	<flight id="1002" departureLocation_id="1000" destinationLocation_id="1003" dateOfDeparture="2016-12-14 11:11:11" flightDuration="8200000000000" partner_id="1002"/>
+	<flight id="1003" departureLocation_id="1002" destinationLocation_id="1004" dateOfDeparture="2016-12-02 11:11:11" flightDuration="6200000000000" partner_id="1003"/>
+	<flight id="1004" departureLocation_id="1001" destinationLocation_id="1002" dateOfDeparture="2016-12-28 11:11:11" flightDuration="3200000000000" partner_id="1002"/>
+	<flight id="1005" departureLocation_id="1000" destinationLocation_id="1003" dateOfDeparture="2016-12-27 11:11:11" flightDuration="7000000000000" partner_id="1003"/>
+	<flight id="1006" departureLocation_id="1003" destinationLocation_id="1004" dateOfDeparture="2016-12-26 11:11:11" flightDuration="7800000000000" partner_id="1002"/>
 	
 	
 	<seat id="1000" type="Economy" basePrice="333.0"/>
