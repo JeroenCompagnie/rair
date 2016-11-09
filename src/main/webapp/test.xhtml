@@ -1,0 +1,17 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui"
+	template="WEB-INF/templates/common.xhtml">
+	
+	<!-- TODO replace content here -->
+	<ui:define name="title">
+	Home</ui:define>
+
+	<ui:define name="content">
+		#{test.getAllEmploye().get(0).userName}
+	</ui:define>
+</ui:composition>

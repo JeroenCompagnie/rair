@@ -1,6 +1,7 @@
 package com.realdolmen.repository;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -9,13 +10,18 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.Metamodel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.realdolmen.domain.flight.Flight;
+import com.realdolmen.domain.flight.Seat;
 import com.realdolmen.domain.flight.SeatType;
 import com.realdolmen.domain.user.Partner;
 import com.realdolmen.domain.user.User;
@@ -52,6 +58,33 @@ public class FlightRepository {
 		em.remove(em.getReference(User.class, flightId));
 	}
 	
+	public List<Flight> findByParams2(SeatType t, Partner p,Date d)
+	{  
+		/*
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Flight> cq = cb.createQuery(Flight.class);
+		Metamodel m = em.getMetamodel();
+		EntityType<Flight> Flight_ = m.entity(Flight.class);
+		EntityType<List<Seat>> Seat_ = m.entity(Seat.class);
+		Root<Flight> flight = cq.from(Flight.class);
+		Join<Flight, List<Seat>> seatList = flight.join(Flight_.);
+		cq.where(cb.equal(flight.get("seatList").get("type"), t));
+		/*
+		CriteriaBuilder cb = em.getCriteriaBuilder(); //em is EntityManager
+		CriteriaQuery<Flight> cq = cb.createQuery(Flight.class);
+		Root<Flight> root = cq.from(Flight.class);
+
+		Expression<Collection<Seat>> seatlist = root.get("seatList");
+		Predicate containsWantedSeatType = cb.isMember("favorite-id", productIds);
+
+		cq.where(containsFavoritedProduct);
+
+		List<FavoritesFolder> favoritesFolders = em.createQuery(cq).getResultList();
+		return null;*/
+		//return em.createQuery(cq).getResultList();
+		return null;
+	}
+	
 	public List<Flight> findByParams(SeatType t,Partner partner,Date departureDate)
 	{
 		CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -62,7 +95,7 @@ public class FlightRepository {
 	    //Adding predicates in case of parameter not being null
 	    if (t != null) {
 	        predicates.add(
-	                cb.equal(flight.get("seatList").get("type"), t));
+	                cb.equal(flight.get("seatList")	, t));
 	    }
 	    if (partner != null) {
 	        predicates.add(

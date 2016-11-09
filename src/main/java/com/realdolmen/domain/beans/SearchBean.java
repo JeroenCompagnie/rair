@@ -43,7 +43,8 @@ public class SearchBean {
 			setFlights2(entityManager.createNamedQuery("Flight.findAll",Flight.class).getResultList());
 			Partner partner = partnerRepository.findById(1001L);
 			System.out.println("partnerName="+partner.getName());
-			setFlights2(flightRepository.findByParams(SeatType.Economy, partner, new Date()));
+			//setFlights2(flightRepository.findByParams(SeatType.Economy, partner, new Date()));
+			setFlights2(flightRepository.findByParams2(SeatType.Economy, partner, new Date()));
 		}
 
 

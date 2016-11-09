@@ -5,16 +5,22 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.realdolmen.domain.user.Employee;
 import com.realdolmen.domain.user.Partner;
 
 @Stateless
 public class PartnerRepository {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
+	private CriteriaBuilder cb;
 
 	@PersistenceContext
 	EntityManager em;
@@ -34,7 +40,12 @@ public class PartnerRepository {
 	}
 
 	public List<Partner> findAll() {
-		return em.createNamedQuery("Flight.findAll", Partner.class).getResultList();
+		cb = em.getCriteriaBuilder();
+		CriteriaQuery<Partner> cq = cb.createQuery(Partner.class);
+		Root<Partner> rootElement = cq.from(Partner.class);
+		CriteriaQuery<Partner> all = cq.select(rootElement);
+		TypedQuery<Partner> allQuery = em.createQuery(all);
+        return allQuery.getResultList();
 	}
 
 	public void remove(long partnerId) {

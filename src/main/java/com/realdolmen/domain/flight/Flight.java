@@ -55,6 +55,7 @@ public class Flight implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL)
 	private Location destinationLocation;
 
+
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinTable(inverseJoinColumns = @JoinColumn(table = "seat", name = "seat_id", referencedColumnName = "id"))
 	private List<Seat> seatList = new ArrayList<>();
