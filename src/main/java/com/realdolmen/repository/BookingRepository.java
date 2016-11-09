@@ -2,6 +2,7 @@ package com.realdolmen.repository;
 
 import java.util.List;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.realdolmen.domain.flight.Booking;
 
+@Stateless
 public class BookingRepository {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 

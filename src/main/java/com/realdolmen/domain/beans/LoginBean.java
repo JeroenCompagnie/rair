@@ -1,10 +1,14 @@
 package com.realdolmen.domain.beans;
 
 import java.io.Serializable;
+import java.util.PropertyResourceBundle;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.realdolmen.domain.user.User;
@@ -22,6 +26,10 @@ public class LoginBean implements Serializable{
 	@EJB
     UserRepository userRepository;
 	
+	
+	private transient @Inject PropertyResourceBundle bundle;
+
+	
 	private User u = null;
 	
 	private Boolean isUserNull = false;
@@ -30,9 +38,17 @@ public class LoginBean implements Serializable{
 	
 	private String unhashedPassword;
 	
+	// In order to show the type of user in the browser => see getter
+	@SuppressWarnings("unused")
+	private String userType;
+	
 	@PostConstruct
 	public void init(){
-		System.out.println("HASH: " + this.hashCode());
+//		System.out.println("HASH: " + this.hashCode());
+//		System.err.println("facescontext: " + facesContext);
+//		System.err.println("messageBundleName: " + messageBundleName);
+//		System.err.println("locale: " + locale);
+//		System.err.println("bundle: " + bundle);
 	}
 
 	public String getUserName() {
@@ -50,20 +66,36 @@ public class LoginBean implements Serializable{
 	public void setUnhashedPassword(String unhashedPassword) {
 		this.unhashedPassword = unhashedPassword;
 	}
-	
+		
+	public String getUserType() {
+		if(u != null){
+			String[] split = u.getClass().getName().split("\\.");
+			return split[split.length-1];
+		}
+		return "noType";
+	}
+
 	public String login(){
 		// First check if user exists:
-		User tempUser = userRepository.findCustomer(userName);
+		User tempUser = userRepository.findUser(userName);
 		if(tempUser == null){
 			 // user doesn't exist!
 			System.out.println("Login failed, invalid username");
-			return ""; // TODO: show error message
+			
+			String message = bundle.getString("loginUsernamePassError");
+		    FacesContext.getCurrentInstance().addMessage(null, 
+		        new FacesMessage(FacesMessage.SEVERITY_ERROR, message, null));
+			return "";
 		}
 		// Check password:
 		if(!tempUser.checkPassword(unhashedPassword)){
 			// password doesn't match
 			System.out.println("Login failed, invalid passw");
-			return ""; // TODO: show error message
+			
+			String message = bundle.getString("loginUsernamePassError");
+		    FacesContext.getCurrentInstance().addMessage(null, 
+		        new FacesMessage(FacesMessage.SEVERITY_ERROR, message, null));
+			return "";
 		}
 		
 		// Login succeeds:

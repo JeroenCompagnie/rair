@@ -22,9 +22,6 @@ public class Partner extends User{
 	 */
 	private static final long serialVersionUID = 4558912184599597151L;
 	public static final String findAll = "Partner.findAll";
-	@Id 
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected Long id;
 	
 	protected String name;
 	
@@ -47,10 +44,6 @@ public class Partner extends User{
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public Long getId() {
-		return id;
 	}
 	
 	public void addFlight(Flight f){

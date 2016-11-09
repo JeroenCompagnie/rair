@@ -28,6 +28,8 @@ public class BookingBean implements Serializable{
 	private String urlCode = "";
 	
 	private Booking booking;
+	
+	private boolean bookingIsNull = true;
 
 	public String getUrlCode() {
 		return urlCode;
@@ -37,28 +39,47 @@ public class BookingBean implements Serializable{
 		this.urlCode = urlCode;
 	}
 	
-	public boolean checkRightUser(){
+	public boolean isBookingIsNull() {
+		if(getBooking() == null){
+			return true;
+		}
 		return false;
 	}
 
+	public void setBookingIsNull(boolean bookingIsNull) {
+		this.bookingIsNull = bookingIsNull;
+	}
+
 	public Booking getBooking() {
+		System.err.println("Trying to fetch booking");
+//		if(true){
+//			return new Booking();
+//		}
 		Booking bookingFound = bookingRepository.findById(urlCode);
 		if(bookingFound == null){
 			// TODO booking bestaat niet
+			System.err.println("Booking doesn't exist");
 			booking = null;
 			return booking;
 		}
 		if(loginBean.getIsUserNull() || 
-				bookingFound.getCustomer().getUserName() != loginBean.getUserName()){
+				! bookingFound.getCustomer().getUserName().equals(loginBean.getUserName())){
 			// TODO user niet ingelogd of niet juiste user
+			System.err.println("Booking user is not correct, bookingFound customer username: " 
+			+ bookingFound.getCustomer().getUserName() + " and logged in user username: " + loginBean.getUserName());
 			booking = null;
 			return booking;
 		}
-		booking = bookingFound;
+		booking = bookingRepository.findById(urlCode);
+		System.err.println("Found the booking with Id and customer: " + booking.getId() + ", " + booking.getCustomer());
 		return booking;
 	}
 
 	public void setBooking(Booking booking) {
 		this.booking = booking;
+	}
+	
+	public String print(){
+		return "invoicePrintVersion";
 	}
 }

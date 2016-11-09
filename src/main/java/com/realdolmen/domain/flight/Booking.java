@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Column;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -35,15 +35,15 @@ public class Booking implements Serializable{
 	private String id;
 	
 	@Enumerated(EnumType.STRING)
-	private PaymentStatus paymentStatus; //TODO: dit een enum mss
+	private PaymentStatus paymentStatus;
 	
 	@ManyToOne
 	@JoinColumn(name="customer_id", nullable=false)
 	private Customer customer;
 	
-	private Date dateOfReservation; //TODO: calendar of iets anders?
+	private Date dateOfReservation;
 
-	@OneToMany
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(
 			joinColumns = @JoinColumn(table = "booking",
 		            name="booking_id",
@@ -101,6 +101,7 @@ public class Booking implements Serializable{
 	}
 	
 	public void addBookingOfFlight(BookingOfFlight bf){
+		bf.setNumberInBooking(bookingOfFlightList.size()+1);
 		bookingOfFlightList.add(bf);
 	}
 	

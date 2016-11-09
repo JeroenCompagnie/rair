@@ -13,37 +13,14 @@
 		<title><ui:insert name="title">Placeholder</ui:insert></title>
 	</h:head>
 	<h:body>
-		<b:navBar>
+		<b:navBar ng-class="{greenStyle: true}">
+			
 			<b:navbarLinks>
 				<b:navLink value="Rair" href="index.xhtml" iconAwesome="plane" />
 				<b:navLink value="Search Flight" href="#" iconAwesome="search"></b:navLink>
 				<b:navLink value="Book Flight" href="#" iconAwesome="book"></b:navLink>
-
-				<!-- <b:dropMenu value="Dropdown" iconAwesome="birthday-cake">
-					<b:navLink value="Action" href="#"></b:navLink>
-					<b:navLink value="Another action" href="#"></b:navLink>
-					<b:navLink value="Something else here" href="#"></b:navLink>
-					<b:navLink></b:navLink>
-					<b:navLink header="Nav header"></b:navLink>
-					<b:navLink value="Separated link" href="#"></b:navLink>
-					<b:dropMenu value="Nested submenu" iconAwesome="birthday-cake"
-						iconAlign="right">
-						<b:navLink value="You can nest menus" href="#"></b:navLink>
-						<b:dropMenu value="Nested sub-submenu">
-							<b:navLink value="... as deep as ..." href="#"></b:navLink>
-							<b:dropMenu value="Nested sub-sub-submenu">
-								<b:navLink value="... you want!" href="#"></b:navLink>
-							</b:dropMenu>
-						</b:dropMenu>
-
-					</b:dropMenu> 
-					<b:navLink value="One more separated link" href="#"></b:navLink>
-				</b:dropMenu>-->
 			</b:navbarLinks>
-			<form class="navbar-form navbar-left hidden-md hidden-sm hidden-xs"
-				role="search">
-				<button type="submit" class="btn btn-default">Submit</button>
-			</form>
+			
 			<!-- Following line is needed for TBS 3.0.1 (panel content overflow issue) -->
 			<b:navbarLinks pull="right">
 				<b:navLink value="    " href="#"></b:navLink>
@@ -53,28 +30,19 @@
 					rendered="#{loginBean.isUserNull}"></b:navLink>
 				<b:navLink value="Register" href="register.xhtml"
 					iconAwesome="list-alt" rendered="#{loginBean.isUserNull}"></b:navLink>
-
+				
 			</b:navbarLinks>
 			
 			<!-- logout button must be in form and out of navbarLinks -->
 			<h:form class="navbar-form navbar-right hidden-md hidden-sm hidden-xs"
 				role="submit">
-				<b:commandButton value="Logout" action="#{loginBean.logout}" iconAwesome="user" rendered="#{not loginBean.isUserNull}" ></b:commandButton>
+				<b:commandButton value="Logout #{loginBean.userName} #{loginBean.userType}" action="#{loginBean.logout}" iconAwesome="user" rendered="#{not loginBean.isUserNull}" ></b:commandButton>
+				
 			</h:form>
 			
-			<b:navbarLinks pull="right" styleClass="hidden-xs">
-
-				<b:dropMenu value="Dropdown">
-					<b:navLink value="Action" href="#"></b:navLink>
-					<b:navLink value="Another action" href="#"></b:navLink>
-					<b:navLink value="Something else here" href="#"></b:navLink>
-					<b:navLink></b:navLink>
-					<b:navLink header="Nav header"></b:navLink>
-					<b:navLink value="Separated link" href="#"></b:navLink>
-					<b:navLink value="One more separated link" href="#"></b:navLink>
-				</b:dropMenu>
-			</b:navbarLinks>
 		</b:navBar>
+		
+		
 		<b:container>
 			<header>
 				<h1>

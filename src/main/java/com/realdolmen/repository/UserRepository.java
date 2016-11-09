@@ -101,4 +101,15 @@ public class UserRepository {
 		
 		return query.getSingleResult();
 	}
+
+	public User findUser(String userName) {
+		TypedQuery<User> query = em.createQuery("select u from User u where u.userName = :arg1", User.class);
+		query.setParameter("arg1", userName);
+		try{
+			return query.getSingleResult();
+		}
+		catch (NoResultException e){
+			return null;
+		}
+	}
 }

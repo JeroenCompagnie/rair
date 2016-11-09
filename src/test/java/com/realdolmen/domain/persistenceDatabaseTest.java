@@ -6,6 +6,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
 
 import org.junit.Test;
 
@@ -20,6 +22,7 @@ import com.realdolmen.domain.flight.Seat;
 import com.realdolmen.domain.flight.SeatType;
 import com.realdolmen.domain.user.Address;
 import com.realdolmen.domain.user.Customer;
+import com.realdolmen.domain.user.Employee;
 import com.realdolmen.domain.user.Partner;
 import com.realdolmen.domain.user.User;
 import com.realdolmen.repository.UserRepository;
@@ -115,13 +118,20 @@ public class persistenceDatabaseTest extends JpaPersistenceTest{
 		em.persist(b);
 		assertNotNull(b.getId());
 		
-		// Make BookingOfFLight bf, persist, check Id for null
+		// Make multiple BookingOfFLight bf, persist, check Id for null
 		//		and add it to the Booking b
-		BookingOfFlight bf = new BookingOfFlight(999.99, f, b);
-		em.persist(bf);
-		assertNotNull(bf.getId());
-		b.addBookingOfFlight(bf);
+		for(int i = 0; i < 4; i++){
+			BookingOfFlight bf = new BookingOfFlight(999.99, f, b);
+			em.persist(bf);
+			assertNotNull(bf.getId());
+			b.addBookingOfFlight(bf);
+			em.merge(bf);
+			f.addBookingOfFlight(bf);
+		}
+		
+		// merge it
 		em.merge(b);
+		em.merge(f);
 		
 		c.addBooking(b);
 		em.merge(c);
@@ -136,9 +146,6 @@ public class persistenceDatabaseTest extends JpaPersistenceTest{
 				em.find(Booking.class, b.getId()).getBookingOfFlightList().get(0).getFlight().getId());
 		assertEquals("Jon", 
 				em.find(Booking.class, b.getId()).getCustomer().getFirstName());
-		
-		
-		
 	}
 	
 	@Test
@@ -146,5 +153,33 @@ public class persistenceDatabaseTest extends JpaPersistenceTest{
 		EntityManager em = entityManager();
 		Customer c = (Customer) em.createQuery("SELECT c FROM Customer c").getResultList().get(0);
 		assertEquals("Jon", c.getFirstName());
+	}
+	
+	@Test
+	public void testUsers(){
+		EntityManager em = entityManager();
+		Address a = new Address("1",1,1,"","");
+		em.persist(a);
+		
+		Customer customer = new Customer(a,"1@gmail.com","12345678","12345678","12345678","123");
+		Partner partner = new Partner("partner", "partner", "partner", "partner", "12345678");
+		Employee employee = new Employee("employee", "employee", "12345678", "employee");
+		
+		
+		em.persist(customer);
+		em.persist(partner);
+		em.persist(employee);
+		
+		TypedQuery<User> query = em.createQuery("select u from User u where u.userName = :arg1", User.class);
+		query.setParameter("arg1", "employee");
+		try{
+			query.getSingleResult();
+			System.err.println("Succeeded");
+		}
+		catch (NoResultException e){
+			System.err.println("Failed");
+		}
+		String[] split = employee.getClass().getName().split("\\.");
+		System.err.println(split[split.length-1]);
 	}
 }

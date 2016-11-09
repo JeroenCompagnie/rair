@@ -1,15 +1,14 @@
 <dataset>
-
 	<address id = "1000" country="North" street="NorthStreet" city="NorthCity" number="42" postalcode="9999" />
 	<address id = "1001" country="Belgium" street="Straat" city="Stad" number="42" postalcode="9999" />
 	
-	<customer id="1000" firstName="Jon" lastName="Snow" userName="KingOfTheNorth" hashedPassword="toHash" email="jon.snow@gmail.com" address_id="1000"/>
-	<customer id="1001" firstName="User" lastName="User" userName="User" hashedPassword="toHash" email="user@gmail.com" address_id="1001"/>
+	<user DTYPE="customer" id="1000" firstName="Jon" lastName="Snow" userName="KingOfTheNorth" hashedPassword="toHash" email="jon.snow@gmail.com" address_id="1000" type="customer"/>
+	<user DTYPE="customer" id="1001" firstName="User" lastName="User" userName="User" hashedPassword="toHash" email="user@gmail.com" address_id="1001" type="customer"/>
 	
-	<partner id="1000" firstName="Bryan" lastName="Air" userName="BryanAir" name="BryanAir" hashedPassword="toHash"/>
-	<partner id="1001" firstName="Air" lastName="Terror" userName="AirTerror" name="AirTerror" hashedPassword="toHash"/>
+	<user DTYPE="partner" id="1002" firstName="Bryan" lastName="Air" userName="BryanAir" name="BryanAir" hashedPassword="toHash"/>
+	<user DTYPE="partner" id="1003" firstName="Air" lastName="Terror" userName="AirTerror" name="AirTerror" hashedPassword="toHash"/>
 	
-	<employee id="1000" firstName="Emplo" lastName="Yee" userName="Employee" hashedPassword="toHash"/>
+	<user DTYPE="employee" id="1004" firstName="Emplo" lastName="Yee" userName="Employee123" hashedPassword="toHash"/>
 	
 	<location id="1000" airportName="Zaventem" airportCountry="Belgium" airportInternationalCode="ZaBe" globalRegion="WesternEurope"/>
 	<location id="1001" airportName="London" airportCountry="England" airportInternationalCode="LoEn" globalRegion ="WesternEurope"/>
@@ -55,7 +54,7 @@
 	
 	<booking id="1000" paymentStatus="Payed" customer_id="1000" dateOfReservation="2016-12-20 12:34:56" />
 	
-	<bookingOfFlight id="1000" price="111.0" flight_id="1000" booking_id="1000"/>
+	<bookingOfFlight id="1000" price="111.0" flight_id="1000" booking_id="1000" numberinBooking="1"/>
 	
 	<booking_bookingOfFlight booking_id="1000" bookingOfFlight_id="1000"/>
 	
