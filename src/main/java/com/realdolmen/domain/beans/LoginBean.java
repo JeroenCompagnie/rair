@@ -11,6 +11,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.realdolmen.domain.user.Partner;
 import com.realdolmen.domain.user.User;
 import com.realdolmen.repository.UserRepository;
 
@@ -42,6 +43,10 @@ public class LoginBean implements Serializable{
 	@SuppressWarnings("unused")
 	private String userType;
 	
+	// In order to check if user is a partner
+	@SuppressWarnings("unused")
+	private String userIsPartner;
+	
 	@PostConstruct
 	public void init(){
 //		System.out.println("HASH: " + this.hashCode());
@@ -66,6 +71,10 @@ public class LoginBean implements Serializable{
 	public void setUnhashedPassword(String unhashedPassword) {
 		this.unhashedPassword = unhashedPassword;
 	}
+	
+	public User getUser(){
+		return u;
+	}
 		
 	public String getUserType() {
 		if(u != null){
@@ -73,6 +82,13 @@ public class LoginBean implements Serializable{
 			return split[split.length-1];
 		}
 		return "noType";
+	}
+	
+	public Boolean getUserIsPartner() {
+		if(u==null){
+			return false;
+		}
+		return u.getClass() == Partner.class;
 	}
 
 	public String login(){

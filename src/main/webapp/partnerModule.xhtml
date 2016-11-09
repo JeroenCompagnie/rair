@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui">
+<ui:composition template="WEB-INF/templates/common.xhtml">
+	<!-- TODO replace content here -->
+	<ui:define name="title">Partner module</ui:define>
+
+	<ui:define name="content">
+		<h:outputLabel value="You have no powers here!" rendered="#{not loginBean.userIsPartner}"/>
+	
+		<h:form rendered="#{loginBean.userIsPartner}">
+			<b:panelGrid colSpans="4,8" size="xs">
+				<h:outputLabel value="Seats for Business class" />
+				<b:inputText value="#{partnerBean.nrBusinessSeats}" rows="2"
+					styleClass="datePicker" fieldSize="sm" type="number">
+					<f:facet name="prepend">
+						<h:outputText value="#" />
+					</f:facet>
+				</b:inputText>
+				<h:outputLabel value="Price for Business class" />
+				<b:inputText value="#{partnerBean.priceBusinessSeats}" rows="2"
+					styleClass="datePicker" fieldSize="sm" type="number">
+					<f:facet name="prepend">
+						<h:outputText value="€" />
+					</f:facet>
+				</b:inputText>
+
+				<h:outputLabel value="Seats for Economy class" />
+				<b:inputText value="#{partnerBean.nrEconomySeats}" rows="2"
+					styleClass="datePicker" fieldSize="sm" type="number">
+					<f:facet name="prepend">
+						<h:outputText value="#" />
+					</f:facet>
+				</b:inputText>
+				<h:outputLabel value="Price for Economy class" />
+				<b:inputText value="#{partnerBean.priceEconomySeats}" rows="2"
+					styleClass="datePicker" fieldSize="sm" type="number">
+					<f:facet name="prepend">
+						<h:outputText value="€" />
+					</f:facet>
+				</b:inputText>
+
+				<h:outputLabel value="Seats for First class" />
+				<b:inputText value="#{partnerBean.nrFirstSeats}" rows="2"
+					styleClass="datePicker" fieldSize="sm" type="number">
+					<f:facet name="prepend">
+						<h:outputText value="#" />
+					</f:facet>
+				</b:inputText>
+				<h:outputLabel value="Price for First class" />
+				<b:inputText value="#{partnerBean.priceFirstSeats}" rows="2"
+					styleClass="datePicker" fieldSize="sm" type="number">
+					<f:facet name="prepend">
+						<h:outputText value="€" />
+					</f:facet>
+				</b:inputText>
+
+				<h:outputLabel value="Departure location"/>
+				<b:inputText value="#{partnerBean.departureLocation}"
+					styleClass="datePicker" fieldSize="sm">
+				</b:inputText>
+				
+				<h:outputLabel value="Destination location"/>
+				<b:inputText value="#{partnerBean.destinationLocation}"
+					styleClass="datePicker" fieldSize="sm">
+				</b:inputText>
+				
+				<h:outputLabel value="Flight duration" />
+				<b:inputText value="#{partnerBean.flightDuration}"
+					styleClass="datePicker" fieldSize="sm" type="number">
+				</b:inputText>
+	
+				<h:outputLabel value="Departure date" />
+				<b:dateTimePicker value="#{flights.dateOfDeparture}" id="departure"
+					mode="popup" show-date="true" show-time="true"
+					styleClass="datePicker"/>
+
+					
+			</b:panelGrid>
+
+			<b:commandButton value="Add flight" action="#{partnerBean.addFlight}"
+				look="success"></b:commandButton>
+			<b:messages/>
+			<h:outputLabel value="#{partnerBean.nrBusinessSeats}" />
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

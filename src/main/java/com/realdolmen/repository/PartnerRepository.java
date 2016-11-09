@@ -2,6 +2,7 @@ package com.realdolmen.repository;
 
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -13,12 +14,15 @@ import javax.persistence.criteria.Root;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.realdolmen.domain.user.Employee;
+import com.realdolmen.domain.flight.Flight;
 import com.realdolmen.domain.user.Partner;
 
 @Stateless
 public class PartnerRepository {
 
+	@EJB
+	FlightRepository flightRepository;
+	
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	private CriteriaBuilder cb;
 
@@ -51,6 +55,13 @@ public class PartnerRepository {
 	public void remove(long partnerId) {
 		logger.info("Removing partner with id " + partnerId);
 		em.remove(em.getReference(Partner.class, partnerId));
+	}
+	
+	public void addFlight(Partner p, Flight f){
+		if(p != null && f != null){
+			em.persist(f);
+			p.addFlight(f);
+		}
 	}
 	/*
 	 * public List<Flight> findByParams(SeatType t,Partner partner,Date
