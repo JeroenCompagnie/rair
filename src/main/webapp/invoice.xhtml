@@ -6,18 +6,28 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:b="http://bootsfaces.net/ui">
-	<f:metadata>
-		<f:viewParam name="urlCode" value="#{bookingBean.urlCode}"/>
-	</f:metadata>
-	
+<f:metadata>
+	<f:viewParam name="urlCode" value="#{bookingBean.urlCode}" />
+</f:metadata>
+
 <ui:composition template="WEB-INF/templates/common.xhtml">
 	<!-- TODO replace content here -->
 	<ui:define name="title">Invoice with code #{bookingBean.urlCode}</ui:define>
 
 	<ui:define name="content">
-		<h:outputLabel value="Hello"/>
-		<br/>
+		<h:outputLabel value="Helo" />
+		<br />
 		<h:outputLabel value="#{bookingBean.urlCode}" />
+		<br />
+		<h:outputLabel value="test: #{bookingBean.booking.paymentStatus}" />
+		<br/>
+		<h:outputLabel value="#{bookingBean.bookingIsNull}"/>
+		<b:dataTable value="#{bookingBean.booking.bookingOfFlightList}" var="b" rendered="#{not bookingBean.bookingIsNull}">
+			<b:dataTableColumn value="#{b.flight.partner.name}" label="Flight company"/>
+			<b:dataTableColumn value="#{b.price}" label="Ticket price"/>
+			
+		</b:dataTable>
+
 	</ui:define>
 </ui:composition>
 </html>

@@ -136,9 +136,6 @@ public class persistenceDatabaseTest extends JpaPersistenceTest{
 				em.find(Booking.class, b.getId()).getBookingOfFlightList().get(0).getFlight().getId());
 		assertEquals("Jon", 
 				em.find(Booking.class, b.getId()).getCustomer().getFirstName());
-		
-		
-		
 	}
 	
 	@Test

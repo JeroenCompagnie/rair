@@ -35,13 +35,13 @@ public class Booking implements Serializable{
 	private String id;
 	
 	@Enumerated(EnumType.STRING)
-	private PaymentStatus paymentStatus; //TODO: dit een enum mss
+	private PaymentStatus paymentStatus;
 	
 	@ManyToOne
 	@JoinColumn(name="customer_id", nullable=false)
 	private Customer customer;
 	
-	private Date dateOfReservation; //TODO: calendar of iets anders?
+	private Date dateOfReservation;
 
 	@OneToMany
 	@JoinTable(

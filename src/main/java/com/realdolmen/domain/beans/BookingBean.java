@@ -28,6 +28,8 @@ public class BookingBean implements Serializable{
 	private String urlCode = "";
 	
 	private Booking booking;
+	
+	private boolean bookingIsNull = true;
 
 	public String getUrlCode() {
 		return urlCode;
@@ -37,11 +39,29 @@ public class BookingBean implements Serializable{
 		this.urlCode = urlCode;
 	}
 	
-	public boolean checkRightUser(){
-		return false;
+	public boolean isBookingIsNull() {
+		Booking bookingFound = bookingRepository.findById(urlCode);
+		if(bookingFound == null){
+			// TODO booking bestaat niet
+			booking = null;
+			return true;
+		}
+		else{
+			booking = bookingFound;
+			System.err.println("Booking id = " + booking.getId());
+			return false;
+		}
+	}
+
+	public void setBookingIsNull(boolean bookingIsNull) {
+		this.bookingIsNull = bookingIsNull;
 	}
 
 	public Booking getBooking() {
+		System.err.println("Trying to fetch booking");
+//		if(true){
+//			return new Booking();
+//		}
 		Booking bookingFound = bookingRepository.findById(urlCode);
 		if(bookingFound == null){
 			// TODO booking bestaat niet
