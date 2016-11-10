@@ -31,23 +31,25 @@ public class UserRepository {
 	
 	@PostConstruct
 	public void init(){
-		try{
-			em.createQuery("select c from Customer c where c.userName = :arg", Customer.class).setParameter("arg","customer").getSingleResult();
-		}
-		catch (NoResultException e){
-			System.err.println("no result exception caught");
-			Customer c = new Customer(new Address("Street", 42, 4242, "City", "Country"), 
-					"cust@mail.com", "Cust", "Omer", "customer", "customer");
-			saveCustomer(c);
-			Booking b = new Booking(PaymentStatus.SUCCESS, c, new Date());
-			em.persist(b);
-			for(int i = 0; i < 3; i++){
-				BookingOfFlight bf = new BookingOfFlight(100.0, em.find(Flight.class, 1000L), b);
-				em.persist(bf);
-				b.addBookingOfFlight(bf);
-			}
-			c.addBooking(b);
-		}
+//		try{
+//			em.createQuery("select c from Customer c where c.userName = :arg", Customer.class).setParameter("arg","customer").getSingleResult();
+//		}
+//		catch (NoResultException e){
+//			System.err.println("no result exception caught");
+//			Customer c = new Customer(new Address("Street", 42, 4242, "City", "Country"), 
+//					"cust@mail.com", "Cust", "Omer", "customer", "customer");
+//			saveCustomer(c);
+//			Booking b = new Booking(PaymentStatus.SUCCESS, c, new Date());
+//			em.persist(b);
+//			
+//			for(int i = 0; i < 3; i++){
+//				
+//				BookingOfFlight bf = new BookingOfFlight(100.0,, b);
+//				em.persist(bf);
+//				b.addBookingOfFlight(bf);
+//			}
+//			c.addBooking(b);
+//		}
 	}
 
 	public User save(User user) {

@@ -3,8 +3,6 @@ package com.realdolmen.domain.flight;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
@@ -24,7 +22,7 @@ public class Airport implements Serializable{
 	private String airportName;
 	
 	@Id
-	private String internationalAirportCode;
+	private String id;
 	
 	private String globalRegion;
 	
@@ -38,7 +36,7 @@ public class Airport implements Serializable{
 		this.country=country;
 		this.countryCode=countryCode;
 		this.airportName = airportName;
-		this.internationalAirportCode = internationalAirportCode;
+		this.id = internationalAirportCode;
 	}
 
 	public Airport(String city, String country, String countryCode, 
@@ -47,7 +45,7 @@ public class Airport implements Serializable{
 		this.country=country;
 		this.countryCode=countryCode;
 		this.airportName = airportName;
-		this.internationalAirportCode = internationalAirportCode;
+		this.id = internationalAirportCode;
 		this.globalRegion=globalRegion;
 	}
 
@@ -83,8 +81,8 @@ public class Airport implements Serializable{
 		this.airportName = airportName;
 	}
 	
-	public String getInternationalAirportCode() {
-		return internationalAirportCode;
+	public String getId() {
+		return id;
 	}
 
 	public String getGlobalRegion() {
@@ -97,7 +95,7 @@ public class Airport implements Serializable{
 	
 	@Override
 	public String toString(){
-		return internationalAirportCode + ": " + 
+		return id + ": " + 
 				country + ", " + city +" - " + airportName + " ("
 				+ globalRegion + ")";
 	}

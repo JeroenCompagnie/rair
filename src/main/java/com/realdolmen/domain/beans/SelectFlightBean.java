@@ -29,7 +29,6 @@ public class SelectFlightBean implements Serializable {
 	
 	private Date dateOfDeparture;
 	
-	@NotNull
 	public Date getDateOfDeparture() {
 		return dateOfDeparture;
 	}

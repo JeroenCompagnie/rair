@@ -1,5 +1,6 @@
 package com.realdolmen.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -39,5 +40,20 @@ public class AirportRepositroy {
 	public void remove(long airportId) {
 		logger.info("Removing airport with id " + airportId);
 		em.remove(em.getReference(Airport.class, airportId));
+	}
+
+	public List<Airport> findWithCountry(String searchCriteriaCountry) {
+		List<Airport> list = new ArrayList<Airport>();
+		try {
+			list = em.createQuery("select a from Airport a where a.country = :arg", Airport.class)
+					.setParameter("arg", searchCriteriaCountry)
+					.getResultList();
+		} catch (Exception e) {
+			return findAll();
+		}
+		if(list == null || list.isEmpty()){
+			return findAll();
+		}
+		return list;
 	}
 }

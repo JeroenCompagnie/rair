@@ -18,6 +18,7 @@ import javax.persistence.criteria.Root;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.realdolmen.domain.flight.Airport;
 import com.realdolmen.domain.flight.Flight;
 import com.realdolmen.domain.flight.Seat;
 import com.realdolmen.domain.flight.SeatType;
@@ -102,6 +103,18 @@ public class FlightRepository {
 		}
 		cq.select(flight).where(predicates.toArray(new Predicate[] {}));
 		return em.createQuery(cq).getResultList();
+	}
+
+	public ArrayList<Flight> getFlightsByPartner(Partner partner) {
+		ArrayList<Flight> resultList = new ArrayList<Flight>();
+		try{
+			resultList = (ArrayList<Flight>) em.createQuery("select f from Flight f where f.partner = :arg", Flight.class).setParameter("arg", partner).getResultList();
+		}
+		catch (Exception e){
+			logger.error("No flights found for partner: " + partner.getName());
+			return resultList;
+		}
+		return (ArrayList<Flight>) resultList;
 	}
 
 }

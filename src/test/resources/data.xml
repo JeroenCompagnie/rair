@@ -11,55 +11,6 @@
 	
 	<user DTYPE="employee" id="1004" firstName="Emplo" lastName="Yee" userName="Employee123" hashedPassword="toHash"/>
 	
-	<location id="1000" airportName="Zaventem" airportCountry="Belgium" airportInternationalCode="ZaBe" globalRegion="WesternEurope"/>
-	<location id="1001" airportName="London" airportCountry="England" airportInternationalCode="LoEn" globalRegion ="WesternEurope"/>
-	<location id="1002" airportName="Rome" airportCountry="Italy" airportInternationalCode="RoIt" globalRegion="SouthernEurope"/>
-	<location id="1003" airportName="Paris" airportCountry="France" airportInternationalCode="PaFa" globalRegion="WesternEurope"/>
-	<location id="1004" airportName="Barcelona" airportCountry="Spai" airportInternationalCode="BaSa" globalRegion="SouthernEurope"/>
-	
-	<!-- 120 minutes ~~ 7200000000000 -->
-	<flight id="1000" departureLocation_id="1000" destinationLocation_id="1001" dateOfDeparture="2016-12-12 11:11:11" flightDuration="1200000000000" partner_id="1002"/>
-	<flight id="1001" departureLocation_id="1000" destinationLocation_id="1002" dateOfDeparture="2016-12-20 11:11:11" flightDuration="4200000000000" partner_id="1003"/>
-	<flight id="1002" departureLocation_id="1000" destinationLocation_id="1003" dateOfDeparture="2016-12-14 11:11:11" flightDuration="8200000000000" partner_id="1002"/>
-	<flight id="1003" departureLocation_id="1002" destinationLocation_id="1004" dateOfDeparture="2016-12-02 11:11:11" flightDuration="6200000000000" partner_id="1003"/>
-	<flight id="1004" departureLocation_id="1001" destinationLocation_id="1002" dateOfDeparture="2016-12-28 11:11:11" flightDuration="3200000000000" partner_id="1002"/>
-	<flight id="1005" departureLocation_id="1000" destinationLocation_id="1003" dateOfDeparture="2016-12-27 11:11:11" flightDuration="7000000000000" partner_id="1003"/>
-	<flight id="1006" departureLocation_id="1003" destinationLocation_id="1004" dateOfDeparture="2016-12-26 11:11:11" flightDuration="7800000000000" partner_id="1002"/>
-	
-	
-	<seat id="1000" type="Economy" basePrice="333.0"/>
-	<seat id="1001" type="Business" basePrice="333.0"/>
-	<seat id="1002" type="Economy" basePrice="333.0"/>
-	<flight_seat flight_id="1000" seat_id="1000"/>
-	<flight_seat flight_id="1000" seat_id="1001"/>
-	<flight_seat flight_id="1000" seat_id="1002"/>
-	
-	<seat id="1003" type="Business" basePrice="333.0"/>
-	<seat id="1004" type="Economy" basePrice="333.0"/>
-	<seat id="1005" type="Business" basePrice="333.0"/>
-	<flight_seat flight_id="1001" seat_id="1003"/>
-	<flight_seat flight_id="1001" seat_id="1004"/>
-	<flight_seat flight_id="1001" seat_id="1005"/>
-	
-	<seat id="1006" type="Business" basePrice="333.0"/>
-	<seat id="1007" type="Business" basePrice="333.0"/>
-	<seat id="1008" type="Economy" basePrice="333.0"/>
-	<flight_seat flight_id="1002" seat_id="1006"/>
-	<flight_seat flight_id="1002" seat_id="1007"/>
-	<flight_seat flight_id="1002" seat_id="1008"/>
-	
-	<seat id="1009" type="Business" basePrice="333.0"/>
-	<seat id="1010" type="Economy" basePrice="333.0"/>
-	<flight_seat flight_id="1003" seat_id="1009"/>
-	<flight_seat flight_id="1003" seat_id="1010"/>
-	
-	<booking id="1000" paymentStatus="Payed" customer_id="1000" dateOfReservation="2016-12-20 12:34:56" />
-	
-	<bookingOfFlight id="1000" price="111.0" flight_id="1000" booking_id="1000" numberinBooking="1"/>
-	
-	<booking_bookingOfFlight booking_id="1000" bookingOfFlight_id="1000"/>
-	
-	<flight_bookingOfFlight flight_id="1000" bookingOfFlight_id="1000"/>
 		
 	
 </dataset>

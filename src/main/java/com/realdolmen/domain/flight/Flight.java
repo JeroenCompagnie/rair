@@ -50,10 +50,10 @@ public class Flight implements Serializable {
 	@JoinTable(joinColumns = @JoinColumn(table = "flight", name = "flight_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(table = "bookingOfFlight", name = "bookingOfFlight_id", referencedColumnName = "id"))
 	private List<BookingOfFlight> bookingOfFlightList = new ArrayList<>();
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	private Airport departureAirport;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	private Airport destinationAirport;
 
 
@@ -200,6 +200,10 @@ public class Flight implements Serializable {
 
 	public Date getLandingTime() {
 		return new Date(getDateOfDeparture().getTime() + getFlightDuration().toMillis());
+	}
+	
+	public int getSeatsLeft(){
+		return seatList.size();
 	}
 
 }
