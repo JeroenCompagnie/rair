@@ -6,6 +6,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
@@ -20,6 +21,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.junit.Before;
 
+import com.realdolmen.domain.flight.Airport;
 import com.realdolmen.domain.flight.BookingOfFlight;
 import com.realdolmen.domain.flight.Flight;
 import com.realdolmen.domain.flight.GlobalRegion;
@@ -41,6 +43,8 @@ public class PartnerBean implements Serializable{
 	
 	@EJB
 	private PartnerRepository partnerRepository;
+	
+	private List<Airport> listOfAirports;
 	
 	@Before
 	public void init(){
@@ -80,6 +84,12 @@ public class PartnerBean implements Serializable{
 	@NotNull(message = "Needs a flight duration")
 	@Min(value=0, message = "Flight duration needs to be higher as 0")
 	private int flightDuration;
+	
+	@NotNull
+	private Airport departureAirport;
+	
+	@NotNull
+	private Airport destinationAirport;
 	
 	@NotEmpty(message = "Needs a departure location")
 	private String departureLocation;
@@ -165,6 +175,26 @@ public class PartnerBean implements Serializable{
 
 	public void setFlightDuration(int flightDuration) {
 		this.flightDuration = flightDuration;
+	}
+	
+	public Airport getDepartureAirport() {
+		return departureAirport;
+	}
+
+	public void setDepartureAirport(Airport departureAirport) {
+		this.departureAirport = departureAirport;
+	}
+
+	public Airport getDestinationAirport() {
+		return destinationAirport;
+	}
+
+	public void setDestinationAirport(Airport destinationAirport) {
+		this.destinationAirport = destinationAirport;
+	}
+
+	public List<Airport> getAirports(){
+		return partnerRepository.getAllAirports();
 	}
 	
 	public String addFlight(){

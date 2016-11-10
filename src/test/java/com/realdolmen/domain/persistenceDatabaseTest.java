@@ -4,6 +4,11 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -12,6 +17,7 @@ import javax.persistence.TypedQuery;
 import org.junit.Test;
 
 import com.realdolmen.course.utilities.persistence.JpaPersistenceTest;
+import com.realdolmen.domain.flight.Airport;
 import com.realdolmen.domain.flight.Booking;
 import com.realdolmen.domain.flight.BookingOfFlight;
 import com.realdolmen.domain.flight.Flight;
@@ -20,6 +26,7 @@ import com.realdolmen.domain.flight.Location;
 import com.realdolmen.domain.flight.PaymentStatus;
 import com.realdolmen.domain.flight.Seat;
 import com.realdolmen.domain.flight.SeatType;
+import com.realdolmen.domain.flight.locationReaders.CSVReader;
 import com.realdolmen.domain.user.Address;
 import com.realdolmen.domain.user.Customer;
 import com.realdolmen.domain.user.Employee;
@@ -156,7 +163,7 @@ public class persistenceDatabaseTest extends JpaPersistenceTest{
 	}
 	
 	@Test
-	public void testUsers(){
+	public void testUsersAndPeristInitData(){
 		EntityManager em = entityManager();
 		Address a = new Address("1",1,1,"","");
 		em.persist(a);
@@ -181,5 +188,31 @@ public class persistenceDatabaseTest extends JpaPersistenceTest{
 		}
 		String[] split = employee.getClass().getName().split("\\.");
 		System.err.println(split[split.length-1]);
+		
+		/**
+		 * For airports
+		 */
+		HashMap<String, Airport> airportsFromCSV = CSVReader.getAirportsFromCSV();
+		
+		int count = 0;
+		for(Map.Entry<String, Airport> entry : airportsFromCSV.entrySet()){
+        	if(null != entry.getValue().getGlobalRegion()){
+        		count++;
+        	}
+        }
+		System.err.println("HIER: " + count);
+		
+		for(Map.Entry<String, Airport> entry : airportsFromCSV.entrySet()){
+			Airport airport = new Airport(entry.getValue().getCity(),
+					entry.getValue().getCountry(), 
+					entry.getValue().getCountryCode(), 
+					entry.getValue().getAirportName(), 
+					entry.getValue().getInternationalAirportCode(),
+					entry.getValue().getGlobalRegion());
+			em.persist(airport);
+		}
+		
+		ArrayList<Airport> airports = (ArrayList<Airport>) em.createQuery("select a from Airport a", Airport.class).getResultList();
+		assertEquals(airportsFromCSV.size(), airports.size());
 	}
 }

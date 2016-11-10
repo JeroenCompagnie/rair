@@ -11,8 +11,9 @@
 	<ui:define name="title">Partner module</ui:define>
 
 	<ui:define name="content">
-		<h:outputLabel value="You have no powers here!" rendered="#{not loginBean.userIsPartner}"/>
-	
+		<h:outputLabel value="You have no powers here!"
+			rendered="#{not loginBean.userIsPartner}" />
+
 		<h:form rendered="#{loginBean.userIsPartner}">
 			<b:panelGrid colSpans="4,8" size="xs">
 				<h:outputLabel value="Seats for Business class" />
@@ -60,22 +61,31 @@
 					</f:facet>
 				</b:inputText>
 
-				<h:outputLabel value="Departure location"/>
+				<h:outputLabel value="Departure location"  />
+				<b:selectOneMenu id="flightDepartureLocation" rows="2" 
+					value="#{partnerBean.departureAirport}" styleClass="datePicker">
+					<f:selectItems value="#{partnerBean.airports}" />
+					<f:facet name="prepend">
+						<b:icon name="globe" size=""></b:icon>
+					</f:facet>
+				</b:selectOneMenu>
+
+				<h:outputLabel value="Departure location" />
 				<b:inputText value="#{partnerBean.departureLocation}" rows="2"
 					styleClass="datePicker">
 					<f:facet name="prepend">
 						<b:icon name="globe" size=""></b:icon>
 					</f:facet>
 				</b:inputText>
-				
-				<h:outputLabel value="Destination location"/>
+
+				<h:outputLabel value="Destination location" />
 				<b:inputText value="#{partnerBean.destinationLocation}" rows="2"
-					styleClass="datePicker" >
+					styleClass="datePicker">
 					<f:facet name="prepend">
 						<b:icon name="globe" size=""></b:icon>
 					</f:facet>
 				</b:inputText>
-				
+
 				<h:outputLabel value="Flight duration" />
 				<b:inputText value="#{partnerBean.flightDuration}"
 					styleClass="datePicker" type="number">
@@ -83,20 +93,20 @@
 						<b:icon name="dashboard" size=""></b:icon>
 					</f:facet>
 				</b:inputText>
-	
+
 				<h:outputLabel value="Departure date" />
 				<b:dateTimePicker value="#{flights.dateOfDeparture}" id="departure"
 					mode="toggle-icon" show-date="true" show-time="true"
-					styleClass="datePicker"/>
+					styleClass="datePicker" />
 
-					
+
 			</b:panelGrid>
 
 			<b:commandButton value="Add flight" action="#{partnerBean.addFlight}"
 				look="success"></b:commandButton>
-			<b:messages/>
+			<b:messages />
 			<b:messages errorClass="datePicker" globalOnly="true" />
-			
+
 		</h:form>
 	</ui:define>
 </ui:composition>
