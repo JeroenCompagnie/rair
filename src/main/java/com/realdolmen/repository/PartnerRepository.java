@@ -20,6 +20,7 @@ import com.realdolmen.domain.flight.Flight;
 import com.realdolmen.domain.flight.Seat;
 import com.realdolmen.domain.flight.SeatType;
 import com.realdolmen.domain.user.Partner;
+import com.realdolmen.domain.user.User;
 
 @Stateless
 public class PartnerRepository {
@@ -86,9 +87,19 @@ public class PartnerRepository {
 		return seats;
 	}
 	
-	public List<Airport> getAllAirports(){
-		return airportRepository.findAll();
+	public List<Airport> getAllAirports(String searchCriteriaCountry){
+		return airportRepository.findWithCountry(searchCriteriaCountry);
 	}
+
+	public ArrayList<Flight> getFlightsByPartner(User user){
+		if(user.getClass().equals(Partner.class)){
+			return flightRepository.getFlightsByPartner((Partner) user);
+		}
+		else{
+			return new ArrayList<Flight>();
+		}
+	}
+	
 	/*
 	 * public List<Flight> findByParams(SeatType t,Partner partner,Date
 	 * departureDate) { CriteriaBuilder cb = em.getCriteriaBuilder();

@@ -10,6 +10,5 @@
 	<user DTYPE="partner" id="1003" firstName="Air" lastName="Terror" userName="AirTerror" name="AirTerror" hashedPassword="toHash"/>
 	
 	<user DTYPE="employee" id="1004" firstName="Emplo" lastName="Yee" userName="Employee123" hashedPassword="toHash"/>
-		
 	
 </dataset>

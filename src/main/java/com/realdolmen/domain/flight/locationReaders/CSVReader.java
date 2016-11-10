@@ -3,6 +3,7 @@ package com.realdolmen.domain.flight.locationReaders;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -22,7 +23,7 @@ public class CSVReader {
     	getAirportsFromCSV();
     }
     
-    public static HashMap<String, Airport> getAirportsFromCSV(){
+    public static ArrayList<Airport> getAirportsFromCSV(){
     	/**
     	 * Read country - global region
     	 */
@@ -54,22 +55,25 @@ public class CSVReader {
          */
         csvFile = "src/main/resources/city_country_airportName_code.csv";
         
-        HashMap<String, Airport> code_airport = new HashMap<>();
+        int nr =0;
+        
+        ArrayList<Airport> code_airport = new ArrayList<Airport>();
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
 
             while ((line = br.readLine()) != null) {
                 String[] lineSplit = line.split(cvsSplitBy);
+                
                 if(lineIsValid(lineSplit)){
-                	code_airport.put(lineSplit[2].trim(), 
-                		new Airport(lineSplit[0].trim(), lineSplit[3].trim(),
-                				lineSplit[4].trim(), lineSplit[2].trim(),
-                				lineSplit[1].trim()));
+                	code_airport.add(new Airport(lineSplit[0].trim(), lineSplit[3].trim(),
+            				lineSplit[4].trim(), lineSplit[2].trim(),
+            				lineSplit[1].trim()));
                 }
             }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.err.println("Number added:" + nr);
         
         // To see if read properly
 //        System.err.println(code_city_country.size());
@@ -80,8 +84,9 @@ public class CSVReader {
          * Add global region to each airport
          */
         int nrOfGlobalRegionsNotFound = 0;
-        for(Map.Entry<String, Airport> entry : code_airport.entrySet()){
-        	String matching_globalRegion = country_region.get(entry.getValue().getCountry());
+        for(Airport airport : code_airport){
+        	String matching_globalRegion = country_region.get(airport.getCountry());
+        	
         	if(matching_globalRegion == null){
         		nrOfGlobalRegionsNotFound++;
         		/**
@@ -90,15 +95,15 @@ public class CSVReader {
 //        		System.err.println(entry.getValue().getCountry());
         	}
         	else{
-        		entry.getValue().setGlobalRegion(matching_globalRegion);
+        		airport.setGlobalRegion(matching_globalRegion);
         	}
         }
        
         System.out.println(nrOfGlobalRegionsNotFound);
         
         int count = 0;
-        for(Map.Entry<String, Airport> entry : code_airport.entrySet()){
-        	if(null != entry.getValue().getGlobalRegion()){
+        for(Airport airport: code_airport){
+        	if(null != airport.getGlobalRegion()){
         		count++;
         	}
         }

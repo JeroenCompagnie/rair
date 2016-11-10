@@ -65,9 +65,9 @@ public class persistenceDatabaseTest extends JpaPersistenceTest{
 		Airport l1 = new Airport("city1", "country1", "cc1", "airportname1", "421","globalregion1");
 		Airport l2 = new Airport("city2", "country2", "cc2", "airportname2", "422","globalregion2");
 		em.persist(l1);
-		assertNotNull(l1.getInternationalAirportCode());
+		assertNotNull(l1.getId());
 		em.persist(l2);
-		assertNotNull(l2.getInternationalAirportCode());
+		assertNotNull(l2.getId());
 
 		// Make Fligt f with l1 and l2, persist and check Id for null
 		Flight f = new Flight(p, new ArrayList<BookingOfFlight>(), l1, l2,
@@ -191,27 +191,50 @@ public class persistenceDatabaseTest extends JpaPersistenceTest{
 		/**
 		 * For airports
 		 */
-		HashMap<String, Airport> airportsFromCSV = CSVReader.getAirportsFromCSV();
+		ArrayList<Airport> airportsFromCSV = CSVReader.getAirportsFromCSV();
 		
 		int count = 0;
-		for(Map.Entry<String, Airport> entry : airportsFromCSV.entrySet()){
-        	if(null != entry.getValue().getGlobalRegion()){
+		for(Airport airport : airportsFromCSV){
+        	if(null != airport.getGlobalRegion()){
         		count++;
         	}
         }
-		System.err.println("HIER: " + count);
+		System.err.println("Number of global regions which are null: " + count);
 		
-		for(Map.Entry<String, Airport> entry : airportsFromCSV.entrySet()){
-			Airport airport = new Airport(entry.getValue().getCity(),
-					entry.getValue().getCountry(), 
-					entry.getValue().getCountryCode(), 
-					entry.getValue().getAirportName(), 
-					entry.getValue().getInternationalAirportCode(),
-					entry.getValue().getGlobalRegion());
+		for(Airport entry : airportsFromCSV){
+			Airport airport = new Airport(entry.getCity(),
+					entry.getCountry(), 
+					entry.getCountryCode(), 
+					entry.getAirportName(), 
+					entry.getId(),
+					entry.getGlobalRegion());
 			em.persist(airport);
 		}
 		
 		ArrayList<Airport> airports = (ArrayList<Airport>) em.createQuery("select a from Airport a", Airport.class).getResultList();
 		assertEquals(airportsFromCSV.size(), airports.size());
+		
+		Airport a1 = em.find(Airport.class, "BRU");
+		assertNotNull(a1);
+		Airport a2 = em.find(Airport.class, "VCE");
+		assertNotNull(a2);
+		
+		Flight f = new Flight(partner, new ArrayList<BookingOfFlight>(),
+				a1, a2, new Date(), Duration.ofMinutes(120));
+		em.persist(f);
+		assertNotNull(f.getId());
+		
+		Booking b = new Booking(PaymentStatus.SUCCESS, customer, new Date());
+		em.persist(b);
+		assertNotNull(b.getId());
+		
+		BookingOfFlight bof = new BookingOfFlight(100.0, f, b);
+		em.persist(bof);
+		assertNotNull(bof.getId());
+		
+		f.addBookingOfFlight(bof);
+		em.merge(f);
+		assertEquals(1, em.find(Flight.class, f.getId()).getBookingOfFlightList().size());
+		
 	}
 }

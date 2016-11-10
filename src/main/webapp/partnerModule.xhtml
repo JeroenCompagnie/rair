@@ -15,97 +15,140 @@
 			rendered="#{not loginBean.userIsPartner}" />
 
 		<h:form rendered="#{loginBean.userIsPartner}">
-			<b:panelGrid colSpans="4,8" size="xs">
-				<h:outputLabel value="Seats for Business class" />
-				<b:inputText value="#{partnerBean.nrBusinessSeats}" rows="2"
-					styleClass="datePicker" type="number">
-					<f:facet name="prepend">
-						<h:outputText value="#" />
-					</f:facet>
-				</b:inputText>
-				<h:outputLabel value="Price for Business class" />
-				<b:inputText value="#{partnerBean.priceBusinessSeats}" rows="2"
-					styleClass="datePicker" type="number">
-					<f:facet name="prepend">
-						<h:outputText value="€" />
-					</f:facet>
-				</b:inputText>
+			<b:panelGrid colSpans="6,6" size="lg">
+				<h:panelGroup>
+					<b:inputText placeholder="Search airport departure"
+						value="#{partnerBean.searchCriteriaCountryDeparture}"
+						styleClass="partnerModuleInputBox" rows="2">
+						<f:facet name="prepend">
+							<b:commandButton value="search" look="success"
+								action="#{partnerBean.searchAirportDepartureCountry}" />
+						</f:facet>
+					</b:inputText>
+				</h:panelGroup>
+				<h:panelGroup>
+					<b:inputText placeholder="Search airport destination"
+						value="#{partnerBean.searchCriteriaCountryDestination}"
+						styleClass="partnerModuleInputBox" rows="2">
+						<f:facet name="prepend">
+							<b:commandButton value="search" look="success"
+								action="#{partnerBean.searchAirportDestinationCountry}" />
+						</f:facet>
+					</b:inputText>
+				</h:panelGroup>
+			</b:panelGrid>
+		</h:form>
 
-				<h:outputLabel value="Seats for Economy class" />
-				<b:inputText value="#{partnerBean.nrEconomySeats}" rows="2"
-					styleClass="datePicker" type="number">
-					<f:facet name="prepend">
-						<h:outputText value="#" />
-					</f:facet>
-				</b:inputText>
-				<h:outputLabel value="Price for Economy class" />
-				<b:inputText value="#{partnerBean.priceEconomySeats}" rows="2"
-					styleClass="datePicker" type="number">
-					<f:facet name="prepend">
-						<h:outputText value="€" />
-					</f:facet>
-				</b:inputText>
+		<h:form rendered="#{loginBean.userIsPartner}">
+			<b:messages />
 
-				<h:outputLabel value="Seats for First class" />
-				<b:inputText value="#{partnerBean.nrFirstSeats}" rows="2"
-					styleClass="datePicker" type="number">
-					<f:facet name="prepend">
-						<h:outputText value="#" />
-					</f:facet>
-				</b:inputText>
-				<h:outputLabel value="Price for First class" />
-				<b:inputText value="#{partnerBean.priceFirstSeats}" rows="2"
-					styleClass="datePicker" type="number">
-					<f:facet name="prepend">
-						<h:outputText value="€ " />
-					</f:facet>
-				</b:inputText>
+			<b:panelGrid colSpans="6,6" size="lg">
 
-				<h:outputLabel value="Departure location"  />
-				<b:selectOneMenu id="flightDepartureLocation" rows="2" 
-					value="#{partnerBean.departureAirport}" styleClass="datePicker">
-					<f:selectItems value="#{partnerBean.airports}" />
-					<f:facet name="prepend">
-						<b:icon name="globe" size=""></b:icon>
-					</f:facet>
-				</b:selectOneMenu>
+				<h:panelGroup>
+					<h:outputLabel value="Departure airport" />
+					<b:selectOneMenu id="flightDepartureAirport" rows="2"
+						value="#{partnerBean.departureAirport}" styleClass="partnerModuleInputBox">
+						<f:selectItems value="#{partnerBean.airportsDeparture}" />
+						<f:facet name="prepend">
+							<b:icon name="globe" size=""></b:icon>
+						</f:facet>
+					</b:selectOneMenu>
+				</h:panelGroup>
 
-				<h:outputLabel value="Departure location" />
-				<b:inputText value="#{partnerBean.departureLocation}" rows="2"
-					styleClass="datePicker">
-					<f:facet name="prepend">
-						<b:icon name="globe" size=""></b:icon>
-					</f:facet>
-				</b:inputText>
+				<h:panelGroup>
+					<h:outputLabel value="Destination airport" />
+					<b:selectOneMenu id="flightDestinationAirport" rows="2"
+						value="#{partnerBean.destinationAirport}" styleClass="partnerModuleInputBox">
+						<f:selectItems value="#{partnerBean.airportsDestination}" />
+						<f:facet name="prepend">
+							<b:icon name="globe" size=""></b:icon>
+						</f:facet>
+					</b:selectOneMenu>
+				</h:panelGroup>
 
-				<h:outputLabel value="Destination location" />
-				<b:inputText value="#{partnerBean.destinationLocation}" rows="2"
-					styleClass="datePicker">
-					<f:facet name="prepend">
-						<b:icon name="globe" size=""></b:icon>
-					</f:facet>
-				</b:inputText>
+				<h:panelGroup>
+					<h:outputLabel value="Seats for Business class" />
+					<b:inputText value="#{partnerBean.nrBusinessSeats}" rows="2"
+						styleClass="partnerModuleInputBox" type="number">
+						<f:facet name="prepend">
+							<h:outputText value="#" />
+						</f:facet>
+					</b:inputText>
+				</h:panelGroup>
 
-				<h:outputLabel value="Flight duration" />
-				<b:inputText value="#{partnerBean.flightDuration}"
-					styleClass="datePicker" type="number">
-					<f:facet name="prepend">
-						<b:icon name="dashboard" size=""></b:icon>
-					</f:facet>
-				</b:inputText>
+				<h:panelGroup>
+					<h:outputLabel value="Price for Business class" />
+					<b:inputText value="#{partnerBean.priceBusinessSeats}" rows="2"
+						styleClass="partnerModuleInputBox" type="number">
+						<f:facet name="prepend">
+							<h:outputText value="€" />
+						</f:facet>
+					</b:inputText>
+				</h:panelGroup>
 
-				<h:outputLabel value="Departure date" />
-				<b:dateTimePicker value="#{flights.dateOfDeparture}" id="departure"
-					mode="toggle-icon" show-date="true" show-time="true"
-					styleClass="datePicker" />
 
+				<h:panelGroup>
+					<h:outputLabel value="Seats for Economy class" />
+					<b:inputText value="#{partnerBean.nrEconomySeats}" rows="2"
+						styleClass="partnerModuleInputBox" type="number">
+						<f:facet name="prepend">
+							<h:outputText value="#" />
+						</f:facet>
+					</b:inputText>
+				</h:panelGroup>
+				<h:panelGroup>
+					<h:outputLabel value="Price for Economy class" />
+					<b:inputText value="#{partnerBean.priceEconomySeats}" rows="2"
+						styleClass="partnerModuleInputBox" type="number">
+						<f:facet name="prepend">
+							<h:outputText value="€" />
+						</f:facet>
+					</b:inputText>
+				</h:panelGroup>
+
+				<h:panelGroup>
+					<h:outputLabel value="Seats for First class" />
+					<b:inputText value="#{partnerBean.nrFirstSeats}" rows="2"
+						styleClass="partnerModuleInputBox" type="number">
+						<f:facet name="prepend">
+							<h:outputText value="#" />
+						</f:facet>
+					</b:inputText>
+				</h:panelGroup>
+
+				<h:panelGroup>
+					<h:outputLabel value="Price for First class" />
+					<b:inputText value="#{partnerBean.priceFirstSeats}" rows="2"
+						styleClass="partnerModuleInputBox" type="number">
+						<f:facet name="prepend">
+							<h:outputText value="€ " />
+						</f:facet>
+					</b:inputText>
+				</h:panelGroup>
+
+				<h:panelGroup>
+					<h:outputLabel value="Flight duration" />
+					<b:inputText value="#{partnerBean.flightDuration}"
+						styleClass="datePicker" type="number">
+						<f:facet name="prepend">
+							<b:icon name="dashboard" size=""></b:icon>
+						</f:facet>
+					</b:inputText>
+				</h:panelGroup>
+
+				<h:panelGroup>
+					<h:outputLabel value="Departure date" />
+					<b:dateTimePicker value="#{partnerBean.dateOfDeparture}"
+						id="departure" mode="toggle-icon" show-date="true"
+						show-time="true" styleClass="datePicker" />
+				</h:panelGroup>
 
 			</b:panelGrid>
 
 			<b:commandButton value="Add flight" action="#{partnerBean.addFlight}"
 				look="success"></b:commandButton>
-			<b:messages />
-			<b:messages errorClass="datePicker" globalOnly="true" />
+
+
 
 		</h:form>
 	</ui:define>

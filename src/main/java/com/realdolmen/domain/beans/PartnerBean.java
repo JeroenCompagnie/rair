@@ -16,7 +16,6 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.junit.Before;
 
 import com.realdolmen.domain.flight.Airport;
@@ -39,8 +38,6 @@ public class PartnerBean implements Serializable{
 	
 	@EJB
 	private PartnerRepository partnerRepository;
-	
-	private List<Airport> listOfAirports;
 	
 	@Before
 	public void init(){
@@ -81,17 +78,25 @@ public class PartnerBean implements Serializable{
 	@Min(value=0, message = "Flight duration needs to be higher as 0")
 	private int flightDuration;
 	
-	@NotNull
+	@NotNull(message = "Needs a departure airport")
 	private Airport departureAirport;
 	
-	@NotNull
+	@NotNull(message = "Needs a destination airport")
 	private Airport destinationAirport;
+//	
+//	@NotEmpty(message = "Needs a departure location")
+//	private String departureLocation;
+//	
+//	@NotEmpty(message = "Needs a destination location")
+//	private String destinationLocation;
 	
-	@NotEmpty(message = "Needs a departure location")
-	private String departureLocation;
+	private String searchCriteriaCountryDeparture = "";
 	
-	@NotEmpty(message = "Needs a destination location")
-	private String destinationLocation;
+	private String searchCriteriaCountryDestination = "";
+	
+	private List<Airport> airportsDeparture = new ArrayList<>();
+	
+	private List<Airport> airportsDestination = new ArrayList<>();
 	
 	public int getNrBusinessSeats() {
 		return nrBusinessSeats;
@@ -141,28 +146,28 @@ public class PartnerBean implements Serializable{
 		this.priceFirstSeats = priceFirstSeats;
 	}
 	
-	public String getDepartureLocation() {
-		return departureLocation;
-	}
+//	public String getDepartureLocation() {
+//		return departureLocation;
+//	}
+//
+//	public void setDepartureLocation(String departureLocation) {
+//		this.departureLocation = departureLocation;
+//	}
+//
+//	public String getDestinationLocation() {
+//		return destinationLocation;
+//	}
+//
+//	public void setDestinationLocation(String destinationLocation) {
+//		this.destinationLocation = destinationLocation;
+//	}
 
-	public void setDepartureLocation(String departureLocation) {
-		this.departureLocation = departureLocation;
-	}
-
-	public String getDestinationLocation() {
-		return destinationLocation;
-	}
-
-	public void setDestinationLocation(String destinationLocation) {
-		this.destinationLocation = destinationLocation;
-	}
-
-	public Date getDepartureDate() {
+	public Date getDateOfDeparture() {
 		return dateOfDeparture;
 	}
 
-	public void setDepartureDate(Date departureDate) {
-		this.dateOfDeparture = departureDate;
+	public void setDateOfDeparture(Date dateOfDeparture) {
+		this.dateOfDeparture = dateOfDeparture;
 	}
 
 	public int getFlightDuration() {
@@ -188,16 +193,50 @@ public class PartnerBean implements Serializable{
 	public void setDestinationAirport(Airport destinationAirport) {
 		this.destinationAirport = destinationAirport;
 	}
+	
+	public String getSearchCriteriaCountryDeparture() {
+		return searchCriteriaCountryDeparture;
+	}
 
-	public List<Airport> getAirports(){
-		return partnerRepository.getAllAirports();
+	public void setSearchCriteriaCountryDeparture(String searchCriteriaCountryDeparture) {
+		this.searchCriteriaCountryDeparture = searchCriteriaCountryDeparture;
+	}
+
+	public String getSearchCriteriaCountryDestination() {
+		return searchCriteriaCountryDestination;
+	}
+
+	public void setSearchCriteriaCountryDestination(String searchCriteriaCountryDestination) {
+		this.searchCriteriaCountryDestination = searchCriteriaCountryDestination;
+	}
+
+	public List<Airport> getAirportsDeparture(){
+		airportsDeparture =  partnerRepository.getAllAirports(searchCriteriaCountryDeparture);
+		return airportsDeparture;
+	}
+	
+	public List<Airport> getAirportsDestination(){
+		airportsDestination = partnerRepository.getAllAirports(searchCriteriaCountryDestination);
+		return airportsDestination;
+	}
+	
+	public void searchAirportDepartureCountry(){
+		getAirportsDeparture();
+	}
+	
+	public void searchAirportDestinationCountry(){
+		getAirportsDestination();
+	}
+	
+	public ArrayList<Flight> getFlightsOfPartner(){
+		return partnerRepository.getFlightsByPartner(loginBean.getUser());
 	}
 	
 	public String addFlight(){
 		System.err.println("Tried to add flight");
 		Flight f = new Flight((Partner) loginBean.getUser(), new ArrayList<BookingOfFlight>(), 
-				new Airport(), 
-				new Airport(), 
+				departureAirport, 
+				destinationAirport, 
 				dateOfDeparture, Duration.ofMinutes(flightDuration));
 		
 		partnerRepository.addFlight((Partner) loginBean.getUser(), f, 
@@ -220,12 +259,12 @@ public class PartnerBean implements Serializable{
 		setPriceBusinessSeats(0.0);
 		setPriceEconomySeats(0.0);
 		setPriceFirstSeats(0.0);
-//		setDepartureLocation("");
-//		setDestinationLocation("");
+			//		setDepartureLocation("");
+			//		setDestinationLocation("");
 		setDepartureAirport(null);
 		setDestinationAirport(null);
 		setFlightDuration(0);
-		setDepartureDate(null);
+		setDateOfDeparture(null);
 	}
 	
 }

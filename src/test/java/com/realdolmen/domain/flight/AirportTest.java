@@ -14,9 +14,9 @@ public class AirportTest {
 
 	@Test
 	public void locationUnitTest() {
-		assertEquals("airportName",a.getAirportName());
-		assertEquals("airportCountry",a.getCountry());
-		assertEquals("airportInternationalCode",a.getInternationalAirportCode());
+		assertEquals("airportname1",a.getAirportName());
+		assertEquals("country1",a.getCountry());
+		assertEquals("421",a.getId());
 		assertEquals("globalregion1",a.getGlobalRegion());
 	}
 

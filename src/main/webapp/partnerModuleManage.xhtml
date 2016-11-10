@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui">
+<ui:composition template="WEB-INF/templates/common.xhtml">
+	<!-- TODO replace content here -->
+	<ui:define name="title">Partner module</ui:define>
+
+	<ui:define name="content">
+		<h:outputLabel value="You have no powers here!"
+			rendered="#{not loginBean.userIsPartner}" />
+
+		<h:panelGroup layout="block" rendered="#{loginBean.userIsPartner}">
+   			<b:dataTable value="#{partnerBean.flightsOfPartner}" var="f">
+				<b:dataTableColumn value="#{f.id}" label="#"/>
+				<b:dataTableColumn value="#{f.getSeatsLeft()}" label="Seats left" />
+				<b:dataTableColumn value="#{f.departureAirport}" label="Departure airport"/>
+				<b:dataTableColumn value="#{f.destinationAirport}" label="Destination airport"/>
+				<b:dataTableColumn value="#{f.dateOfDeparture}" label="Departure date"/>
+				<b:dataTableColumn> nav</b:dataTableColumn>
+			</b:dataTable>
+		</h:panelGroup>
+
+	</ui:define>
+</ui:composition>
+</html>

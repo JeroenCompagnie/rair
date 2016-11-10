@@ -105,5 +105,8 @@ public class Booking implements Serializable{
 		bookingOfFlightList.add(bf);
 	}
 	
+	public void getQrCode(){
+		QRCode.createQrCodeForInvoice(id);
+	}
 	
 }
