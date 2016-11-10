@@ -23,8 +23,8 @@
 				<f:selectItems value="#{search.flightclasses}" />
 			</b:selectOneMenu>
 			<h:outputLabel for="preferedAirline"  value="Prefered Airline" />
-			<b:selectOneMenu id="preferedAirline" value="#{search.selectedAirline}" styleClass="datePicker">
-					<f:selectItems value="#{search.airlines}" />
+			<b:selectOneMenu id="preferedAirline" value="#{search.selectedPartner}" styleClass="datePicker">
+					<f:selectItems value="#{search.partners}" />
 			</b:selectOneMenu>
 			<h:outputLabel for="departure" value="Select Day Of Departure"></h:outputLabel>
 			<b:dateTimePicker value="#{search.dateOfDeparture}" id="departure" mode="popup" show-date="true" show-time="false"
