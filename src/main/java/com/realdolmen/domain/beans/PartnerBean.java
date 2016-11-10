@@ -1,14 +1,15 @@
 package com.realdolmen.domain.beans;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.validation.constraints.Max;
@@ -18,9 +19,9 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.junit.Before;
 
+import com.realdolmen.domain.flight.Airport;
 import com.realdolmen.domain.flight.BookingOfFlight;
 import com.realdolmen.domain.flight.Flight;
-import com.realdolmen.domain.flight.Location;
 import com.realdolmen.domain.user.Partner;
 import com.realdolmen.repository.PartnerRepository;
 
@@ -38,6 +39,8 @@ public class PartnerBean implements Serializable{
 	
 	@EJB
 	private PartnerRepository partnerRepository;
+	
+	private List<Airport> listOfAirports;
 	
 	@Before
 	public void init(){
@@ -77,6 +80,12 @@ public class PartnerBean implements Serializable{
 	@NotNull(message = "Needs a flight duration")
 	@Min(value=0, message = "Flight duration needs to be higher as 0")
 	private int flightDuration;
+	
+	@NotNull
+	private Airport departureAirport;
+	
+	@NotNull
+	private Airport destinationAirport;
 	
 	@NotEmpty(message = "Needs a departure location")
 	private String departureLocation;
@@ -164,12 +173,59 @@ public class PartnerBean implements Serializable{
 		this.flightDuration = flightDuration;
 	}
 	
+	public Airport getDepartureAirport() {
+		return departureAirport;
+	}
+
+	public void setDepartureAirport(Airport departureAirport) {
+		this.departureAirport = departureAirport;
+	}
+
+	public Airport getDestinationAirport() {
+		return destinationAirport;
+	}
+
+	public void setDestinationAirport(Airport destinationAirport) {
+		this.destinationAirport = destinationAirport;
+	}
+
+	public List<Airport> getAirports(){
+		return partnerRepository.getAllAirports();
+	}
+	
 	public String addFlight(){
 		System.err.println("Tried to add flight");
 		Flight f = new Flight((Partner) loginBean.getUser(), new ArrayList<BookingOfFlight>(), 
-				new Location(), new Location(), dateOfDeparture, Duration.ofMinutes(flightDuration));
+				new Airport(), 
+				new Airport(), 
+				dateOfDeparture, Duration.ofMinutes(flightDuration));
 		
+		partnerRepository.addFlight((Partner) loginBean.getUser(), f, 
+				nrBusinessSeats, priceBusinessSeats,
+				nrEconomySeats, priceEconomySeats,
+				nrFirstSeats, priceFirstSeats);
+		
+		String message = "Fligt added!";
+	    FacesContext.getCurrentInstance().addMessage(null, 
+	        new FacesMessage(FacesMessage.SEVERITY_INFO, message, null));
+	    
+	    clearAllInput();
 		return "";
+	}
+
+	private void clearAllInput() {
+		setNrBusinessSeats(0);
+		setNrEconomySeats(0);
+		setNrFirstSeats(0);
+		setPriceBusinessSeats(0.0);
+		setPriceEconomySeats(0.0);
+		setPriceFirstSeats(0.0);
+//		setDepartureLocation("");
+//		setDestinationLocation("");
+		setDepartureAirport(null);
+		setDestinationAirport(null);
+		setFlightDuration(0);
+		setDepartureDate(null);
 	}
 	
 }

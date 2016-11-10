@@ -1,5 +1,6 @@
 package com.realdolmen.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -14,14 +15,20 @@ import javax.persistence.criteria.Root;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.realdolmen.domain.flight.Airport;
 import com.realdolmen.domain.flight.Flight;
+import com.realdolmen.domain.flight.Seat;
+import com.realdolmen.domain.flight.SeatType;
 import com.realdolmen.domain.user.Partner;
 
 @Stateless
 public class PartnerRepository {
 
 	@EJB
-	FlightRepository flightRepository;
+	private FlightRepository flightRepository;
+	
+	@EJB
+	private AirportRepositroy airportRepository;
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	private CriteriaBuilder cb;
@@ -57,11 +64,30 @@ public class PartnerRepository {
 		em.remove(em.getReference(Partner.class, partnerId));
 	}
 	
-	public void addFlight(Partner p, Flight f){
+	public void addFlight(Partner p, Flight f, int nrBusinessSeats, double priceBusinessSeats, int nrEconomySeats, double priceEconomySeats, int nrFirstSeats, double priceFirstSeats){
+		ArrayList<Seat> seats = new ArrayList<Seat>();
+		seats.addAll(addSeats(nrBusinessSeats, priceBusinessSeats, SeatType.Business));
+		seats.addAll(addSeats(nrEconomySeats, priceEconomySeats, SeatType.Economy));
+		seats.addAll(addSeats(nrFirstSeats, priceFirstSeats, SeatType.FirstClass));
 		if(p != null && f != null){
+			f.addSeats(seats);
 			em.persist(f);
 			p.addFlight(f);
 		}
+	}
+	
+	private ArrayList<Seat> addSeats(int nrOfSeats, double priceOfSeats, SeatType seatType) {
+		ArrayList<Seat> seats = new ArrayList<Seat>();
+		for(int i = 0; i<nrOfSeats; i++){
+			Seat s = new Seat(seatType, priceOfSeats);
+			em.persist(s);
+			seats.add(s);
+		}
+		return seats;
+	}
+	
+	public List<Airport> getAllAirports(){
+		return airportRepository.findAll();
 	}
 	/*
 	 * public List<Flight> findByParams(SeatType t,Partner partner,Date

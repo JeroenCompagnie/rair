@@ -11,6 +11,8 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.realdolmen.domain.user.Customer;
+import com.realdolmen.domain.user.Employee;
 import com.realdolmen.domain.user.Partner;
 import com.realdolmen.domain.user.User;
 import com.realdolmen.repository.UserRepository;
@@ -89,6 +91,20 @@ public class LoginBean implements Serializable{
 			return false;
 		}
 		return u.getClass() == Partner.class;
+	}
+	
+	public Boolean getUserIsEmployee() {
+		if(u==null){
+			return false;
+		}
+		return u.getClass() == Employee.class;
+	}
+	
+	public Boolean getUserIsCustomer() {
+		if(u==null){
+			return false;
+		}
+		return u.getClass() == Customer.class;
 	}
 
 	public String login(){
