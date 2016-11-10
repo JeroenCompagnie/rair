@@ -14,7 +14,7 @@ public class Flight_ {
     public static volatile SingularAttribute<Flight, Partner> partner;
     public static volatile SetAttribute<Flight, List<Seat>> seatList;
     public static volatile SingularAttribute<Flight, BookingOfFlight> bookingOfFlightList;
-    public static volatile SingularAttribute<Flight, Location> destinationLocation;
-    public static volatile SingularAttribute<Flight, Location> departureLocation;
+    public static volatile SingularAttribute<Flight, Airport> destinationLocation;
+    public static volatile SingularAttribute<Flight, Airport> departureLocation;
 
 }

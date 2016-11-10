@@ -51,10 +51,10 @@ public class Flight implements Serializable {
 	private List<BookingOfFlight> bookingOfFlightList = new ArrayList<>();
 
 	@OneToOne(cascade = CascadeType.ALL)
-	private Location departureLocation;
+	private Airport departureAirport;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	private Location destinationLocation;
+	private Airport destinationAirport;
 
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -86,12 +86,12 @@ public class Flight implements Serializable {
 		return count;
 	}
 
-	public Flight(Partner partner, List<BookingOfFlight> bookingOfFlightList, Location departureLocation,
-			Location destinationLocation, Date dateOfDeparture, Duration flightDuration) {
+	public Flight(Partner partner, List<BookingOfFlight> bookingOfFlightList, Airport departureAirport,
+			Airport destinationAirport, Date dateOfDeparture, Duration flightDuration) {
 		this.partner = partner;
 		this.bookingOfFlightList = bookingOfFlightList;
-		this.departureLocation = departureLocation;
-		this.destinationLocation = destinationLocation;
+		this.departureAirport = departureAirport;
+		this.destinationAirport = destinationAirport;
 		this.dateOfDeparture = dateOfDeparture;
 		this.flightDuration = flightDuration;
 	}
@@ -116,20 +116,20 @@ public class Flight implements Serializable {
 		this.bookingOfFlightList = bookingOfFlightList;
 	}
 
-	public Location getDepartureLocation() {
-		return departureLocation;
+	public Airport getDepartureAirport() {
+		return departureAirport;
 	}
 
-	public void setDepartureLocation(Location departureLocation) {
-		this.departureLocation = departureLocation;
+	public void setDepartureAirport(Airport departureAirport) {
+		this.departureAirport = departureAirport;
 	}
 
-	public Location getDestinationLocation() {
-		return destinationLocation;
+	public Airport getDestinationAirport() {
+		return destinationAirport;
 	}
 
-	public void setDestinationLocation(Location destinationLocation) {
-		this.destinationLocation = destinationLocation;
+	public void setDestinationAirport(Airport destinationAirport) {
+		this.destinationAirport = destinationAirport;
 	}
 
 	public List<Seat> getSeatList() {

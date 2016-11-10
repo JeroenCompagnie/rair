@@ -22,7 +22,6 @@ import com.realdolmen.domain.flight.Booking;
 import com.realdolmen.domain.flight.BookingOfFlight;
 import com.realdolmen.domain.flight.Flight;
 import com.realdolmen.domain.flight.GlobalRegion;
-import com.realdolmen.domain.flight.Location;
 import com.realdolmen.domain.flight.PaymentStatus;
 import com.realdolmen.domain.flight.Seat;
 import com.realdolmen.domain.flight.SeatType;
@@ -63,12 +62,12 @@ public class persistenceDatabaseTest extends JpaPersistenceTest{
 		
 		
 		// Make two Location objects l1 and l2, persist both and check Ids for null
-		Location l1 = new Location("Airport1", "Belgium", "111", GlobalRegion.WesternEurope);
-		Location l2 = new Location("Airport2", "Italy", "222", GlobalRegion.SouthernEurope);
+		Airport l1 = new Airport("city1", "country1", "cc1", "airportname1", "421","globalregion1");
+		Airport l2 = new Airport("city2", "country2", "cc2", "airportname2", "422","globalregion2");
 		em.persist(l1);
-		assertNotNull(l1.getId());
+		assertNotNull(l1.getInternationalAirportCode());
 		em.persist(l2);
-		assertNotNull(l2.getId());
+		assertNotNull(l2.getInternationalAirportCode());
 
 		// Make Fligt f with l1 and l2, persist and check Id for null
 		Flight f = new Flight(p, new ArrayList<BookingOfFlight>(), l1, l2,
@@ -87,8 +86,8 @@ public class persistenceDatabaseTest extends JpaPersistenceTest{
 		// Find persistedFlight and check if l1 and l2 are linked 
 		// 	through globalRegion, this way the enum is also tested
 		Flight persistedFlight = em.find(Flight.class, f.getId());
-		assertEquals("WesternEurope", persistedFlight.getDepartureLocation().getGlobalRegion().toString());
-		assertEquals("SouthernEurope", persistedFlight.getDestinationLocation().getGlobalRegion().toString());
+		assertEquals("globalregion1", persistedFlight.getDepartureAirport().getGlobalRegion().toString());
+		assertEquals("globalregion2", persistedFlight.getDestinationAirport().getGlobalRegion().toString());
 		
 		// Check departure date stuff:
 		//	- check if depature date is before current date
