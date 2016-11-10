@@ -11,6 +11,4 @@
 	
 	<user DTYPE="employee" id="1004" firstName="Emplo" lastName="Yee" userName="Employee123" hashedPassword="toHash"/>
 	
-		
-	
 </dataset>

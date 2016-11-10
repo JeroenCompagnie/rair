@@ -1,6 +1,7 @@
 package com.realdolmen.repository;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -79,7 +80,7 @@ public class FlightRepository {
 		Path<Seat> s = join.get("type");
 		Predicate predicate = cb.equal(s, t);
 		cq.where(predicate);
-		cq.select(from);
+		cq.select(from).distinct(true);
 		TypedQuery<Flight> typedQuery = em.createQuery(cq);
 
 		return typedQuery.getResultList();
@@ -88,20 +89,28 @@ public class FlightRepository {
 	public List<Flight> findByParams(SeatType t, Partner partner, Date departureDate) {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Flight> cq = cb.createQuery(Flight.class);
-		Root<Flight> flight = cq.from(Flight.class);
+		Root<Flight> from = cq.from(Flight.class);
+		Date date2;
+		Calendar c = Calendar.getInstance();
+		c.setTime(departureDate);
+		c.add(Calendar.DATE, 1); 
+		date2 = c.getTime();
+		System.out.println(date2.toString() + " added one day in flightrepository");
 		List<Predicate> predicates = new ArrayList<Predicate>();
 
 		// Adding predicates in case of parameter not being null
 		if (t != null) {
-			predicates.add(cb.equal(flight.get("seatList"), t));
+			From<Flight, Seat> join = from.join("seatList");
+			Path<Seat> s = join.get("type");
+			predicates.add(cb.equal(s, t));
 		}
 		if (partner != null) {
-			predicates.add(cb.equal(flight.get("partner"), partner));
+			predicates.add(cb.equal(from.get("partner"), partner));
 		}
 		if (departureDate != null) {
-			predicates.add(cb.equal(flight.get("dateOfDeparture"), departureDate));
+			predicates.add(cb.between(from.get("dateOfDeparture"), departureDate, date2));
 		}
-		cq.select(flight).where(predicates.toArray(new Predicate[] {}));
+		cq.select(from).where(predicates.toArray(new Predicate[] {})).distinct(true);
 		return em.createQuery(cq).getResultList();
 	}
 

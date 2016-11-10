@@ -2,14 +2,14 @@ package com.realdolmen.domain.beans;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
-import javax.inject.Inject;
+import javax.faces.event.ActionEvent;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -45,7 +45,7 @@ public class SearchBean implements Serializable {
 
 	private String selectedAirline;
 
-	private String selectedFlightClass;
+	private SeatType selectedFlightClass;
 	
 	private Date dateOfDeparture;
 	
@@ -54,28 +54,53 @@ public class SearchBean implements Serializable {
 	private List<PaymentMethod> paymentMethods;
 	
 	private PaymentMethod selectedPaymentMethod;
+	
+	private Long selectedFlightId;
+
+	public Long getSelectedFlightId() {
+		return selectedFlightId;
+	}
+	
+	private Calendar calendar;
+
+	public void setSelectedFlightId(Long selectedFlightId) {
+		this.selectedFlightId = selectedFlightId;
+	}
+	
+	public void selectedFlightIdAttr(ActionEvent ae)
+	{
+		System.out.println("this shit works");
+		setSelectedFlightId((Long) ae.getComponent().getAttributes().get("selectedFlightIdAttr"));
+	}
 
 	@PostConstruct
 	public void init() {
+		calendar = Calendar.getInstance();
 		setFlights(new ArrayList<Flight>());
 		setFlights(entityManager.createQuery("select f from Flight f", Flight.class).getResultList());
 		// setFlights2(entityManager.createNamedQuery("Flight.findAll",Flight.class).getResultList());;
-		Partner partner = partnerRepository.findById(1002L);
+		
 		// System.out.println("partnerName="+partner.getName());
 		// setFlights2(flightRepository.findByParams(SeatType.Economy, partner,
 		// new Date()));
-		setFlights2(flightRepository.findByParams3(SeatType.Economy, partner, new Date()));
 		flightclasses = new ArrayList<String>();
 		airlines = new ArrayList<String>();
 		flightclasses.add("Economy");
 		flightclasses.add("Business");
-		airlines.add("AirTerror");
+		airlines.add("AirTerror");	
 		airlines.add("CrashAirline");
 		paymentMethods = new ArrayList<PaymentMethod>();
 		for(PaymentMethod p : PaymentMethod.values())
 		{
 			paymentMethods.add(p);
 		}
+	}
+	
+	public String bookFlight(Long flightId)
+	{
+		setSelectedFlightId(flightId);
+		System.out.println(selectedFlightId + " = Book Flight");
+		return "booking.xhtml";
 	}
 
 	public List<Flight> getFlights() {
@@ -104,26 +129,44 @@ public class SearchBean implements Serializable {
 	}
 
 	public void setDateOfDeparture(Date dateOfDeparture) {
-		this.dateOfDeparture = dateOfDeparture;
+		System.out.println(dateOfDeparture.toString() + " pre transform");
+		
+		Date d=removeTimeFromDate(dateOfDeparture);
+		System.out.println(d.toString()+ " post transform");
+		this.dateOfDeparture = d;
 	}
 
 	public Date getDateOfReturn() {
 		return dateOfReturn;
 	}
 
+	private Date removeTimeFromDate(Date d)
+	{
+		calendar.clear();
+		calendar.setTime(d);
+	    calendar.set(Calendar.MINUTE, 0);
+	    calendar.set(Calendar.SECOND, 0);
+	    calendar.set(Calendar.MILLISECOND, 0);
+		Date date = calendar.getTime();	
+		return date;
+	}
+	
 	public void setDateOfReturn(Date dateOfReturn) {
-		this.dateOfReturn = dateOfReturn;
+		Date d = null;
+		if(dateOfReturn != null){
+		d = removeTimeFromDate(dateOfReturn);}
+		this.dateOfReturn = d;
 	}
 
 	public void setSelectedAirline(String selectedAirline) {
 		this.selectedAirline = selectedAirline;
 	}
 
-	public String getSelectedFlightclass() {
+	public SeatType getSelectedFlightclass() {
 		return selectedFlightClass;
 	}
 
-	public void setSelectedFlightclass(String selectedFlightclass) {
+	public void setSelectedFlightclass(SeatType selectedFlightclass) {
 		this.selectedFlightClass = selectedFlightclass;
 	}
 
@@ -163,4 +206,14 @@ public class SearchBean implements Serializable {
 	public void setSelectedPaymentMethod(PaymentMethod selectedPaymentMethod) {
 		this.selectedPaymentMethod = selectedPaymentMethod;
 	}
+	
+	public String search()
+	{
+		Partner partner = partnerRepository.findById(1002L);
+		Date d =getDateOfDeparture();
+		//System.out.println(d.);
+		setFlights2(flightRepository.findByParams(SeatType.Economy, partner, getDateOfDeparture()));
+		return "search";
+	}
+
 }

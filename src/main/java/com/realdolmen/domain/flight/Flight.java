@@ -40,7 +40,7 @@ public class Flight implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "partner_id", nullable = false)
 	private Partner partner;
 
