@@ -12,14 +12,14 @@
 	Search Results</ui:define>
 
 	<ui:define name="content">
-		
+
 		<b:jumbotron>
-		<f:facet name="heading">
-					<h:outputText
-						value="You have selected the following flight options:" />
-				</f:facet>
+			<f:facet name="heading">
+				<h:outputText
+					value="You have selected the following flight options:" />
+			</f:facet>
 			<b:panelGrid colSpans="6,6" size="xs">
-				
+
 				<h:panelGroup>
 					<h:outputText span="8" value="The flightClass you selected is " />
 				</h:panelGroup>
@@ -33,25 +33,49 @@
 					<b:label text="#{search.selectedAirline}" />
 				</h:panelGroup>
 				<h:panelGroup>
-					<h:outputText
-						value="Your date of departure is" />
+					<h:outputText value="Your date of departure is" />
 				</h:panelGroup>
 				<h:panelGroup>
-					<b:label text="#{search.dateOfDeparture}" />
+					<b:label text="#{search.dateOfDeparture}">
+						
+					</b:label>
 				</h:panelGroup>
 			</b:panelGrid>
 		</b:jumbotron>
 
 
-		<b:dataTable value="#{search.flights2}" var="flight" id="flight"
-			fixedHeader="true" scroll-size="400px" scroll-x="false"
+		<b:dataTable value="#{search.flights2}" var="flight" id="flightId"
+			fixedHeader="true" scroll-size="400px" scroll-x="false" select="true"
 			responsive="true" searching="false">
-			<b:dataTableColumn value="#{flight.id}" />
-			<b:dataTableColumn value="#{flight.partner.name}" />
-			<b:dataTableColumn value="#{flight.departureLocation.airportName}" />
-			<b:dataTableColumn value="#{flight.destinationLocation.airportName}" />
-			<b:dataTableColumn value="#{flight.dateOfDeparture}" />
-			<b:dataTableColumn><h:link value="Go to booking" outcome="booking"/></b:dataTableColumn>
+			<b:dataTableColumn value="#{flight.partner.name}">
+				<f:facet name="header">
+					<h:outputText value="Airline" />
+				</f:facet>
+			</b:dataTableColumn>
+			<b:dataTableColumn value="#{flight.departureLocation.airportName}">
+				<f:facet name="header">
+					<h:outputText value="From" />
+				</f:facet>
+			</b:dataTableColumn>
+			<b:dataTableColumn value="#{flight.destinationLocation.airportName}">
+				<f:facet name="header">
+					<h:outputText value="To" />
+				</f:facet>
+			</b:dataTableColumn>
+			<b:dataTableColumn value="#{flight.dateOfDeparture}">
+				<f:facet name="header">
+					<h:outputText value="Departure date" />
+				</f:facet>
+			</b:dataTableColumn>
+			<b:dataTableColumn>
+				<f:facet name="header">
+					<h:outputText value="Book now" />
+				</f:facet>
+				<b:navLink value="Book now"
+					outcome="#{search.bookFlight(flight.id)}">
+					<f:param name="selectedFlightId" value="#{flight.id}" />
+				</b:navLink>
+			</b:dataTableColumn>
 		</b:dataTable>
 	</ui:define>
 </ui:composition>

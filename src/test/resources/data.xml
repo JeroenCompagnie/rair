@@ -27,15 +27,15 @@
 	<flight id="1006" departureLocation_id="1003" destinationLocation_id="1004" dateOfDeparture="2016-12-26 11:11:11" flightDuration="7800000000000" partner_id="1002"/>
 	
 	
-	<seat id="1000" type="Economy" basePrice="333.0"/>
+	<seat id="1000" type="Economy" basePrice="150.0"/>
 	<seat id="1001" type="Business" basePrice="333.0"/>
-	<seat id="1002" type="Economy" basePrice="333.0"/>
+	<seat id="1002" type="Economy" basePrice="150.0"/>
 	<flight_seat flight_id="1000" seat_id="1000"/>
 	<flight_seat flight_id="1000" seat_id="1001"/>
 	<flight_seat flight_id="1000" seat_id="1002"/>
 	
 	<seat id="1003" type="Business" basePrice="333.0"/>
-	<seat id="1004" type="Economy" basePrice="333.0"/>
+	<seat id="1004" type="Economy" basePrice="150.0"/>
 	<seat id="1005" type="Business" basePrice="333.0"/>
 	<flight_seat flight_id="1001" seat_id="1003"/>
 	<flight_seat flight_id="1001" seat_id="1004"/>
@@ -43,15 +43,44 @@
 	
 	<seat id="1006" type="Business" basePrice="333.0"/>
 	<seat id="1007" type="Business" basePrice="333.0"/>
-	<seat id="1008" type="Economy" basePrice="333.0"/>
+	<seat id="1008" type="Economy" basePrice="150.0"/>
 	<flight_seat flight_id="1002" seat_id="1006"/>
 	<flight_seat flight_id="1002" seat_id="1007"/>
 	<flight_seat flight_id="1002" seat_id="1008"/>
 	
 	<seat id="1009" type="Business" basePrice="333.0"/>
-	<seat id="1010" type="Economy" basePrice="333.0"/>
+	<seat id="1010" type="Economy" basePrice="150.0"/>
 	<flight_seat flight_id="1003" seat_id="1009"/>
 	<flight_seat flight_id="1003" seat_id="1010"/>
+	<seat id="1011" type="Business" basePrice="333.0"/>
+	<seat id="1012" type="Economy" basePrice="150.0"/>
+	<seat id="1013" type="Business" basePrice="333.0"/>
+	<seat id="1014" type="Economy" basePrice="150.0"/>
+	<flight_seat flight_id="1004" seat_id="1011"/>
+	<flight_seat flight_id="1004" seat_id="1012"/>
+	<flight_seat flight_id="1004" seat_id="1013"/>
+	<flight_seat flight_id="1004" seat_id="1014"/>
+	<seat id="1015" type="Business" basePrice="333.0"/>
+	<seat id="1016" type="Economy" basePrice="150.0"/>
+	<seat id="1017" type="Business" basePrice="333.0"/>
+	<seat id="1018" type="Economy" basePrice="150.0"/>
+	<flight_seat flight_id="1005" seat_id="1015"/>
+	<flight_seat flight_id="1005" seat_id="1016"/>
+	<flight_seat flight_id="1005" seat_id="1017"/>
+	<flight_seat flight_id="1005" seat_id="1018"/>
+	<seat id="1019" type="Business" basePrice="333.0"/>
+	<seat id="1020" type="Economy" basePrice="150.0"/>
+	<seat id="1021" type="Business" basePrice="333.0"/>
+	<seat id="1022" type="Economy" basePrice="150.0"/>
+	<seat id="1023" type="Business" basePrice="333.0"/>
+	<seat id="1024" type="Economy" basePrice="150.0"/>
+	<flight_seat flight_id="1006" seat_id="1019"/>
+	<flight_seat flight_id="1006" seat_id="1020"/>
+	<flight_seat flight_id="1006" seat_id="1021"/>
+	<flight_seat flight_id="1006" seat_id="1022"/>
+	<flight_seat flight_id="1006" seat_id="1023"/>
+	<flight_seat flight_id="1006" seat_id="1024"/>
+	
 	
 	<booking id="1000" paymentStatus="Payed" customer_id="1000" dateOfReservation="2016-12-20 12:34:56" />
 	

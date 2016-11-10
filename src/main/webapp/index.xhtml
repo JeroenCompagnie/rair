@@ -32,7 +32,7 @@
 			<h:outputLabel  for="return" value="Select Day Of Return"></h:outputLabel>
 			<b:dateTimePicker value="#{search.dateOfReturn}" id="return" mode="popup" show-date="true" show-time="false"
 				styleClass="datePicker" />
-			<b:commandButton value="Search now" action="search"></b:commandButton>
+			<b:commandButton value="Search now" action="#{search.search()}"></b:commandButton>
 		</h:form>
 	</ui:define>
 </ui:composition>
