@@ -217,6 +217,58 @@ public class persistenceDatabaseTest extends JpaPersistenceTest {
 		Airport a2 = em.find(Airport.class, "VCE");
 		assertNotNull(a2);
 		
+		/** BEGIN
+		 * Make flight, add 21 seats, 7 of each seattype
+		 * Make bookingsofflights for 9 new seats, 3 of each seattype;
+		 * 	add it to a booking
+		 */
+		Flight flight = new Flight(partner, new ArrayList<>(),
+				em.find(Airport.class, "JFK"), 
+				em.find(Airport.class, "JFK"),
+				new Date(), Duration.ofMinutes(9));
+		em.persist(flight);
+		assertNotNull(flight.getId());
+		
+		Booking booking = new Booking(PaymentStatus.SUCCESS, 
+				customer, 
+				new Date());
+		em.persist(booking);
+		assertNotNull(booking.getId());
+		
+		List<SeatType> seatTypeList = new ArrayList<>();
+		seatTypeList.add(SeatType.Business);
+		seatTypeList.add(SeatType.Economy);
+		seatTypeList.add(SeatType.FirstClass);
+		
+		for(int j=0;j <3; j++){
+			for(int i=0; i<10; i++){
+				Seat seat = new Seat(seatTypeList.get(j), 1.99*(j+1));
+				em.persist(seat);
+				assertNotNull(seat.getId());
+
+				if(i<7){
+					BookingOfFlight bookingOfFlight = 
+							new BookingOfFlight(1.0*(j+1), flight, booking, seat);
+					em.persist(bookingOfFlight);
+					assertNotNull(bookingOfFlight.getId());
+					
+					booking.addBookingOfFlight(bookingOfFlight);
+					em.merge(booking);
+				}
+				else{
+					flight.addSeat(seat);
+					em.merge(flight);
+				}
+			}
+		}
+		assertEquals(21, em.find(Flight.class, flight.getId()));
+		assertEquals(9, em.find(Booking.class, booking.getId()));
+		/** END
+		 * Make flight, add 21 seats, 7 of each seattype
+		 * Make bookingsofflights for 9 new seats, 3 of each seattype;
+		 * 	add it to a booking
+		 */
+		
 //		Flight f = new Flight(partner, new ArrayList<BookingOfFlight>(),
 //				a1, a2, new Date(), Duration.ofMinutes(120));
 //		em.persist(f);
@@ -284,13 +336,24 @@ public class persistenceDatabaseTest extends JpaPersistenceTest {
 			em.persist(b);
 			assertNotNull(b.getId());
 
-			BookingOfFlight bof = new BookingOfFlight(100.0, f, b, new Seat(SeatType.Economy, 424242.42));
+			Seat s = new Seat(SeatType.Economy, 424242.42);
+			em.persist(s);
+			assertNotNull(s.getId());
+			BookingOfFlight bof = new BookingOfFlight(100.0, f, b, s);
 			em.persist(bof);
 			assertNotNull(bof.getId());
+			
+			b.addBookingOfFlight(bof);
+			em.merge(b);
+			assertEquals(1, em.find(Booking.class, b.getId()).getBookingOfFlightList().size());
 
 			f.addBookingOfFlight(bof);
 			em.merge(f);
 			assertEquals(1, em.find(Flight.class, f.getId()).getBookingOfFlightList().size());
+			
+			
+			
 		}
 	}
 }
+

@@ -46,8 +46,15 @@ public class Flight implements Serializable {
 
 	// TODO cascadetype hier oppassen! bookingOfFlight hoort bij zowel een
 	// Booking als een Flight
-	@OneToMany(fetch=FetchType.EAGER)
-	@JoinTable(joinColumns = @JoinColumn(table = "flight", name = "flight_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(table = "bookingOfFlight", name = "bookingOfFlight_id", referencedColumnName = "id"))
+	@OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinTable(joinColumns = 
+		@JoinColumn(table = "flight", 
+					name = "flight_id", 
+					referencedColumnName = "id"),
+	inverseJoinColumns = 
+		@JoinColumn(table = "bookingOfFlight", 
+					name = "bookingOfFlight_id", 
+					referencedColumnName = "id"))
 	private List<BookingOfFlight> bookingOfFlightList = new ArrayList<>();
 
 	@OneToOne
