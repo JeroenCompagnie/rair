@@ -39,7 +39,7 @@ public class SearchBean implements Serializable {
 	private PartnerRepository partnerRepository;
 
 	// @ManagedProperty("#{flightclasses}")
-	private List<String> flightclasses;
+	private List<SeatType> flightclasses;
 	// @ManagedProperty("#{airlines}")
 	private List<String> airlines;
 
@@ -60,6 +60,10 @@ public class SearchBean implements Serializable {
 	public Long getSelectedFlightId() {
 		return selectedFlightId;
 	}
+	
+	private Partner selectedPartner;
+	
+	private List<Partner> partners;
 	
 	private Calendar calendar;
 
@@ -83,12 +87,16 @@ public class SearchBean implements Serializable {
 		// System.out.println("partnerName="+partner.getName());
 		// setFlights2(flightRepository.findByParams(SeatType.Economy, partner,
 		// new Date()));
-		flightclasses = new ArrayList<String>();
-		airlines = new ArrayList<String>();
-		flightclasses.add("Economy");
-		flightclasses.add("Business");
+		flightclasses = new ArrayList<SeatType>();
+		for(SeatType st : SeatType.values())
+		{
+			flightclasses.add(st);
+		}
+		airlines = new ArrayList<String>();	
 		airlines.add("AirTerror");	
 		airlines.add("CrashAirline");
+		setPartners(new ArrayList<Partner>());
+		setPartners(partnerRepository.findAll());
 		paymentMethods = new ArrayList<PaymentMethod>();
 		for(PaymentMethod p : PaymentMethod.values())
 		{
@@ -170,11 +178,11 @@ public class SearchBean implements Serializable {
 		this.selectedFlightClass = selectedFlightclass;
 	}
 
-	public List<String> getFlightclasses() {
+	public List<SeatType> getFlightclasses() {
 		return flightclasses;
 	}
 
-	public void setFlightclasses(List<String> flightclasses) {
+	public void setFlightclasses(List<SeatType> flightclasses) {
 		this.flightclasses = flightclasses;
 	}
 
@@ -209,11 +217,27 @@ public class SearchBean implements Serializable {
 	
 	public String search()
 	{
-		Partner partner = partnerRepository.findById(1002L);
+		Partner partner = getSelectedPartner();
 		Date d =getDateOfDeparture();
 		//System.out.println(d.);
-		setFlights2(flightRepository.findByParams(SeatType.Economy, partner, getDateOfDeparture()));
+		setFlights2(flightRepository.findByParams(getSelectedFlightclass(), partner, getDateOfDeparture()));
 		return "search";
+	}
+
+	public Partner getSelectedPartner() {
+		return selectedPartner;
+	}
+
+	public void setSelectedPartner(Partner selectedPartner) {
+		this.selectedPartner = selectedPartner;
+	}
+
+	public List<Partner> getPartners() {
+		return partners;
+	}
+
+	public void setPartners(List<Partner> partners) {
+		this.partners = partners;
 	}
 
 }

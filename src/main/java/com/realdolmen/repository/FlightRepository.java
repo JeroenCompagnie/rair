@@ -18,7 +18,6 @@ import javax.persistence.criteria.Root;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.realdolmen.domain.flight.Flight;
 import com.realdolmen.domain.flight.Seat;
 import com.realdolmen.domain.flight.SeatType;
@@ -104,10 +103,12 @@ public class FlightRepository {
 			predicates.add(cb.equal(s, t));
 		}
 		if (partner != null) {
-			predicates.add(cb.equal(from.get("partner"), partner));
+			Path<Partner> dbPartner=from.<Partner>get("partner");
+			predicates.add(cb.equal(dbPartner, partner));
 		}
 		if (departureDate != null) {
-			predicates.add(cb.between(from.get("dateOfDeparture"), departureDate, date2));
+			Path<Date> dbDepartureDate=from.<Date>get("dateOfDeparture");
+			predicates.add(cb.between(dbDepartureDate, departureDate, date2));
 		}
 		cq.select(from).where(predicates.toArray(new Predicate[] {})).distinct(true);
 		return em.createQuery(cq).getResultList();

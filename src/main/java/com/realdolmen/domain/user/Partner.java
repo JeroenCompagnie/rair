@@ -50,4 +50,10 @@ public class Partner extends User{
 	public void addFlight(Flight f){
 		flightList.add(f);
 	}
+	
+	@Override
+	public String toString()
+	{
+		return this.getUserName();
+	}
 }
