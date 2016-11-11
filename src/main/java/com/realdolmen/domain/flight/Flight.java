@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
@@ -21,6 +23,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.realdolmen.domain.user.Customer;
 import com.realdolmen.domain.user.Partner;
 
 @NamedQueries(@NamedQuery(name = Flight.findAll, query = "SELECT f FROM Flight f"))
@@ -46,7 +49,7 @@ public class Flight implements Serializable {
 
 	// TODO cascadetype hier oppassen! bookingOfFlight hoort bij zowel een
 	// Booking als een Flight
-	@OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(fetch=FetchType.EAGER)
 	@JoinTable(joinColumns = 
 		@JoinColumn(table = "flight", 
 					name = "flight_id", 
@@ -56,15 +59,15 @@ public class Flight implements Serializable {
 					name = "bookingOfFlight_id", 
 					referencedColumnName = "id"))
 	private List<BookingOfFlight> bookingOfFlightList = new ArrayList<>();
-
+	
 	@OneToOne
 	private Airport departureAirport;
 
 	@OneToOne
 	private Airport destinationAirport;
 
-
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	//TODO CHECK CASCADETYPES
+	@OneToMany(fetch = FetchType.EAGER)
 	@JoinTable(inverseJoinColumns = @JoinColumn(table = "seat", name = "seat_id", referencedColumnName = "id"))
 	private List<Seat> seatList = new ArrayList<>();
 
@@ -94,10 +97,9 @@ public class Flight implements Serializable {
 		return count;
 	}
 
-	public Flight(Partner partner, List<BookingOfFlight> bookingOfFlightList, Airport departureAirport,
+	public Flight(Partner partner,  Airport departureAirport,
 			Airport destinationAirport, Date dateOfDeparture, Duration flightDuration) {
 		this.partner = partner;
-		this.bookingOfFlightList = bookingOfFlightList;
 		this.departureAirport = departureAirport;
 		this.destinationAirport = destinationAirport;
 		this.dateOfDeparture = dateOfDeparture;
@@ -177,8 +179,67 @@ public class Flight implements Serializable {
 	}
 
 	public void addBookingOfFlight(BookingOfFlight bof) {
+		if(bookingOfFlightList.contains(bof)){
+			System.err.println("9999988888  TRIED TO ADD BookingOfFlight that was already there");
+			return;
+		}
 		System.err.println("Booking of flight with id: " + bof.getId() + " added");
 		this.bookingOfFlightList.add(bof);
+	}
+	
+	/**
+	 * RETURNS NULL IF NOT ENOUGH SEATS AVAILABLE
+	 * @param list
+	 * @param customer
+	 * @return
+	 */
+	public Booking addBooking(HashMap<SeatType, Integer> list, Booking booking){
+		/**
+		 * TODO: add discounts to price of seat
+		 * TODO: add locking!!
+		 */
+		if(checkIfEnoughSeatsAvailable(list)){
+
+
+			for(Entry<SeatType, Integer> entry : list.entrySet()){
+				for(int i = 0; i < entry.getValue();i++){
+					Seat seat = getSeatWithType(entry.getKey());
+					//TODO: add discounts to price here!
+					double price = seat.getBasePrice();
+					BookingOfFlight bof = new BookingOfFlight(price, this, booking, seat);
+					this.addBookingOfFlight(bof);
+					booking.addBookingOfFlight(bof);
+				}
+			}
+			return booking;
+		}
+		else{
+			return null;
+		}
+	}
+
+	/**
+	 * RETURNS NULL IF SEAT NOT FOUND WITH THE GIVEN TYPE
+	 * @param type
+	 * @return
+	 */
+	private Seat getSeatWithType(SeatType type) {
+		for(int i = 0; i < seatList.size(); i++ ){
+			if(seatList.get(i).getType() == type){
+				return seatList.remove(i);
+			}
+		}
+		return null;
+	}
+
+	private boolean checkIfEnoughSeatsAvailable(HashMap<SeatType, Integer> list) {
+		for(Entry<SeatType, Integer> entry : list.entrySet()){
+			if(getSeatsLeft(entry.getKey()) < entry.getValue()){
+				System.err.println("NOT ENOUGH SEATS");
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public void addSeat(Seat s) {
@@ -244,10 +305,12 @@ public class Flight implements Serializable {
 	public int getSeatsLeft(SeatType type){
 		int count = 0;
 		for(Seat s : seatList){
-			if(s.getType() == type){
+			if(s.getType().toString().equals(type.toString())){
+				System.err.println("TYPE OF THE SEATTHING: " +s.getType());
 				count++;
 			}
 		}
+		System.err.println("Seats with type: "+type+ " left: " + count);
 		return count;
 	}
 

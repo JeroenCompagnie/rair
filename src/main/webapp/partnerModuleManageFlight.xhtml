@@ -39,7 +39,7 @@
 					value="Destination airport: #{partnerBean.partnerFlight.destinationAirport}" />
 				<br />
 				<h:outputText
-					value="Flight duration: #{partnerBean.partnerFlight.flightDurationInMinutes}" />
+					value="Flight duration: #{partnerBean.partnerFlight.flightDuration}" />
 				<br />
 
 				<b:panelGrid colSpans="6,6" size="lg">
@@ -55,7 +55,7 @@
 							styleClass="partnerModuleInputBox" rows="2">
 							<f:facet name="prepend">
 								<b:commandButton value="Change" look="info"
-									action="#{partnerBean.setEconomySeatPrice}" />
+									action="#{partnerBean.setEconomySeatPriceInDb}" />
 							</f:facet>
 						</b:inputText>
 					</h:panelGroup>
@@ -72,7 +72,7 @@
 							styleClass="partnerModuleInputBox" rows="2">
 							<f:facet name="prepend">
 								<b:commandButton value="Change" look="info"
-									action="#{partnerBean.setBusinessSeatPrice}" />
+									action="#{partnerBean.setBusinessSeatPriceInDb}" />
 							</f:facet>
 						</b:inputText>
 					</h:panelGroup>

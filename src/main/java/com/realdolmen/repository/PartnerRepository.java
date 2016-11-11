@@ -118,6 +118,15 @@ public class PartnerRepository {
 		return partner.getClass().equals(Partner.class);
 	}
 	
+	public int getNumberOfSeatsLeft(User partner, Flight flight, SeatType seatType){
+		if(checkForPartner(partner)){
+			return flightRepository.getNumberOfSeatsLeft((Partner) partner, flight, seatType);
+		}
+		else{
+			return -1;
+		}
+	}
+	
 	/*
 	 * public List<Flight> findByParams(SeatType t,Partner partner,Date
 	 * departureDate) { CriteriaBuilder cb = em.getCriteriaBuilder();

@@ -317,7 +317,9 @@ public class PartnerBean implements Serializable{
 	}
 	
 	public int getNumberOfSeatsBooked(String type){
-		return getPartnerFlight().getSeatsSold(SeatType.valueOf(type));
+		return partnerRepository.getNumberOfSeatsLeft(loginBean.getUser(), 
+				getPartnerFlight(), SeatType.valueOf(type));
+//		return getPartnerFlight().getSeatsSold(SeatType.valueOf(type));
 	}
 	
 	public int getNumberOfSeatsBookedEconomy(){
@@ -334,7 +336,7 @@ public class PartnerBean implements Serializable{
 	
 	public String addFlight(){
 		System.err.println("Tried to add flight");
-		Flight f = new Flight((Partner) loginBean.getUser(), new ArrayList<BookingOfFlight>(), 
+		Flight f = new Flight((Partner) loginBean.getUser(), 
 				departureAirport, 
 				destinationAirport, 
 				dateOfDeparture, Duration.ofMinutes(flightDuration));

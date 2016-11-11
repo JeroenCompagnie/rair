@@ -70,7 +70,7 @@ public class persistenceDatabaseTest extends JpaPersistenceTest {
 		assertNotNull(l2.getId());
 
 		// Make Fligt f with l1 and l2, persist and check Id for null
-		Flight f = new Flight(p, new ArrayList<BookingOfFlight>(), l1, l2, new Date(), Duration.ofMinutes(120));
+		Flight f = new Flight(p, l1, l2, new Date(), Duration.ofMinutes(120));
 		em.persist(f);
 		assertNotNull(f.getId());
 		assertEquals(120, em.find(Flight.class, f.getId()).getFlightDuration().toMinutes());
@@ -216,98 +216,148 @@ public class persistenceDatabaseTest extends JpaPersistenceTest {
 		assertNotNull(a1);
 		Airport a2 = em.find(Airport.class, "VCE");
 		assertNotNull(a2);
-		
+
 		/** BEGIN
 		 * Make flight, add 21 seats, 7 of each seattype
 		 * Make bookingsofflights for 9 new seats, 3 of each seattype;
 		 * 	add it to a booking
 		 */
-		Flight flight = new Flight(partner, new ArrayList<>(),
+		Flight flight = new Flight(partner,
 				em.find(Airport.class, "JFK"), 
 				em.find(Airport.class, "JFK"),
 				new Date(), Duration.ofMinutes(9));
 		em.persist(flight);
 		assertNotNull(flight.getId());
-		
-		Booking booking = new Booking(PaymentStatus.SUCCESS, 
-				customer, 
-				new Date());
-		em.persist(booking);
-		assertNotNull(booking.getId());
-		
+
+		//		Booking booking = new Booking(PaymentStatus.SUCCESS, 
+		//				customer, 
+		//				new Date());
+		//		em.persist(booking);
+		//		assertNotNull(booking.getId());
+
 		List<SeatType> seatTypeList = new ArrayList<>();
 		seatTypeList.add(SeatType.Business);
 		seatTypeList.add(SeatType.Economy);
 		seatTypeList.add(SeatType.FirstClass);
-		
+
 		for(int j=0;j <3; j++){
 			for(int i=0; i<10; i++){
 				Seat seat = new Seat(seatTypeList.get(j), 1.99*(j+1));
 				em.persist(seat);
 				assertNotNull(seat.getId());
 
-				if(i<7){	
-					flight.addSeat(seat);
-					em.merge(flight);
-				}
-				else{
-
-					BookingOfFlight bookingOfFlight = 
-							new BookingOfFlight(1.0*(j+1), flight, booking, seat);
-					em.persist(bookingOfFlight);
-					assertNotNull(bookingOfFlight.getId());
-
-					booking.addBookingOfFlight(bookingOfFlight);
-					em.merge(booking);
-				}
+				flight.addSeat(seat);
+				em.merge(flight);
 			}
 		}
+
+
+		HashMap<SeatType, Integer> map = new HashMap<>();
+		map.put(SeatType.Business, 3);
+		map.put(SeatType.Economy, 3);
+		map.put(SeatType.FirstClass, 3);
+
+		Booking addBooking = new Booking(PaymentStatus.PENDING, customer, new Date());
+		assertNull(addBooking.getId());
+		em.persist(addBooking);
+		assertNotNull(addBooking.getId());
+		addBooking = flight.addBooking(map, addBooking);		
+
+		for(BookingOfFlight element:addBooking.getBookingOfFlightList()){
+			em.persist(element);
+			assertNotNull(element.getId());
+		}
+
+		em.merge(flight);
+		em.merge(addBooking);
+		assertNotNull(addBooking.getId());
+
 		assertEquals(21, em.find(Flight.class, flight.getId()).getSeatsLeft());
-		assertEquals(9, em.find(Booking.class, booking.getId()).getBookingOfFlightList().size());
-		/** END
+		assertEquals(9, em.find(Booking.class, addBooking.getId()).getBookingOfFlightList().size());
+
+		//		int number = (int) em.createQuery("Select COUNT(s) from BookingOfFlight f join Seat s "
+		//				+ "where f.flight_id = :arg1 and type= :arg2"
+		//				+ "and seat.id = seat_id")
+		//		.setParameter("arg1", flight.getId())
+		//		.setParameter("arg2", SeatType.Economy.toString())
+		//		.getSingleResult();
+
+		// COUNT NUMBER OF SEATS, which is 30
+		int number = (int)(long) em.createQuery("select count(s) from Seat s")
+				.getSingleResult();
+		assertEquals(30, number);
+
+		// COUNT NUMBER OF join between bookingofflight and seat
+		// which is 9 => nr of bookingofflight is 9 and each one has a seat
+		number = (int)(long) em.createQuery("select count(s) from BookingOfFlight bof join bof.seat s")
+				.getSingleResult();
+		assertEquals(9, number);
+
+		// with flight matching the flight made above
+		number = (int)(long) em.createQuery(
+				"select count(s) "
+				+ "from BookingOfFlight bof join bof.seat s "
+				+ "where bof.flight = :arg1 "
+				+ "and bof.seat = s")
+				.setParameter("arg1", flight)
+				.getSingleResult();
+		assertEquals(9, number);
+		
+		// just economy seats
+		number = (int)(long) em.createQuery(
+				"select count(s) "
+				+ "from BookingOfFlight bof join bof.seat s "
+				+ "where bof.flight = :arg1 "
+				+ "and bof.seat = s "
+				+ "and s.type = :arg2")
+				.setParameter("arg1", flight)
+				.setParameter("arg2", SeatType.Economy)
+				.getSingleResult();
+		assertEquals(3, number);
+		/** ENDtype
 		 * Make flight, add 21 seats, 7 of each seattype
 		 * Make bookingsofflights for 9 new seats, 3 of each seattype;
 		 * 	add it to a booking
 		 */
-		
-//		Flight f = new Flight(partner, new ArrayList<BookingOfFlight>(),
-//				a1, a2, new Date(), Duration.ofMinutes(120));
-//		em.persist(f);
-//		assertNotNull(f.getId());
-//		
-//		for(int i = 0; i <10; i++){
-//			Seat s = new Seat(SeatType.FirstClass, 1000.0);
-//			em.persist(s);
-//			assertNotNull(s.getId());
-//			f.addSeat(s);
-//		}
-//		em.merge(f);
-//		
-//		Booking b = new Booking(PaymentStatus.SUCCESS, customer, new Date());
-//		em.persist(b);
-//		assertNotNull(b.getId());
-//		
-//		Seat bofSeat = new Seat(SeatType.Business, 800.0);
-//		em.persist(bofSeat);
-//		assertNotNull(bofSeat.getId());
-//		
-//		BookingOfFlight bof = new BookingOfFlight(100.0, f, b, bofSeat);
-//		em.persist(bof);
-//		assertNotNull(bof.getId());
-//		
-//		f.addBookingOfFlight(bof);
-//		em.merge(f);
-//		assertEquals(1, em.find(Flight.class, f.getId()).getBookingOfFlightList().size());
-//		
-//		
-//		assertEquals(1, f.getBookingOfFlightList().size());
+
+		//		Flight f = new Flight(partner, new ArrayList<BookingOfFlight>(),
+		//				a1, a2, new Date(), Duration.ofMinutes(120));
+		//		em.persist(f);
+		//		assertNotNull(f.getId());
+		//		
+		//		for(int i = 0; i <10; i++){
+		//			Seat s = new Seat(SeatType.FirstClass, 1000.0);
+		//			em.persist(s);
+		//			assertNotNull(s.getId());
+		//			f.addSeat(s);
+		//		}
+		//		em.merge(f);
+		//		
+		//		Booking b = new Booking(PaymentStatus.SUCCESS, customer, new Date());
+		//		em.persist(b);
+		//		assertNotNull(b.getId());
+		//		
+		//		Seat bofSeat = new Seat(SeatType.Business, 800.0);
+		//		em.persist(bofSeat);
+		//		assertNotNull(bofSeat.getId());
+		//		
+		//		BookingOfFlight bof = new BookingOfFlight(100.0, f, b, bofSeat);
+		//		em.persist(bof);
+		//		assertNotNull(bof.getId());
+		//		
+		//		f.addBookingOfFlight(bof);
+		//		em.merge(f);
+		//		assertEquals(1, em.find(Flight.class, f.getId()).getBookingOfFlightList().size());
+		//		
+		//		
+		//		assertEquals(1, f.getBookingOfFlightList().size());
 
 		for (int y = 1; y <= 10; y++) {
-			Flight f = new Flight(partner, new ArrayList<BookingOfFlight>(), a1, a2, new Date(),
+			Flight f = new Flight(partner, a1, a2, new Date(),
 					Duration.ofMinutes(120*y));
 			em.persist(f);
 			assertNotNull(f.getId());
-			
+
 			for (int i = 1; i < 120; i++) {
 				if (i <= 60) {
 					/*Seat seat = new Seat(SeatType.Business, 999.99);
@@ -326,10 +376,10 @@ public class persistenceDatabaseTest extends JpaPersistenceTest {
 				} else {
 					if(i!=5)
 					{
-					Seat seat = new Seat(SeatType.Economy, 237.99);
-					em.persist(seat);
-					assertNotNull(seat.getId());
-					f.addSeat(seat);}
+						Seat seat = new Seat(SeatType.Economy, 237.99);
+						em.persist(seat);
+						assertNotNull(seat.getId());
+						f.addSeat(seat);}
 				}
 			}
 
@@ -343,7 +393,7 @@ public class persistenceDatabaseTest extends JpaPersistenceTest {
 			BookingOfFlight bof = new BookingOfFlight(100.0, f, b, s);
 			em.persist(bof);
 			assertNotNull(bof.getId());
-			
+
 			b.addBookingOfFlight(bof);
 			em.merge(b);
 			assertEquals(1, em.find(Booking.class, b.getId()).getBookingOfFlightList().size());
@@ -351,9 +401,9 @@ public class persistenceDatabaseTest extends JpaPersistenceTest {
 			f.addBookingOfFlight(bof);
 			em.merge(f);
 			assertEquals(1, em.find(Flight.class, f.getId()).getBookingOfFlightList().size());
-			
-			
-			
+
+
+
 		}
 	}
 }

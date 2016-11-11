@@ -148,5 +148,41 @@ public class FlightRepository {
 			em.merge(find);
 		}
 	}
+	
+	public int getNumberOfSeatsLeft(Partner partner, Flight flight, SeatType seatType){
+		if(flight == null){
+			System.err.println("flight was null");
+			return -41;
+		}
+		if(flight.getPartner() == null) {
+			System.err.println("flight partner was null");
+			return -42;
+		}
+		if(partner == null){
+			System.err.println("given partner was null");
+			return -43;
+		}
+		if(flight.getPartner().getId() == partner.getId()){
+			return (int)(long) em.createQuery(
+					"select count(s) "
+					+ "from BookingOfFlight bof join bof.seat s "
+					+ "where bof.flight = :arg1 "
+					+ "and bof.seat = s "
+					+ "and s.type = :arg2")
+					.setParameter("arg1", flight)
+					.setParameter("arg2", seatType)
+					.getSingleResult();
+//			return (int) em.createQuery("Select COUNT(s) from BookingOfFlight f join Seat s "
+//					+ "where f.flight_id = :arg1 and type= :arg2"
+//					+ "and seat.id = seat_id")
+//			.setParameter("arg1", flight.getId())
+//			.setParameter("arg2", seatType.toString())
+//			.getSingleResult();
+		}
+		else{
+			System.err.println("Partner was not the right one!");
+			return -1;
+		}
+	}
 
 }
