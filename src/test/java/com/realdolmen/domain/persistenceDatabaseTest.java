@@ -246,23 +246,24 @@ public class persistenceDatabaseTest extends JpaPersistenceTest {
 				em.persist(seat);
 				assertNotNull(seat.getId());
 
-				if(i<7){
+				if(i<7){	
+					flight.addSeat(seat);
+					em.merge(flight);
+				}
+				else{
+
 					BookingOfFlight bookingOfFlight = 
 							new BookingOfFlight(1.0*(j+1), flight, booking, seat);
 					em.persist(bookingOfFlight);
 					assertNotNull(bookingOfFlight.getId());
-					
+
 					booking.addBookingOfFlight(bookingOfFlight);
 					em.merge(booking);
 				}
-				else{
-					flight.addSeat(seat);
-					em.merge(flight);
-				}
 			}
 		}
-		assertEquals(21, em.find(Flight.class, flight.getId()));
-		assertEquals(9, em.find(Booking.class, booking.getId()));
+		assertEquals(21, em.find(Flight.class, flight.getId()).getSeatsLeft());
+		assertEquals(9, em.find(Booking.class, booking.getId()).getBookingOfFlightList().size());
 		/** END
 		 * Make flight, add 21 seats, 7 of each seattype
 		 * Make bookingsofflights for 9 new seats, 3 of each seattype;
