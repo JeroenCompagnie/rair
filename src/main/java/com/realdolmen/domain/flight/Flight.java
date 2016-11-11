@@ -46,7 +46,7 @@ public class Flight implements Serializable {
 
 	// TODO cascadetype hier oppassen! bookingOfFlight hoort bij zowel een
 	// Booking als een Flight
-	@OneToMany()
+	@OneToMany(fetch=FetchType.EAGER)
 	@JoinTable(joinColumns = @JoinColumn(table = "flight", name = "flight_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(table = "bookingOfFlight", name = "bookingOfFlight_id", referencedColumnName = "id"))
 	private List<BookingOfFlight> bookingOfFlightList = new ArrayList<>();
 
@@ -70,6 +70,8 @@ public class Flight implements Serializable {
 
 	@ElementCollection
 	private List<Double> discountsListPartner = new ArrayList<Double>();
+	
+	private static final int milliSecondsInOneSecond = 60000;
 
 	public Flight() {
 
@@ -77,7 +79,6 @@ public class Flight implements Serializable {
 
 	public int getNumberOfSeatForType(SeatType st) {
 		int count = 0;
-		System.out.println(seatList.size());
 		for (int i = 0; i < seatList.size(); i++) {
 			if (seatList.get(i).getType().equals(st)) {
 				count++;
@@ -151,6 +152,10 @@ public class Flight implements Serializable {
 	public Duration getFlightDuration() {
 		return flightDuration;
 	}
+	
+	public int getFlightDurationInMinutes() {
+		return ((int) flightDuration.toMillis())*milliSecondsInOneSecond;
+	}
 
 	public void setFlightDuration(Duration flightDuration) {
 		this.flightDuration = flightDuration;
@@ -165,6 +170,7 @@ public class Flight implements Serializable {
 	}
 
 	public void addBookingOfFlight(BookingOfFlight bof) {
+		System.err.println("Booking of flight with id: " + bof.getId() + " added");
 		this.bookingOfFlightList.add(bof);
 	}
 
@@ -205,5 +211,49 @@ public class Flight implements Serializable {
 	public int getSeatsLeft(){
 		return seatList.size();
 	}
+	
+	/**
+	 * Rerturns the seatprice with SeatType type. If no more seats available of this type the return value will be -1.
+	 * @param type
+	 * @return
+	 */
+	public double getSeatPrice(SeatType type){
+		for(Seat s: seatList){
+			if(s.getType() == type){
+				return s.getBasePrice();
+			}
+		}
+		return -1.0;
+	}
+	
+	public void setSeatPrice(double newPrice, SeatType type){
+		for(Seat s : seatList){
+			if(s.getType().equals(type)){
+				s.setBasePrice(newPrice);
+			}
+		}
+	}
+	
+	public int getSeatsLeft(SeatType type){
+		int count = 0;
+		for(Seat s : seatList){
+			if(s.getType() == type){
+				count++;
+			}
+		}
+		return count;
+	}
 
+	public int getSeatsSold(SeatType type){
+		int count = 0;
+		System.err.println("999999999999999 --- " + bookingOfFlightList.size());
+		for(BookingOfFlight b : bookingOfFlightList){
+			if(b.getSeat().getType() == type){
+				count++;
+				System.err.println("Seat id: " + b.getSeat().getId());
+				System.err.println("BookingOfFlight id: " + b.getId());
+			}
+		}
+		return count;
+	}
 }

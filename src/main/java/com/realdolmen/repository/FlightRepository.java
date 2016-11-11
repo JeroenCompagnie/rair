@@ -19,7 +19,6 @@ import javax.persistence.criteria.Root;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.realdolmen.domain.flight.Airport;
 import com.realdolmen.domain.flight.Flight;
 import com.realdolmen.domain.flight.Seat;
 import com.realdolmen.domain.flight.SeatType;
@@ -124,6 +123,29 @@ public class FlightRepository {
 			return resultList;
 		}
 		return (ArrayList<Flight>) resultList;
+	}
+
+	public Flight getFlightByPartner(Partner partner, long partnerFlightId) {
+		Flight f = null;
+		try{
+			f = em.createQuery("select f from Flight f where f.partner = :arg1 and f.id = :arg2", Flight.class)
+					.setParameter("arg1", partner)
+					.setParameter("arg2", partnerFlightId)
+					.getSingleResult();
+		}
+		catch (Exception e){
+			logger.error("No flight found for partner: " + partner.getName() +" with flight id: " + partnerFlightId);
+			return f;
+		}
+		return f;
+	}
+
+	public void setSeatPrice(Partner partner, long partnerFlightId, SeatType seatType, double newPrice) {
+		Flight find = em.find(Flight.class, partnerFlightId);
+		if(find.getPartner().getId() == partner.getId()){
+			find.setSeatPrice(newPrice, seatType);
+			em.merge(find);
+		}
 	}
 
 }

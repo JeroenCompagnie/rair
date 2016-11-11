@@ -127,7 +127,10 @@ public class persistenceDatabaseTest extends JpaPersistenceTest{
 		// Make multiple BookingOfFLight bf, persist, check Id for null
 		//		and add it to the Booking b
 		for(int i = 0; i < 4; i++){
-			BookingOfFlight bf = new BookingOfFlight(999.99, f, b);
+			Seat bofSeat = new Seat(SeatType.Business, 800.0);
+			em.persist(bofSeat);
+			assertNotNull(bofSeat.getId());
+			BookingOfFlight bf = new BookingOfFlight(999.99, f, b, bofSeat);
 			em.persist(bf);
 			assertNotNull(bf.getId());
 			b.addBookingOfFlight(bf);
@@ -224,11 +227,23 @@ public class persistenceDatabaseTest extends JpaPersistenceTest{
 		em.persist(f);
 		assertNotNull(f.getId());
 		
+		for(int i = 0; i <10; i++){
+			Seat s = new Seat(SeatType.FirstClass, 1000.0);
+			em.persist(s);
+			assertNotNull(s.getId());
+			f.addSeat(s);
+		}
+		em.merge(f);
+		
 		Booking b = new Booking(PaymentStatus.SUCCESS, customer, new Date());
 		em.persist(b);
 		assertNotNull(b.getId());
 		
-		BookingOfFlight bof = new BookingOfFlight(100.0, f, b);
+		Seat bofSeat = new Seat(SeatType.Business, 800.0);
+		em.persist(bofSeat);
+		assertNotNull(bofSeat.getId());
+		
+		BookingOfFlight bof = new BookingOfFlight(100.0, f, b, bofSeat);
 		em.persist(bof);
 		assertNotNull(bof.getId());
 		
@@ -236,5 +251,7 @@ public class persistenceDatabaseTest extends JpaPersistenceTest{
 		em.merge(f);
 		assertEquals(1, em.find(Flight.class, f.getId()).getBookingOfFlightList().size());
 		
+		
+		assertEquals(1, f.getBookingOfFlightList().size());
 	}
 }
