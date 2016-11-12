@@ -1,14 +1,11 @@
-package com.realdolmen.domain;
+	package com.realdolmen.domain;
 
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -21,7 +18,6 @@ import com.realdolmen.domain.flight.Airport;
 import com.realdolmen.domain.flight.Booking;
 import com.realdolmen.domain.flight.BookingOfFlight;
 import com.realdolmen.domain.flight.Flight;
-import com.realdolmen.domain.flight.GlobalRegion;
 import com.realdolmen.domain.flight.PaymentStatus;
 import com.realdolmen.domain.flight.Seat;
 import com.realdolmen.domain.flight.SeatType;
@@ -31,7 +27,6 @@ import com.realdolmen.domain.user.Customer;
 import com.realdolmen.domain.user.Employee;
 import com.realdolmen.domain.user.Partner;
 import com.realdolmen.domain.user.User;
-import com.realdolmen.repository.UserRepository;
 
 public class persistenceDatabaseTest extends JpaPersistenceTest {
 
@@ -167,7 +162,7 @@ public class persistenceDatabaseTest extends JpaPersistenceTest {
 	@Test
 	public void testUsersAndPeristInitData() {
 		EntityManager em = entityManager();
-		Address a = new Address("1", 1, 1, "", "");
+		Address a = new Address("1", 1, 1, "1", "1");
 		em.persist(a);
 
 		Customer customer = new Customer(a, "1@gmail.com", "12345678", "12345678", "12345678", "123");
@@ -218,8 +213,8 @@ public class persistenceDatabaseTest extends JpaPersistenceTest {
 		assertNotNull(a2);
 
 		/** BEGIN
-		 * Make flight, add 21 seats, 7 of each seattype
-		 * Make bookingsofflights for 9 new seats, 3 of each seattype;
+		 * Make flight, add 30 seats, 10 of each seattype
+		 * Make bookingsofflights for 9 seats, 3 of each seattype;
 		 * 	add it to a booking
 		 */
 		Flight flight = new Flight(partner,
@@ -314,43 +309,44 @@ public class persistenceDatabaseTest extends JpaPersistenceTest {
 				.setParameter("arg2", SeatType.Economy)
 				.getSingleResult();
 		assertEquals(3, number);
+		
+		// GET NUMBER OF SEATS BOOKED PER SEAT TYPE
+		number = (int)(long) em.createQuery(
+				"select count(f) "
+				+ "from Flight f join "
+				+ "f.seatList s WHERE f.id = :flightId "
+				+ "and s.type = :seatType")
+				.setParameter("flightId", 1L)
+				.setParameter("seatType", SeatType.Economy)
+				.getSingleResult();
+		assertEquals(7, number);
+		
+		// GET NUMBER OF TOTAL SEATS LEFT
+		number = (int)(long) em.createQuery(
+				"SELECT count(f) "
+				+ "FROM Flight f JOIN "
+				+ "f.seatList s WHERE f.id = :flightId "
+				+ "AND (s.type IN :seatType)")
+				.setParameter("flightId", 1L)
+				.setParameter("seatType", Arrays.asList(SeatType.values()))
+				.getSingleResult();
+		assertEquals(21, number);
+		
+		// GET NUMBER OF TOTAL SEATS LEFT
+				number = (int)(long) em.createQuery(
+						"SELECT count(f) "
+						+ "FROM Flight f JOIN "
+						+ "f.seatList s WHERE f.id = :flightId "
+						+ "AND (s.type IN :seatType)")
+						.setParameter("flightId", 1L)
+						.setParameter("seatType", SeatType.Economy)
+						.getSingleResult();
+				assertEquals(7, number);
 		/** ENDtype
-		 * Make flight, add 21 seats, 7 of each seattype
-		 * Make bookingsofflights for 9 new seats, 3 of each seattype;
+		 * Make flight, add 30 seats, 10 of each seattype
+		 * Make bookingsofflights for 9 seats, 3 of each seattype;
 		 * 	add it to a booking
 		 */
-
-		//		Flight f = new Flight(partner, new ArrayList<BookingOfFlight>(),
-		//				a1, a2, new Date(), Duration.ofMinutes(120));
-		//		em.persist(f);
-		//		assertNotNull(f.getId());
-		//		
-		//		for(int i = 0; i <10; i++){
-		//			Seat s = new Seat(SeatType.FirstClass, 1000.0);
-		//			em.persist(s);
-		//			assertNotNull(s.getId());
-		//			f.addSeat(s);
-		//		}
-		//		em.merge(f);
-		//		
-		//		Booking b = new Booking(PaymentStatus.SUCCESS, customer, new Date());
-		//		em.persist(b);
-		//		assertNotNull(b.getId());
-		//		
-		//		Seat bofSeat = new Seat(SeatType.Business, 800.0);
-		//		em.persist(bofSeat);
-		//		assertNotNull(bofSeat.getId());
-		//		
-		//		BookingOfFlight bof = new BookingOfFlight(100.0, f, b, bofSeat);
-		//		em.persist(bof);
-		//		assertNotNull(bof.getId());
-		//		
-		//		f.addBookingOfFlight(bof);
-		//		em.merge(f);
-		//		assertEquals(1, em.find(Flight.class, f.getId()).getBookingOfFlightList().size());
-		//		
-		//		
-		//		assertEquals(1, f.getBookingOfFlightList().size());
 
 		for (int y = 1; y <= 10; y++) {
 			Flight f = new Flight(partner, a1, a2, new Date(),

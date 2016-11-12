@@ -27,26 +27,27 @@ public class RegisterCustomerBean implements Serializable{
 	@EJB
     UserRepository userRepository;
 	
-	@NotEmpty
+	@NotEmpty(message= "{firstNameNotEmpty}")
 	@Size(min = 1, max = 50, message = "{firstNameError}")
 	private String firstName;
 	
-	@NotEmpty
+	@NotEmpty(message= "{lastNameNotEmpty}")
 	@Size(min = 1, max = 50, message = "{lastNameError}")
 	private String lastName;
 	
-	@NotEmpty
+	@NotEmpty(message= "{userNameNotEmpty}")
 	@Size(min = 4, max = 50, message = "{userNameError}")
 	private String userName;
 	
-	@NotEmpty
-	@Size(min=8, max=30, message="{unhashedPasswordError")
+	@NotEmpty(message="{passwordError}")
+	@Size(min=8, max=30, message="{passwordError}")
 	private String unhashedPassword;
 	
-	@Email
+	@NotEmpty(message="{emailNotNull}")
+	@Email(message="{emailError}")
 	private String email;
 	
-	@NotNull
+	@NotNull(message="{addressError}")
 	private Address address = new Address();
 
 	public String getFirstName() {
@@ -101,7 +102,7 @@ public class RegisterCustomerBean implements Serializable{
 		Customer c = new Customer(address, email, firstName,
 				lastName, unhashedPassword, userName);
 		userRepository.saveCustomer(c);
-		// Refresh address, otherwise address has an ID and can't be registred again
+		// Refresh address, otherwise address has an ID and can't be registered again
 		address = new Address();
 		
 		return "registrationSuccessful.xhtml";

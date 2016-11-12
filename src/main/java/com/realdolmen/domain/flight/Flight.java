@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,6 +21,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import org.hibernate.annotations.CollectionType;
 
 import com.realdolmen.domain.user.Customer;
 import com.realdolmen.domain.user.Partner;
@@ -50,15 +51,7 @@ public class Flight implements Serializable {
 	// TODO cascadetype hier oppassen! bookingOfFlight hoort bij zowel een
 	// Booking als een Flight
 	@OneToMany(fetch=FetchType.EAGER)
-	@JoinTable(joinColumns = 
-		@JoinColumn(table = "flight", 
-					name = "flight_id", 
-					referencedColumnName = "id"),
-	inverseJoinColumns = 
-		@JoinColumn(table = "bookingOfFlight", 
-					name = "bookingOfFlight_id", 
-					referencedColumnName = "id"))
-	private List<BookingOfFlight> bookingOfFlightList = new ArrayList<>();
+	private List<BookingOfFlight> bookingOfFlightList;
 	
 	@OneToOne
 	private Airport departureAirport;
@@ -68,8 +61,7 @@ public class Flight implements Serializable {
 
 	//TODO CHECK CASCADETYPES
 	@OneToMany(fetch = FetchType.EAGER)
-	@JoinTable(inverseJoinColumns = @JoinColumn(table = "seat", name = "seat_id", referencedColumnName = "id"))
-	private List<Seat> seatList = new ArrayList<>();
+	private List<Seat> seatList;
 
 	private Date dateOfDeparture;
 
@@ -104,6 +96,8 @@ public class Flight implements Serializable {
 		this.destinationAirport = destinationAirport;
 		this.dateOfDeparture = dateOfDeparture;
 		this.flightDuration = flightDuration;
+		this.bookingOfFlightList = new ArrayList<>();
+		this.seatList = new ArrayList<>();
 	}
 
 	public Long getId() {
@@ -163,7 +157,8 @@ public class Flight implements Serializable {
 	}
 	
 	public int getFlightDurationInMinutes() {
-		return ((int) flightDuration.toMillis())*milliSecondsInOneSecond;
+		return ((int) flightDuration.toMinutes());
+//		return ((int) flightDuration.toMillis())*milliSecondsInOneSecond;
 	}
 
 	public void setFlightDuration(Duration flightDuration) {

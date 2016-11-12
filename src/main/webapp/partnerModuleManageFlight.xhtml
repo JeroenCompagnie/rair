@@ -21,26 +21,35 @@
 		<h:outputLabel value="You have no powers here!"
 			rendered="#{not loginBean.userIsPartner}" />
 
+		<h:panelGroup rendered="#{loginBean.userIsPartner and not partnerBean.partnerFlightIdExists}">
+			<h:outputLabel value="No flight with id #{partnerBean.partnerFlightId} found!"/>
+		</h:panelGroup>
 		<h:panelGroup layout="block"
-			rendered="#{loginBean.userIsPartner and partnerBean.partnerFlightId > 0}">
-			You have power, id is #{partnerBean.partnerFlightId}
+			rendered="#{loginBean.userIsPartner and partnerBean.partnerFlightIdExists and partnerBean.partnerFlightId > 0}">
+			
+			<!-- You have power, id is #{partnerBean.partnerFlightId} -->
 			
 			<h:form>
-
-				<h:outputText value="Id: #{partnerBean.partnerFlightId}" />
-				<br />
-				<h:outputText
-					value="Departure date: #{partnerBean.partnerFlight.dateOfDeparture}" />
-				<br />
-				<h:outputText
-					value="Departure airport: #{partnerBean.partnerFlight.departureAirport}" />
-				<br />
-				<h:outputText
-					value="Destination airport: #{partnerBean.partnerFlight.destinationAirport}" />
-				<br />
-				<h:outputText
-					value="Flight duration: #{partnerBean.partnerFlight.flightDuration}" />
-				<br />
+				
+				<b:panelGrid colSpans="6,6" size ="sm">
+					<h:outputText value="Id: " />
+						#{partnerBean.partnerFlightId}
+					<h:outputText
+						value="Departure date: " />
+						#{partnerBean.partnerFlight.dateOfDeparture}
+					<h:outputText
+						value="Departure airport: " />
+						#{partnerBean.partnerFlight.departureAirport}
+					<h:outputText
+						value="Destination airport: "/>
+						#{partnerBean.partnerFlight.destinationAirport}
+					<h:outputText
+						value="Flight duration: " />
+						<h:outputText
+						value="#{partnerBean.partnerFlight.flightDurationInMinutes}" />
+						
+				</b:panelGrid>
+				
 
 				<b:panelGrid colSpans="6,6" size="lg">
 					<h:panelGroup>

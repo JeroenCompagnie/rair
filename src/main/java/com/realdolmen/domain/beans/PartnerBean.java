@@ -3,6 +3,7 @@ package com.realdolmen.domain.beans;
 import java.io.Serializable;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -258,7 +259,15 @@ public class PartnerBean implements Serializable{
 			return partnerFlight;
 		}
 		return partnerRepository.getFlightByPartner(loginBean.getUser(), partnerFlightId);
-		
+	}
+	
+	public boolean getPartnerFlightIdExists(){
+		if(getPartnerFlight() == null){
+			return false;
+		}
+		else{
+			return true;
+		}
 	}
 	
 	public double getEconomySeatPrice(){
@@ -299,9 +308,20 @@ public class PartnerBean implements Serializable{
 		partnerRepository.setSeatPrice(loginBean.getUser(), partnerFlightId, SeatType.FirstClass, firstSeatTypePrice);
 		return "";
 	}
+
+	/**
+	 * Returns number of seats (for each seattype) left
+	 * @return
+	 */
+	public int getNumberOfSeatsLeft(Flight f){
+		return partnerRepository.getNumberOfSeatsLeft(loginBean.getUser(), 
+				f, Arrays.asList(SeatType.values()));
+	}
 	
 	public int getNumberOfSeatsLeft(String type){
-		return getPartnerFlight().getNumberOfSeatForType(SeatType.valueOf(type));
+		return partnerRepository.getNumberOfSeatsLeft(loginBean.getUser(), 
+				getPartnerFlight(), Arrays.asList(SeatType.valueOf(type)));
+		//return getPartnerFlight().getNumberOfSeatForType(SeatType.valueOf(type));
 	}
 	
 	public int getNumberOfSeatsLeftEconomy(){
@@ -316,9 +336,18 @@ public class PartnerBean implements Serializable{
 		return getNumberOfSeatsLeft(SeatType.FirstClass.toString());
 	}
 	
+	/**
+	 * Returns number of seats (for each seattype) booked 
+	 * @return
+	 */
+	public int getNumberOfSeatsBooked(Flight f){
+		return partnerRepository.getNumberOfSeatsBooked(loginBean.getUser(), 
+				f, Arrays.asList(SeatType.values()));
+	}
+	
 	public int getNumberOfSeatsBooked(String type){
-		return partnerRepository.getNumberOfSeatsLeft(loginBean.getUser(), 
-				getPartnerFlight(), SeatType.valueOf(type));
+		return partnerRepository.getNumberOfSeatsBooked(loginBean.getUser(), 
+				getPartnerFlight(), Arrays.asList(SeatType.valueOf(type)));
 //		return getPartnerFlight().getSeatsSold(SeatType.valueOf(type));
 	}
 	

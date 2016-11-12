@@ -13,6 +13,7 @@ import javax.faces.event.ActionEvent;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 
 import com.realdolmen.domain.flight.Flight;
@@ -26,6 +27,10 @@ import com.realdolmen.repository.PartnerRepository;
 @SessionScoped ////////////////////////////////// IF DONT WORK TRY SESSIONSCOPE
 public class SearchBean implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7245024228992246453L;
 	private List<Flight> flights;
 	private List<Flight> flights2;
 
@@ -40,13 +45,13 @@ public class SearchBean implements Serializable {
 
 	// @ManagedProperty("#{flightclasses}")
 	private List<SeatType> flightclasses;
-	// @ManagedProperty("#{airlines}")
-	private List<String> airlines;
 
-	private String selectedAirline;
+
 
 	private SeatType selectedFlightClass;
 	
+	@NotNull(message="Date of departure needs to be filled in!")
+	@Future(message="Date of depature needs to be in the future")
 	private Date dateOfDeparture;
 	
 	private Date dateOfReturn;
@@ -56,6 +61,8 @@ public class SearchBean implements Serializable {
 	private PaymentMethod selectedPaymentMethod;
 	
 	private Long selectedFlightId;
+	
+	private int numberOfSeats;
 
 	public Long getSelectedFlightId() {
 		return selectedFlightId;
@@ -92,9 +99,7 @@ public class SearchBean implements Serializable {
 		{
 			flightclasses.add(st);
 		}
-		airlines = new ArrayList<String>();	
-		airlines.add("AirTerror");	
-		airlines.add("CrashAirline");
+		
 		setPartners(new ArrayList<Partner>());
 		setPartners(partnerRepository.findAll());
 		paymentMethods = new ArrayList<PaymentMethod>();
@@ -127,9 +132,6 @@ public class SearchBean implements Serializable {
 		this.flights2 = flights2;
 	}
 
-	public String getSelectedAirline() {
-		return selectedAirline;
-	}
 
 	@NotNull
 	public Date getDateOfDeparture() {
@@ -166,9 +168,6 @@ public class SearchBean implements Serializable {
 		this.dateOfReturn = d;
 	}
 
-	public void setSelectedAirline(String selectedAirline) {
-		this.selectedAirline = selectedAirline;
-	}
 
 	public SeatType getSelectedFlightclass() {
 		return selectedFlightClass;
@@ -186,13 +185,6 @@ public class SearchBean implements Serializable {
 		this.flightclasses = flightclasses;
 	}
 
-	public List<String> getAirlines() {
-		return airlines;
-	}
-
-	public void setAirlines(List<String> airlines) {
-		this.airlines = airlines;
-	}
 	
 	public String goToSearchPage()
 	{
@@ -238,6 +230,14 @@ public class SearchBean implements Serializable {
 
 	public void setPartners(List<Partner> partners) {
 		this.partners = partners;
+	}
+	
+	public int getNumberOfSeats(){
+		return numberOfSeats;
+	}
+	
+	public void setNumberOfSeats(int numberOfSeats){
+		this.numberOfSeats = numberOfSeats;
 	}
 
 }

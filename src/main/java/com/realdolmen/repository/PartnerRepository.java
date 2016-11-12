@@ -118,13 +118,26 @@ public class PartnerRepository {
 		return partner.getClass().equals(Partner.class);
 	}
 	
-	public int getNumberOfSeatsLeft(User partner, Flight flight, SeatType seatType){
+	public int getNumberOfSeatsLeft(User partner, Flight flight, List<SeatType> seatTypes){
 		if(checkForPartner(partner)){
-			return flightRepository.getNumberOfSeatsLeft((Partner) partner, flight, seatType);
+			return flightRepository.getNumberOfSeatsLeft((Partner) partner, flight, seatTypes);
 		}
 		else{
 			return -1;
 		}
+	}
+	
+	public int getNumberOfSeatsBooked(User partner, Flight flight, List<SeatType> seatTypes){
+		if(checkForPartner(partner)){
+			return flightRepository.getNumberOfSeatsBooked((Partner) partner, flight, seatTypes);
+		}
+		else{
+			return -1;
+		}
+	}
+
+	public List<String> getAirlines() {
+		return em.createQuery("SELECT DISTINCT p.name FROM Partner p").getResultList();
 	}
 	
 	/*

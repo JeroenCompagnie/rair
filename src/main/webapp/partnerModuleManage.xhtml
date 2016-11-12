@@ -19,7 +19,8 @@
 		<h:panelGroup layout="block" rendered="#{loginBean.userIsPartner and (2 > partnerBean.partnerFlightId)}">
 			<b:dataTable value="#{partnerBean.flightsOfPartner}" var="f">
 				<b:dataTableColumn value="#{f.id}" label="#" />
-				<b:dataTableColumn value="#{f.getSeatsLeft()}" label="Seats left" />
+				<b:dataTableColumn value="#{partnerBean.getNumberOfSeatsLeft(f)}" label="Seats left" />
+				<b:dataTableColumn value="#{partnerBean.getNumberOfSeatsBooked(f)}" label="Seats booked" />
 				<b:dataTableColumn value="#{f.departureAirport}"
 					label="Departure airport" />
 				<b:dataTableColumn value="#{f.destinationAirport}"
