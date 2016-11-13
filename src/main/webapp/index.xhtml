@@ -18,8 +18,7 @@
 				type="number" styleClass="datePicker" />
 
 			<h:outputLabel for="flightClass" value="Select Class" />
-			<b:selectOneMenu id="flightClass"
-				value="#{search.selectedFlightclass}" styleClass="datePicker">
+			<b:selectOneMenu id="flightClass" value="#{search.selectedFlightclass}" styleClass="datePicker">
 				<f:selectItems value="#{search.flightclasses}" />
 			</b:selectOneMenu>
 
@@ -30,35 +29,25 @@
 			</b:selectOneMenu>
 
 			<h:outputLabel for="departureDay" value="Select Day Of Departure"></h:outputLabel>
-			<b:dateTimePicker value="#{search.dateOfDeparture}" id="departureDay"
-				mode="popup" show-date="true" show-time="false"
-				styleClass="datePicker" />
+			<b:dateTimePicker value="#{search.dateOfDeparture}" id="departureDay" mode="popup" show-date="true" show-time="false" styleClass="datePicker" />
 
 			<h:outputLabel for="return" value="Select Day Of Return"></h:outputLabel>
-			<b:dateTimePicker value="#{search.dateOfReturn}" id="return"
-				mode="popup" show-date="true" show-time="false"
-				styleClass="datePicker" />
+			<b:dateTimePicker value="#{search.dateOfReturn}" id="return" mode="popup" show-date="true" show-time="false" styleClass="datePicker" />
 			<h:outputLabel for="global_region" value="Select a global region"></h:outputLabel>
-			<b:selectOneMenu id="global_region"
-				value="#{search.selectedGlobalRegion}" styleClass="datePicker">
-				<f:selectItem itemValue="#{null}" itemLabel="--select--" />
+			<b:selectOneMenu id="global_region"	value="#{search.selectedGlobalRegion}" styleClass="datePicker">
 				<f:selectItems value="#{search.globalRegions}" />
 			</b:selectOneMenu>
 			<h:outputLabel for="departure" value="Select a departure airport"></h:outputLabel>
-			<b:selectOneMenu id="departure" value="#{search.selectedDeparture}"
-				styleClass="datePicker">
-				<f:selectItem itemValue="#{null}" itemLabel="--select--" />
+			<b:selectOneMenu id="departure" value="#{search.selectedDeparture}"	styleClass="datePicker">
+				<f:selectItem itemValue="#{null}" itemLabel="#{null}" />
 				<f:selectItems value="#{search.airports}" />
 			</b:selectOneMenu>
 			<h:outputLabel for="destination" value="Select a destination airport"></h:outputLabel>
-			<b:selectOneMenu id="destination"
-				value="#{search.selectedDestination}" styleClass="datePicker">
+			<b:selectOneMenu id="destination" value="#{search.selectedDestination}" styleClass="datePicker">
 				<f:selectItem itemValue="#{null}" itemLabel="--select--" />
 				<f:selectItems value="#{search.airports}" />
 			</b:selectOneMenu>
-			<br />
-			<b:commandButton value="Search now" action="#{search.search}"
-				look="info" />
+			<b:commandButton value="Search now" action="#{search.search}" look="info" />
 		</h:form>
 	</ui:define>
 </ui:composition>

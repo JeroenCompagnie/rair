@@ -87,7 +87,7 @@ public class FlightRepository {
 		return typedQuery.getResultList();
 	}
 
-	public List<Flight> findByParams(SeatType t, Partner partner, Date departureDate,Airport destination,Airport departure,GlobalRegion globalRegion) {
+	public List<Flight> findByParams(SeatType t, Partner partner, Date departureDate,Airport destination,Airport departure,String globalRegion) {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Flight> cq = cb.createQuery(Flight.class);
 		Root<Flight> from = cq.from(Flight.class);
@@ -98,53 +98,59 @@ public class FlightRepository {
 		date2 = c.getTime();
 		//departure=null;
 		//destination=null;
-		System.out.println("SeatType: " + t.toString()+ " from findByParams");
-		System.out.println("Partner: " + partner.toString()+ " from findByParams");
-		System.out.println("DepartureDate: " + departureDate.toString()+ " from findByParams");
-		System.out.println("Destination: " + destination.toString()+ " from findByParams");
-		System.out.println("Departure: " + departure.toString()+ " from findByParams");
-		System.out.println("GlobalRegion: " + globalRegion.toString()+ " from findByParams");
+		//System.out.println("SeatType: " + t.toString()+ " from findByParams");
+		//System.out.println("Partner: " + partner.toString()+ " from findByParams");
+		//System.out.println("DepartureDate: " + departureDate.toString()+ " from findByParams");
+		//System.out.println("Destination: " + destination.toString()+ " from findByParams");
+		//System.out.println("Departure: " + departure.toString()+ " from findByParams");
+		//System.out.println("GlobalRegion: " + globalRegion.toString()+ " from findByParams");
 		
 		List<Predicate> predicates = new ArrayList<Predicate>();
 
 		// Adding predicates in case of parameter not being null
 		if (t != null) {
+			System.out.println("SeatType tested " + t);
 			From<Flight, Seat> join = from.join("seatList");
 			Path<Seat> s = join.get("type");
 			predicates.add(cb.equal(s, t));
-			System.out.println(s + " seattype from database");
+			//System.out.println(s + " seattype from database");
 		}
 		if (partner != null) {
+			System.out.println("Partner tested " + partner);
 			Path<Partner> dbPartner=from.<Partner>get("partner");
 			predicates.add(cb.equal(dbPartner, partner));
-			System.out.println(dbPartner + " partner from database");
+			//System.out.println(dbPartner + " partner from database");
 		}
 		if (departureDate != null) {
+			System.out.println("departureDate tested " +departureDate);
 			Path<Date> dbDepartureDate=from.<Date>get("dateOfDeparture");
 			predicates.add(cb.between(dbDepartureDate, departureDate, date2));
-			System.out.println(dbDepartureDate + " departuredate from database");
+			//System.out.println(dbDepartureDate + " departuredate from database");
 		}
 		if (destination != null)
 		{
+			System.out.println("destination tested " +destination);
 			Path<Airport> dbAirport = from.<Airport>get("destinationAirport");
 			predicates.add(cb.equal(dbAirport, destination));
-			System.out.println(dbAirport + " destinationAirports from database");
+			//System.out.println(dbAirport + " destinationAirports from database");
 		}
 		if (departure != null)
 		{
+			System.out.println("departure tested " + departure);
 			Path<Airport> dbAirport = from.<Airport>get("departureAirport");
-			System.out.println(dbAirport + " destination_airport");
+			//System.out.println(dbAirport + " destination_airport");
 			predicates.add(cb.equal(dbAirport, departure));
 		}
 		if (globalRegion != null)
 		{
+			System.out.println("GlobalRegion tested " + globalRegion);
 			Path<Airport> dbAirport = from.<Airport>get("destinationAirport");
 			Path<String> dbGlobalRegion = dbAirport.<String>get("globalRegion");
-			System.out.println(dbAirport + " dbAirport");
-			System.out.print(dbGlobalRegion.toString() + " = dbGlobalRegion");
-			System.out.println(globalRegion.toString()+ " = globalRegion");
-			System.out.println(cq.getSelection());
-			predicates.add(cb.equal(dbGlobalRegion, "ASIA (EX. NEAR EAST)"));
+			//System.out.println(dbAirport + " dbAirport");
+			//System.out.print(dbGlobalRegion) + " = dbGlobalRegion");
+			//System.out.println(globalRegion.toString()+ " = globalRegion");
+			//System.out.println(cq.getSelection());
+			predicates.add(cb.equal(dbGlobalRegion, globalRegion));
 		}
 		cq.select(from).where(predicates.toArray(new Predicate[] {})).distinct(true);
 		return em.createQuery(cq).getResultList();

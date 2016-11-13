@@ -56,8 +56,8 @@ public class SearchBean implements Serializable {
 
 	private SeatType selectedFlightClass;
 	
-	@NotNull(message="Date of departure needs to be filled in!")
-	@Future(message="Date of depature needs to be in the future")
+	//@NotNull(message="Date of departure needs to be filled in!")
+	//@Future(message="Date of depature needs to be in the future")
 	private Date dateOfDeparture;
 	
 	private Date dateOfReturn;
@@ -76,7 +76,7 @@ public class SearchBean implements Serializable {
 	
 	private List<GlobalRegion> globalRegions;
 	
-	private GlobalRegion selectedGlobalRegion;
+	private String selectedGlobalRegion;
 	
 	private int numberOfSeats;
 
@@ -196,7 +196,7 @@ public class SearchBean implements Serializable {
 		this.flights2 = flights2;
 	}
 
-	@NotNull
+	//@NotNull
 	public Date getDateOfDeparture() {
 		return dateOfDeparture;
 	}
@@ -271,8 +271,9 @@ public class SearchBean implements Serializable {
 	
 	public String search()
 	{
+		System.out.println("called search from searchbean");
 		setFlights2(flightRepository.findByParams(getSelectedFlightclass(), getSelectedPartner(), getDateOfDeparture(),getSelectedDestination(),getSelectedDeparture(),getSelectedGlobalRegion()));
-		return "search";
+		return "search.xhtml";
 	}
 
 	public Partner getSelectedPartner() {
@@ -299,11 +300,11 @@ public class SearchBean implements Serializable {
 		this.numberOfSeats = numberOfSeats;
 	}
 
-	public GlobalRegion getSelectedGlobalRegion() {
+	public String getSelectedGlobalRegion() {
 		return selectedGlobalRegion;
 	}
 
-	public void setSelectedGlobalRegion(GlobalRegion selectedGlobalRegion) {
+	public void setSelectedGlobalRegion(String selectedGlobalRegion) {
 		this.selectedGlobalRegion = selectedGlobalRegion;
 	}
 
