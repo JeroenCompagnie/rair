@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui">
+
+<f:metadata>
+	<f:viewParam name="partnerFlightId"
+		value="#{partnerBean.partnerFlightId}" />
+</f:metadata>
+
+<ui:composition template="WEB-INF/templates/common.xhtml">
+	<!-- TODO replace content here -->
+	<ui:define name="title">Partner module - Manage flight</ui:define>
+
+	<ui:define name="content">
+
+		<h:outputLabel value="You have no powers here!"
+			rendered="#{not loginBean.userIsPartner}" />
+
+		<h:panelGroup rendered="#{loginBean.userIsPartner and not partnerBean.partnerFlightIdExists}">
+			<h:outputLabel value="No flight with id #{partnerBean.partnerFlightId} found!"/>
+		</h:panelGroup>
+		<h:panelGroup layout="block"
+			rendered="#{loginBean.userIsPartner and partnerBean.partnerFlightIdExists and partnerBean.partnerFlightId > 0}">
+			
+			<!-- You have power, id is #{partnerBean.partnerFlightId} -->
+			
+			<h:form>
+				
+				<b:panelGrid colSpans="6,6" size ="sm">
+					<h:outputText value="Id: " />
+						#{partnerBean.partnerFlightId}
+					<h:outputText
+						value="Departure date: " />
+						#{partnerBean.partnerFlight.dateOfDeparture}
+					<h:outputText
+						value="Departure airport: " />
+						#{partnerBean.partnerFlight.departureAirport}
+					<h:outputText
+						value="Destination airport: "/>
+						#{partnerBean.partnerFlight.destinationAirport}
+					<h:outputText
+						value="Flight duration: " />
+						<h:outputText
+						value="#{partnerBean.partnerFlight.flightDurationInMinutes}" />
+						
+				</b:panelGrid>
+				
+
+				<b:panelGrid colSpans="6,6" size="lg">
+					<h:panelGroup>
+						<h:outputLabel value="Economy seats left: #{partnerBean.numberOfSeatsLeftEconomy}" />
+						<br/>
+						<h:outputLabel value="Economy seats sold: #{partnerBean.numberOfSeatsBookedEconomy}"/>
+					</h:panelGroup>
+					<h:panelGroup>
+						<h:outputLabel value="Economy seat price"/>
+						<b:inputText placeholder="New price economy seat"
+							value="#{partnerBean.economySeatPrice}"
+							styleClass="partnerModuleInputBox" rows="2">
+							<f:facet name="prepend">
+								<b:commandButton value="Change" look="info"
+									action="#{partnerBean.setEconomySeatPriceInDb}" />
+							</f:facet>
+						</b:inputText>
+					</h:panelGroup>
+					
+					<h:panelGroup>
+						<h:outputLabel value="Business seats left: #{partnerBean.numberOfSeatsLeftBusiness}" />
+						<br/>
+						<h:outputLabel value="Business seats sold: #{partnerBean.numberOfSeatsBookedBusiness}"/>
+					</h:panelGroup>
+					<h:panelGroup>
+						<h:outputLabel value="Business seat price"/>
+						<b:inputText placeholder="New price business seat"
+							value="#{partnerBean.businessSeatPrice}"
+							styleClass="partnerModuleInputBox" rows="2">
+							<f:facet name="prepend">
+								<b:commandButton value="Change" look="info"
+									action="#{partnerBean.setBusinessSeatPriceInDb}" />
+							</f:facet>
+						</b:inputText>
+					</h:panelGroup>
+					
+					
+					<h:panelGroup>
+						<h:outputLabel value="First class seats left: #{partnerBean.numberOfSeatsLeftFirst}" />
+						<br/>
+						<h:outputLabel value="First class  seats sold: #{partnerBean.numberOfSeatsBookedFirst}"/>
+					</h:panelGroup>
+					<h:panelGroup>
+						<h:outputLabel value="First class seat price"/>
+						<b:inputText placeholder="New price first class seat"
+							value="#{partnerBean.firstSeatPrice}"
+							styleClass="partnerModuleInputBox" rows="2">
+							<f:facet name="prepend">
+								<b:commandButton value="Change" look="info"
+									action="#{partnerBean.setFirstSeatPriceInDb}" />
+							</f:facet>
+						</b:inputText>
+					</h:panelGroup>
+				</b:panelGrid>
+			</h:form>
+		</h:panelGroup>
+
+
+	</ui:define>
+</ui:composition>
+</html>

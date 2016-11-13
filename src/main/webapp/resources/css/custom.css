@@ -1,3 +1,23 @@
+* {
+	margin: 0;
+}
+html, body {
+	height: 100%;
+}
+.wrapper {
+	min-height: 100%;
+	height: auto !important; /* This line and the next line are not necessary unless you need IE6 support */
+	height: 100%;
+	margin: 0 auto -50 px; /* the bottom margin is the negative value of the footer's height */
+}
+.footer, .push {
+	padding: 8px 20px ;
+	height: 50px; /* .push must be the same height as .footer */
+}
+
+
+
+
 .datePicker {
 	min-width: 25%;
 	max-width: 35%;
@@ -6,6 +26,11 @@
 .partnerModuleInputBox {
 	min-width: 15%;
 	max-width: 50%;
+}
+
+.error{
+	min-width: 25%;
+	max-widt: 40%;
 }
 
 .rair-attention {

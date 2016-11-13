@@ -6,6 +6,8 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:b="http://bootsfaces.net/ui">
+
+
 <ui:composition template="WEB-INF/templates/common.xhtml">
 	<!-- TODO replace content here -->
 	<ui:define name="title">Partner module</ui:define>
@@ -13,17 +15,31 @@
 	<ui:define name="content">
 		<h:outputLabel value="You have no powers here!"
 			rendered="#{not loginBean.userIsPartner}" />
-
-		<h:panelGroup layout="block" rendered="#{loginBean.userIsPartner}">
-   			<b:dataTable value="#{partnerBean.flightsOfPartner}" var="f">
-				<b:dataTableColumn value="#{f.id}" label="#"/>
-				<b:dataTableColumn value="#{f.getSeatsLeft()}" label="Seats left" />
-				<b:dataTableColumn value="#{f.departureAirport}" label="Departure airport"/>
-				<b:dataTableColumn value="#{f.destinationAirport}" label="Destination airport"/>
-				<b:dataTableColumn value="#{f.dateOfDeparture}" label="Departure date"/>
-				<b:dataTableColumn> nav</b:dataTableColumn>
+		#{partnerBean.partnerFlightId}
+		<h:panelGroup layout="block" rendered="#{loginBean.userIsPartner and (2 > partnerBean.partnerFlightId)}">
+			<b:dataTable value="#{partnerBean.flightsOfPartner}" var="f">
+				<b:dataTableColumn value="#{f.id}" label="#" />
+				<b:dataTableColumn value="#{partnerBean.getNumberOfSeatsLeft(f)}" label="Seats left" />
+				<b:dataTableColumn value="#{partnerBean.getNumberOfSeatsBooked(f)}" label="Seats booked" />
+				<b:dataTableColumn value="#{f.departureAirport}"
+					label="Departure airport" />
+				<b:dataTableColumn value="#{f.destinationAirport}"
+					label="Destination airport" />
+				<b:dataTableColumn value="#{f.dateOfDeparture}"
+					label="Departure date" />
+				<b:dataTableColumn label="Manage link" >
+					<b:navLink value="Manage"
+						outcome="partnerModuleManageFlight.xhtml">
+						<f:param name="partnerFlightId" value="#{f.id}" />
+					</b:navLink>
+				</b:dataTableColumn>
 			</b:dataTable>
 		</h:panelGroup>
+		
+		<h:panelGroup layout="block" rendered="#{loginBean.userIsPartner and partnerBean.partnerFlightId > 0}">
+			test
+		</h:panelGroup>
+		
 
 	</ui:define>
 </ui:composition>

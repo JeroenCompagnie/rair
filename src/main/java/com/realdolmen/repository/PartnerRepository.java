@@ -91,13 +91,53 @@ public class PartnerRepository {
 		return airportRepository.findWithCountry(searchCriteriaCountry);
 	}
 
-	public ArrayList<Flight> getFlightsByPartner(User user){
-		if(user.getClass().equals(Partner.class)){
-			return flightRepository.getFlightsByPartner((Partner) user);
+	public ArrayList<Flight> getFlightsByPartner(User partner){
+		if(checkForPartner(partner)){
+			return flightRepository.getFlightsByPartner((Partner) partner);
 		}
 		else{
 			return new ArrayList<Flight>();
 		}
+	}
+
+	public Flight getFlightByPartner(User partner, long partnerFlightId) {
+		if(checkForPartner(partner)){
+			Flight f = flightRepository.getFlightByPartner((Partner) partner, partnerFlightId);
+			return f;
+		}
+		return null;
+	}
+
+	public void setSeatPrice(User partner, long partnerFlightId, SeatType seatType, double newPrice) {
+		if(checkForPartner(partner)){
+			flightRepository.setSeatPrice((Partner) partner, partnerFlightId, seatType, newPrice);
+		}
+	}
+
+	private boolean checkForPartner(User partner) {
+		return partner.getClass().equals(Partner.class);
+	}
+	
+	public int getNumberOfSeatsLeft(User partner, Flight flight, List<SeatType> seatTypes){
+		if(checkForPartner(partner)){
+			return flightRepository.getNumberOfSeatsLeft((Partner) partner, flight, seatTypes);
+		}
+		else{
+			return -1;
+		}
+	}
+	
+	public int getNumberOfSeatsBooked(User partner, Flight flight, List<SeatType> seatTypes){
+		if(checkForPartner(partner)){
+			return flightRepository.getNumberOfSeatsBooked((Partner) partner, flight, seatTypes);
+		}
+		else{
+			return -1;
+		}
+	}
+
+	public List<String> getAirlines() {
+		return em.createQuery("SELECT DISTINCT p.name FROM Partner p").getResultList();
 	}
 	
 	/*

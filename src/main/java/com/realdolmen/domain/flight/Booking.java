@@ -43,7 +43,8 @@ public class Booking implements Serializable{
 	
 	private Date dateOfReservation;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	//TODO: cascadetype nakijken!!
+	@OneToMany(fetch = FetchType.EAGER)
 	@JoinTable(
 			joinColumns = @JoinColumn(table = "booking",
 		            name="booking_id",

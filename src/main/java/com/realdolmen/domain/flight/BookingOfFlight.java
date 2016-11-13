@@ -2,12 +2,14 @@ package com.realdolmen.domain.flight;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -38,14 +40,19 @@ public class BookingOfFlight implements Serializable{
 	@NotNull
 	private int numberInBooking;
 	
+	@NotNull
+	@OneToOne
+	private Seat seat;
+	
 	public BookingOfFlight(){
 		
 	}
 
-	public BookingOfFlight(double price, Flight flight, Booking booking) {
+	public BookingOfFlight(double price, Flight flight, Booking booking, Seat seat) {
 		this.price = price;
 		this.flight = flight;
 		this.booking = booking;
+		this.seat = seat;
 	}
 
 	public double getPrice() {
@@ -71,6 +78,12 @@ public class BookingOfFlight implements Serializable{
 	public void setNumberInBooking(int numberInBooking) {
 		this.numberInBooking = numberInBooking;
 	}
-	
-		
+
+	public Seat getSeat() {
+		return seat;
+	}
+
+	public void setSeat(Seat seat) {
+		this.seat = seat;
+	}
 }

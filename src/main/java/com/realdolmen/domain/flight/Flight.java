@@ -4,9 +4,10 @@ import java.io.Serializable;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
-import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -21,6 +22,9 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.hibernate.annotations.CollectionType;
+
+import com.realdolmen.domain.user.Customer;
 import com.realdolmen.domain.user.Partner;
 
 @NamedQueries(@NamedQuery(name = Flight.findAll, query = "SELECT f FROM Flight f"))
@@ -46,20 +50,18 @@ public class Flight implements Serializable {
 
 	// TODO cascadetype hier oppassen! bookingOfFlight hoort bij zowel een
 	// Booking als een Flight
-	@OneToMany()
-	@JoinTable(joinColumns = @JoinColumn(table = "flight", name = "flight_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(table = "bookingOfFlight", name = "bookingOfFlight_id", referencedColumnName = "id"))
-	private List<BookingOfFlight> bookingOfFlightList = new ArrayList<>();
-
+	@OneToMany(fetch=FetchType.EAGER)
+	private List<BookingOfFlight> bookingOfFlightList;
+	
 	@OneToOne
 	private Airport departureAirport;
 
 	@OneToOne
 	private Airport destinationAirport;
 
-
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinTable(inverseJoinColumns = @JoinColumn(table = "seat", name = "seat_id", referencedColumnName = "id"))
-	private List<Seat> seatList = new ArrayList<>();
+	//TODO CHECK CASCADETYPES
+	@OneToMany(fetch = FetchType.EAGER)
+	private List<Seat> seatList;
 
 	private Date dateOfDeparture;
 
@@ -70,6 +72,8 @@ public class Flight implements Serializable {
 
 	@ElementCollection
 	private List<Double> discountsListPartner = new ArrayList<Double>();
+	
+	private static final int milliSecondsInOneSecond = 60000;
 
 	public Flight() {
 
@@ -77,7 +81,6 @@ public class Flight implements Serializable {
 
 	public int getNumberOfSeatForType(SeatType st) {
 		int count = 0;
-		System.out.println(seatList.size());
 		for (int i = 0; i < seatList.size(); i++) {
 			if (seatList.get(i).getType().equals(st)) {
 				count++;
@@ -86,14 +89,15 @@ public class Flight implements Serializable {
 		return count;
 	}
 
-	public Flight(Partner partner, List<BookingOfFlight> bookingOfFlightList, Airport departureAirport,
+	public Flight(Partner partner,  Airport departureAirport,
 			Airport destinationAirport, Date dateOfDeparture, Duration flightDuration) {
 		this.partner = partner;
-		this.bookingOfFlightList = bookingOfFlightList;
 		this.departureAirport = departureAirport;
 		this.destinationAirport = destinationAirport;
 		this.dateOfDeparture = dateOfDeparture;
 		this.flightDuration = flightDuration;
+		this.bookingOfFlightList = new ArrayList<>();
+		this.seatList = new ArrayList<>();
 	}
 
 	public Long getId() {
@@ -151,6 +155,11 @@ public class Flight implements Serializable {
 	public Duration getFlightDuration() {
 		return flightDuration;
 	}
+	
+	public int getFlightDurationInMinutes() {
+		return ((int) flightDuration.toMinutes());
+//		return ((int) flightDuration.toMillis())*milliSecondsInOneSecond;
+	}
 
 	public void setFlightDuration(Duration flightDuration) {
 		this.flightDuration = flightDuration;
@@ -165,7 +174,67 @@ public class Flight implements Serializable {
 	}
 
 	public void addBookingOfFlight(BookingOfFlight bof) {
+		if(bookingOfFlightList.contains(bof)){
+			System.err.println("9999988888  TRIED TO ADD BookingOfFlight that was already there");
+			return;
+		}
+		System.err.println("Booking of flight with id: " + bof.getId() + " added");
 		this.bookingOfFlightList.add(bof);
+	}
+	
+	/**
+	 * RETURNS NULL IF NOT ENOUGH SEATS AVAILABLE
+	 * @param list
+	 * @param customer
+	 * @return
+	 */
+	public Booking addBooking(HashMap<SeatType, Integer> list, Booking booking){
+		/**
+		 * TODO: add discounts to price of seat
+		 * TODO: add locking!!
+		 */
+		if(checkIfEnoughSeatsAvailable(list)){
+
+
+			for(Entry<SeatType, Integer> entry : list.entrySet()){
+				for(int i = 0; i < entry.getValue();i++){
+					Seat seat = getSeatWithType(entry.getKey());
+					//TODO: add discounts to price here!
+					double price = seat.getBasePrice();
+					BookingOfFlight bof = new BookingOfFlight(price, this, booking, seat);
+					this.addBookingOfFlight(bof);
+					booking.addBookingOfFlight(bof);
+				}
+			}
+			return booking;
+		}
+		else{
+			return null;
+		}
+	}
+
+	/**
+	 * RETURNS NULL IF SEAT NOT FOUND WITH THE GIVEN TYPE
+	 * @param type
+	 * @return
+	 */
+	private Seat getSeatWithType(SeatType type) {
+		for(int i = 0; i < seatList.size(); i++ ){
+			if(seatList.get(i).getType() == type){
+				return seatList.remove(i);
+			}
+		}
+		return null;
+	}
+
+	private boolean checkIfEnoughSeatsAvailable(HashMap<SeatType, Integer> list) {
+		for(Entry<SeatType, Integer> entry : list.entrySet()){
+			if(getSeatsLeft(entry.getKey()) < entry.getValue()){
+				System.err.println("NOT ENOUGH SEATS");
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public void addSeat(Seat s) {
@@ -205,5 +274,51 @@ public class Flight implements Serializable {
 	public int getSeatsLeft(){
 		return seatList.size();
 	}
+	
+	/**
+	 * Rerturns the seatprice with SeatType type. If no more seats available of this type the return value will be -1.
+	 * @param type
+	 * @return
+	 */
+	public double getSeatPrice(SeatType type){
+		for(Seat s: seatList){
+			if(s.getType() == type){
+				return s.getBasePrice();
+			}
+		}
+		return -1.0;
+	}
+	
+	public void setSeatPrice(double newPrice, SeatType type){
+		for(Seat s : seatList){
+			if(s.getType().equals(type)){
+				s.setBasePrice(newPrice);
+			}
+		}
+	}
+	
+	public int getSeatsLeft(SeatType type){
+		int count = 0;
+		for(Seat s : seatList){
+			if(s.getType().toString().equals(type.toString())){
+				System.err.println("TYPE OF THE SEATTHING: " +s.getType());
+				count++;
+			}
+		}
+		System.err.println("Seats with type: "+type+ " left: " + count);
+		return count;
+	}
 
+	public int getSeatsSold(SeatType type){
+		int count = 0;
+		System.err.println("999999999999999 --- " + bookingOfFlightList.size());
+		for(BookingOfFlight b : bookingOfFlightList){
+			if(b.getSeat().getType() == type){
+				count++;
+				System.err.println("Seat id: " + b.getSeat().getId());
+				System.err.println("BookingOfFlight id: " + b.getId());
+			}
+		}
+		return count;
+	}
 }

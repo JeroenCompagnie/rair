@@ -3,6 +3,7 @@ package com.realdolmen.domain.beans;
 import java.io.Serializable;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +22,8 @@ import org.junit.Before;
 import com.realdolmen.domain.flight.Airport;
 import com.realdolmen.domain.flight.BookingOfFlight;
 import com.realdolmen.domain.flight.Flight;
+import com.realdolmen.domain.flight.Seat;
+import com.realdolmen.domain.flight.SeatType;
 import com.realdolmen.domain.user.Partner;
 import com.realdolmen.repository.PartnerRepository;
 
@@ -97,6 +100,17 @@ public class PartnerBean implements Serializable{
 	private List<Airport> airportsDeparture = new ArrayList<>();
 	
 	private List<Airport> airportsDestination = new ArrayList<>();
+	
+	private int partnerFlightId = -1;
+	
+	private Flight partnerFlight;
+
+	private double economySeatTypePrice;
+
+	private double businessSeatTypePrice;
+	
+	private double firstSeatTypePrice;
+//	private boolean partnerFlightIdIsNull;
 	
 	public int getNrBusinessSeats() {
 		return nrBusinessSeats;
@@ -194,6 +208,14 @@ public class PartnerBean implements Serializable{
 		this.destinationAirport = destinationAirport;
 	}
 	
+	public int getPartnerFlightId() {
+		return partnerFlightId;
+	}
+
+	public void setPartnerFlightId(int partnerFlightId) {
+		this.partnerFlightId = partnerFlightId;
+	}
+
 	public String getSearchCriteriaCountryDeparture() {
 		return searchCriteriaCountryDeparture;
 	}
@@ -232,9 +254,118 @@ public class PartnerBean implements Serializable{
 		return partnerRepository.getFlightsByPartner(loginBean.getUser());
 	}
 	
+	public Flight getPartnerFlight(){
+		if(partnerFlight != null && partnerFlightId == partnerFlight.getId()){
+			return partnerFlight;
+		}
+		return partnerRepository.getFlightByPartner(loginBean.getUser(), partnerFlightId);
+	}
+	
+	public boolean getPartnerFlightIdExists(){
+		if(getPartnerFlight() == null){
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
+	
+	public double getEconomySeatPrice(){
+		return getPartnerFlight().getSeatPrice(SeatType.Economy);
+	}
+	
+	public void setEconomySeatPrice(double newPrice){
+		economySeatTypePrice = newPrice;
+	}
+	
+	public String setEconomySeatPriceInDb(){
+		partnerRepository.setSeatPrice(loginBean.getUser(), partnerFlightId, SeatType.Economy, economySeatTypePrice);
+		return "";
+	}
+	
+	public double getBusinessSeatPrice(){
+		return getPartnerFlight().getSeatPrice(SeatType.Business);
+	}
+	
+	public void setBusinessSeatPrice(double newPrice){
+		businessSeatTypePrice = newPrice;
+	}
+	
+	public String setBusinessSeatPriceInDb(){
+		partnerRepository.setSeatPrice(loginBean.getUser(), partnerFlightId, SeatType.Business, businessSeatTypePrice);
+		return "";
+	}
+	
+	public double getFirstSeatPrice(){
+		return getPartnerFlight().getSeatPrice(SeatType.FirstClass);
+	}
+	
+	public void setFirstSeatPrice(double newPrice){
+		firstSeatTypePrice=newPrice;
+	}
+	
+	public String setFirstSeatPriceInDb(){
+		partnerRepository.setSeatPrice(loginBean.getUser(), partnerFlightId, SeatType.FirstClass, firstSeatTypePrice);
+		return "";
+	}
+
+	/**
+	 * Returns number of seats (for each seattype) left
+	 * @return
+	 */
+	public int getNumberOfSeatsLeft(Flight f){
+		return partnerRepository.getNumberOfSeatsLeft(loginBean.getUser(), 
+				f, Arrays.asList(SeatType.values()));
+	}
+	
+	public int getNumberOfSeatsLeft(String type){
+		return partnerRepository.getNumberOfSeatsLeft(loginBean.getUser(), 
+				getPartnerFlight(), Arrays.asList(SeatType.valueOf(type)));
+		//return getPartnerFlight().getNumberOfSeatForType(SeatType.valueOf(type));
+	}
+	
+	public int getNumberOfSeatsLeftEconomy(){
+		return getNumberOfSeatsLeft(SeatType.Economy.toString());
+	}
+	
+	public int getNumberOfSeatsLeftBusiness(){
+		return getNumberOfSeatsLeft(SeatType.Business.toString());
+	}
+	
+	public int getNumberOfSeatsLeftFirst(){
+		return getNumberOfSeatsLeft(SeatType.FirstClass.toString());
+	}
+	
+	/**
+	 * Returns number of seats (for each seattype) booked 
+	 * @return
+	 */
+	public int getNumberOfSeatsBooked(Flight f){
+		return partnerRepository.getNumberOfSeatsBooked(loginBean.getUser(), 
+				f, Arrays.asList(SeatType.values()));
+	}
+	
+	public int getNumberOfSeatsBooked(String type){
+		return partnerRepository.getNumberOfSeatsBooked(loginBean.getUser(), 
+				getPartnerFlight(), Arrays.asList(SeatType.valueOf(type)));
+//		return getPartnerFlight().getSeatsSold(SeatType.valueOf(type));
+	}
+	
+	public int getNumberOfSeatsBookedEconomy(){
+		return getNumberOfSeatsBooked(SeatType.Economy.toString());
+	}
+	
+	public int getNumberOfSeatsBookedBusiness(){
+		return getNumberOfSeatsBooked(SeatType.Business.toString());
+	}
+	
+	public int getNumberOfSeatsBookedFirst(){
+		return getNumberOfSeatsBooked(SeatType.FirstClass.toString());
+	}
+	
 	public String addFlight(){
 		System.err.println("Tried to add flight");
-		Flight f = new Flight((Partner) loginBean.getUser(), new ArrayList<BookingOfFlight>(), 
+		Flight f = new Flight((Partner) loginBean.getUser(), 
 				departureAirport, 
 				destinationAirport, 
 				dateOfDeparture, Duration.ofMinutes(flightDuration));

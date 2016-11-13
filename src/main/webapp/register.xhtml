@@ -6,54 +6,60 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:b="http://bootsfaces.net/ui">
+
+<f:view>
+	<f:loadBundle basename="Messages" var="msgs"/>
+</f:view>
+
 <ui:composition template="WEB-INF/templates/common.xhtml">
 	<!-- TODO replace content here -->
-	<ui:define name="title">User Registration</ui:define>
+	<ui:define name="title"><h:outputText value="#{msgs.userRegistration}"/></ui:define>
 
 	<ui:define name="content">
 		<h:form>
-			<h:outputLabel for="firstName" value="First name:"></h:outputLabel>
+			<b:messages styleClass="error"/>
+			<h:outputLabel for="firstName" value="#{msgs.firstName}"></h:outputLabel>
 			<b:inputText styleClass="datePicker"  id="firstName" value="#{registerCustomerBean.firstName}"></b:inputText>
 			<b:message for="firstName" styleClass="error"/>
 			
-			<h:outputLabel for="lastName" value="Last name:"></h:outputLabel>
+			<h:outputLabel for="lastName" value="#{msgs.lastName}"></h:outputLabel>
 			<b:inputText styleClass="datePicker"  id="lastName" value="#{registerCustomerBean.lastName}"></b:inputText>
 			<b:message for="lastName" styleClass="error"/>
 			
-			<h:outputLabel for="userName" value="Username:"></h:outputLabel>
+			<h:outputLabel for="userName" value="#{msgs.userName}"></h:outputLabel>
 			<b:inputText styleClass="datePicker"  id="userName" value="#{registerCustomerBean.userName}"></b:inputText>
 			<b:message for="userName" styleClass="error"/>
 			
-			<h:outputLabel for="password" value="Password:" />
+			<h:outputLabel for="password" value="#{msgs.passWord}" />
 			<b:inputSecret styleClass="datePicker"  id="password" value="#{registerCustomerBean.unhashedPassword}"/>
 			<b:message for="password" styleClass="error"/>
 			
-			<h:outputLabel for="email" value="Email:" />
+			<h:outputLabel for="email" value="#{msgs.email}" />
 			<b:inputText styleClass="datePicker"  id="email" value="#{registerCustomerBean.email}"></b:inputText>
 			<b:message for="email" styleClass="error"/>
 			
-			<h:outputLabel for="street" value="Street:" />
+			<h:outputLabel for="street" value="#{msgs.street}" />
 			<b:inputText styleClass="datePicker"  id="street" value="#{registerCustomerBean.address.street}"></b:inputText>
 			<b:message for="street" styleClass="error"/>
 			
-			<h:outputLabel for="number" value="Number:" />
+			<h:outputLabel for="number" value="#{msgs.number}" />
 			<b:inputText styleClass="datePicker"  id="number" value="#{registerCustomerBean.address.number}"></b:inputText>
 			<b:message for="number" styleClass="error"/>
 			
-			<h:outputLabel for="postalCode" value="Postal code:" />
+			<h:outputLabel for="postalCode" value="#{msgs.postalCode}" />
 			<b:inputText styleClass="datePicker"  id="postalCode" value="#{registerCustomerBean.address.postalCode}"></b:inputText>
 			<b:message for="postalCode" styleClass="error"/>
 			
-			<h:outputLabel for="city" value="City:" />
+			<h:outputLabel for="city" value="#{msgs.city}" />
 			<b:inputText styleClass="datePicker"  id="city" value="#{registerCustomerBean.address.city}"></b:inputText>
 			<b:message for="city" styleClass="error"/>
 			
-			<h:outputLabel for="country" value="Country:" />
+			<h:outputLabel for="country" value="#{msgs.country}" />
 			<b:inputText styleClass="datePicker"  id="country" value="#{registerCustomerBean.address.country}"></b:inputText>
 			<b:message for="country" styleClass="error"/>
 			
-			<b:commandButton value="Register" action="#{registerCustomerBean.register}"/>
-			<b:messages />
+			<b:commandButton value="#{msgs.register}" action="#{registerCustomerBean.register}" look="info"/>
+			
 		</h:form>
 	</ui:define>
 </ui:composition>

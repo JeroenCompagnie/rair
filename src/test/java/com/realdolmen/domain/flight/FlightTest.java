@@ -29,7 +29,7 @@ public class FlightTest {
 		
 		d = new Date();
 		du = Duration.ofHours(3L);
-		f = new Flight(p, new ArrayList<BookingOfFlight>(), l1, l2, d, du);
+		f = new Flight(p, l1, l2, d, du);
 
 	}
 

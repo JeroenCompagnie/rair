@@ -6,6 +6,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:b="http://bootsfaces.net/ui">
 <f:view>
+	<f:loadBundle basename="Messages" var="msgs"></f:loadBundle>
 	<h:head>
 		<f:facet name="last">
 			<h:outputStylesheet library="css" name="custom.css" />
@@ -13,18 +14,21 @@
 		<title><ui:insert name="title">Placeholder</ui:insert></title>
 	</h:head>
 	<h:body>
-		<b:navBar ng-class="{greenStyle: true}">
-			
+	<div class="wrapepr">
+		<b:navBar>
 			<b:navbarLinks>
 				<b:navLink value="Rair" href="index.xhtml" iconAwesome="plane" />
-				<b:navLink value="Search Flight" href="#" iconAwesome="search"></b:navLink>
-				<b:navLink value="Book Flight" href="#" iconAwesome="book"></b:navLink>
-				<b:dropMenu value="Partner Module" href="partnerModule.xhtml" icon="plane" rendered="#{loginBean.userIsPartner}">
-					<b:navLink value="Add flight" href="partnerModule.xhtml" iconAwesome="book"></b:navLink>
-					<b:navLink value="Manage flights" href="partnerModuleManage.xhtml" iconAwesome="book"></b:navLink>
+				<b:navLink value="#{msgs.searchFlight}" href="#" iconAwesome="search"></b:navLink>
+				<b:navLink value="#{msgs.bookFlight}" href="#" iconAwesome="book"></b:navLink>
+				<b:dropMenu value="Partner Module" href="partnerModule.xhtml"
+					icon="plane" rendered="#{loginBean.userIsPartner}">
+					<b:navLink value="#{msgs.addFlight}" href="partnerModule.xhtml"
+						iconAwesome="book"></b:navLink>
+					<b:navLink value="#{msgs.manageFlights}" href="partnerModuleManage.xhtml"
+						iconAwesome="book"></b:navLink>
 				</b:dropMenu>
 			</b:navbarLinks>
-			
+
 			<!-- Following line is needed for TBS 3.0.1 (panel content overflow issue) -->
 			<b:navbarLinks pull="right">
 				<b:navLink value="    " href="#"></b:navLink>
@@ -32,21 +36,25 @@
 			<b:navbarLinks pull="right" styleClass="hidden-xs">
 				<b:navLink value="Login" href="login.xhtml" iconAwesome="user"
 					rendered="#{loginBean.isUserNull}"></b:navLink>
-				<b:navLink value="Register" href="register.xhtml"
+				<b:navLink value="#{msgs.registerNav}" href="register.xhtml"
 					iconAwesome="list-alt" rendered="#{loginBean.isUserNull}"></b:navLink>
-				
+
 			</b:navbarLinks>
-			
+
 			<!-- logout button must be in form and out of navbarLinks -->
-			<h:form class="navbar-form navbar-right hidden-md hidden-sm hidden-xs"
+			<h:form
+				class="navbar-form navbar-right hidden-md hidden-sm hidden-xs"
 				role="submit">
-				<b:commandButton value="Logout #{loginBean.userName} #{loginBean.userType}" action="#{loginBean.logout}" iconAwesome="user" rendered="#{not loginBean.isUserNull}" ></b:commandButton>
-				
+				<b:commandButton
+					value="Logout #{loginBean.userName} #{loginBean.userType}"
+					action="#{loginBean.logout}" iconAwesome="user"
+					rendered="#{not loginBean.isUserNull}"></b:commandButton>
+
 			</h:form>
-			
+
 		</b:navBar>
-		
-		
+
+
 		<b:container>
 			<header>
 				<h1>
@@ -56,8 +64,16 @@
 			<main> <ui:insert name="content">
 				default content
 		</ui:insert> </main>
-			<p>Copyright 2016 - Realdolmen</p>
+			<br/>		
+			<p> <h:outputText value="#{msgs.footerLine1}"/> </p>
+			<p> <h:outputText value="#{msgs.footerLine2}"/></p>
 		</b:container>
+		<div class="push"></div>
+        </div>
+        <div class="footer">
+            <p>Copyright (c) - Realdolmen 2016</p>
+        </div>
+		
 	</h:body>
 </f:view>
 </html>

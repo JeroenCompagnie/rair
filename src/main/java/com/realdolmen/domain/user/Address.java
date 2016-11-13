@@ -6,6 +6,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 public class Address implements Serializable{
@@ -19,14 +22,19 @@ public class Address implements Serializable{
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
+	@NotEmpty(message="{streetError}")
 	private String street;
 	
+	@NotNull(message="{numberError}")
 	private int number;
 	
+	@NotNull(message="{postalCodeError}")
 	private int postalCode;
 	
+	@NotEmpty(message="{cityError}")
 	private String city;
 	
+	@NotEmpty(message="{countryError}")
 	private String country;
 	
 	public Address(){
