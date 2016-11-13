@@ -211,19 +211,32 @@ public class persistenceDatabaseTest extends JpaPersistenceTest {
 		assertNotNull(a1);
 		Airport a2 = em.find(Airport.class, "VCE");
 		assertNotNull(a2);
+		Airport a3 = em.find(Airport.class, "BRO");
+		assertNotNull(a3);
+		Airport a4 = em.find(Airport.class, "VCA");
+		assertNotNull(a4);
 
 		for (int y = 1; y <= 10; y++) {
-			Flight f = new Flight(partner, new ArrayList<BookingOfFlight>(), a1, a2, new Date(),
-					Duration.ofMinutes(120*y));
-			em.persist(f);
-			assertNotNull(f.getId());
-			
+			Flight f;
+			if (y <= 5) {
+				f = new Flight(partner, new ArrayList<BookingOfFlight>(), a1, a2, new Date(),
+						Duration.ofMinutes(120 * y));
+				em.persist(f);
+				assertNotNull(f.getId());
+			} else {
+				f = new Flight(partner, new ArrayList<BookingOfFlight>(), a3, a4, new Date(),
+						Duration.ofMinutes(120 * y));
+				em.persist(f);
+				assertNotNull(f.getId());
+
+			}
 			for (int i = 1; i < 120; i++) {
 				if (i <= 60) {
-					/*Seat seat = new Seat(SeatType.Business, 999.99);
-					em.persist(seat);
-					assertNotNull(seat.getId());
-					f.addSeat(seat);*/
+					/*
+					 * Seat seat = new Seat(SeatType.Business, 999.99);
+					 * em.persist(seat); assertNotNull(seat.getId());
+					 * f.addSeat(seat);
+					 */
 					Seat seat = new Seat(SeatType.FirstClass, 567.99);
 					em.persist(seat);
 					assertNotNull(seat.getId());
@@ -234,12 +247,12 @@ public class persistenceDatabaseTest extends JpaPersistenceTest {
 					assertNotNull(seat.getId());
 					f.addSeat(seat);
 				} else {
-					if(i!=5)
-					{
-					Seat seat = new Seat(SeatType.Economy, 237.99);
-					em.persist(seat);
-					assertNotNull(seat.getId());
-					f.addSeat(seat);}
+					if (i != 5) {
+						Seat seat = new Seat(SeatType.Economy, 237.99);
+						em.persist(seat);
+						assertNotNull(seat.getId());
+						f.addSeat(seat);
+					}
 				}
 			}
 

@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import com.realdolmen.domain.flight.Airport;
 
 @Stateless
-public class AirportRepositroy {
+public class AirportRepository {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@PersistenceContext

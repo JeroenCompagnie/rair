@@ -16,11 +16,15 @@ import javax.persistence.PersistenceContext;
 import javax.validation.constraints.NotNull;
 
 import com.realdolmen.domain.flight.Flight;
+import com.realdolmen.domain.flight.GlobalRegion;
 import com.realdolmen.domain.flight.PaymentMethod;
 import com.realdolmen.domain.flight.SeatType;
+import com.realdolmen.domain.flight.Airport;
 import com.realdolmen.domain.user.Partner;
+import com.realdolmen.repository.AirportRepository;
 import com.realdolmen.repository.FlightRepository;
 import com.realdolmen.repository.PartnerRepository;
+
 
 @Named("search")
 @SessionScoped ////////////////////////////////// IF DONT WORK TRY SESSIONSCOPE
@@ -37,13 +41,15 @@ public class SearchBean implements Serializable {
 
 	@EJB
 	private PartnerRepository partnerRepository;
+	
+	@EJB
+	private AirportRepository airportRepository;
+	
 
 	// @ManagedProperty("#{flightclasses}")
 	private List<SeatType> flightclasses;
 	// @ManagedProperty("#{airlines}")
 	private List<String> airlines;
-
-	private String selectedAirline;
 
 	private SeatType selectedFlightClass;
 	
@@ -56,6 +62,16 @@ public class SearchBean implements Serializable {
 	private PaymentMethod selectedPaymentMethod;
 	
 	private Long selectedFlightId;
+	
+	private List<Airport> airports;
+	
+	private Airport selectedDestination;
+	
+	private Airport selectedDeparture;
+	
+	private List<GlobalRegion> globalRegions;
+	
+	private GlobalRegion selectedGlobalRegion;
 
 	public Long getSelectedFlightId() {
 		return selectedFlightId;
@@ -63,6 +79,46 @@ public class SearchBean implements Serializable {
 	
 	private Partner selectedPartner;
 	
+	public SeatType getSelectedFlightClass() {
+		return selectedFlightClass;
+	}
+
+	public void setSelectedFlightClass(SeatType selectedFlightClass) {
+		this.selectedFlightClass = selectedFlightClass;
+	}
+
+	public List<Airport> getAirports() {
+		return airports;
+	}
+
+	public void setAirports(List<Airport> airports) {
+		this.airports = airports;
+	}
+
+	public Airport getSelectedDestination() {
+		return selectedDestination;
+	}
+
+	public void setSelectedDestination(Airport selectedDestination) {
+		this.selectedDestination = selectedDestination;
+	}
+
+	public Airport getSelectedDeparture() {
+		return selectedDeparture;
+	}
+
+	public void setSelectedDeparture(Airport selectedDeparture) {
+		this.selectedDeparture = selectedDeparture;
+	}
+
+	public List<GlobalRegion> getGlobalRegions() {
+		return globalRegions;
+	}
+
+	public void setGlobalRegions(List<GlobalRegion> globalRegions) {
+		this.globalRegions = globalRegions;
+	}
+
 	private List<Partner> partners;
 	
 	private Calendar calendar;
@@ -80,6 +136,13 @@ public class SearchBean implements Serializable {
 	@PostConstruct
 	public void init() {
 		calendar = Calendar.getInstance();
+		globalRegions = new ArrayList<GlobalRegion>();
+		for(GlobalRegion gr : GlobalRegion.values())
+		{
+			globalRegions.add(gr);
+		}
+		airports = new ArrayList<Airport>();
+		airports = airportRepository.findAll();
 		setFlights(new ArrayList<Flight>());
 		setFlights(entityManager.createQuery("select f from Flight f", Flight.class).getResultList());
 		// setFlights2(entityManager.createNamedQuery("Flight.findAll",Flight.class).getResultList());;
@@ -127,10 +190,6 @@ public class SearchBean implements Serializable {
 		this.flights2 = flights2;
 	}
 
-	public String getSelectedAirline() {
-		return selectedAirline;
-	}
-
 	@NotNull
 	public Date getDateOfDeparture() {
 		return dateOfDeparture;
@@ -164,10 +223,6 @@ public class SearchBean implements Serializable {
 		if(dateOfReturn != null){
 		d = removeTimeFromDate(dateOfReturn);}
 		this.dateOfReturn = d;
-	}
-
-	public void setSelectedAirline(String selectedAirline) {
-		this.selectedAirline = selectedAirline;
 	}
 
 	public SeatType getSelectedFlightclass() {
@@ -217,10 +272,7 @@ public class SearchBean implements Serializable {
 	
 	public String search()
 	{
-		Partner partner = getSelectedPartner();
-		Date d =getDateOfDeparture();
-		//System.out.println(d.);
-		setFlights2(flightRepository.findByParams(getSelectedFlightclass(), partner, getDateOfDeparture()));
+		setFlights2(flightRepository.findByParams(getSelectedFlightclass(), getSelectedPartner(), getDateOfDeparture(),getSelectedDestination(),getSelectedDeparture(),getSelectedGlobalRegion()));
 		return "search";
 	}
 
@@ -238,6 +290,14 @@ public class SearchBean implements Serializable {
 
 	public void setPartners(List<Partner> partners) {
 		this.partners = partners;
+	}
+
+	public GlobalRegion getSelectedGlobalRegion() {
+		return selectedGlobalRegion;
+	}
+
+	public void setSelectedGlobalRegion(GlobalRegion selectedGlobalRegion) {
+		this.selectedGlobalRegion = selectedGlobalRegion;
 	}
 
 }

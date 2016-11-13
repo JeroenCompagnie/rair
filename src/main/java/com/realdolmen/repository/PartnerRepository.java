@@ -29,7 +29,7 @@ public class PartnerRepository {
 	private FlightRepository flightRepository;
 	
 	@EJB
-	private AirportRepositroy airportRepository;
+	private AirportRepository airportRepository;
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	private CriteriaBuilder cb;
