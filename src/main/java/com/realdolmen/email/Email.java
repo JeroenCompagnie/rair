@@ -1,42 +1,56 @@
 package com.realdolmen.email;
 
-import java.util.*;
 import javax.mail.*;
 import javax.mail.internet.*;
-import javax.activation.*;
+import java.util.Properties;
 
 public class Email {
-	
+
 	private static String USER_NAME = "rairnoreply";  // GMail user name (just the part before "@gmail.com")
-    private static String PASSWORD = "rairnorepy12345"; // GMail password
-    private static String RECIPIENT = "jeroen.compagnie@gmail.com";
+	private static String PASSWORD = "rairnorepy12345"; // GMail password
+	private static String TESTRECIPIENT = "jeroen.compagnie@gmail.com";
 
-    public static void main(String[] args) {
-        String from = USER_NAME;
-        String pass = PASSWORD;
-        String[] to = { RECIPIENT }; // list of recipient email addresses
-        String subject = "Java send mail example";
-        String body = "Welcome to JavaMail!";
+	public static void main(String[] args) {
+		String from = USER_NAME;
+		String pass = PASSWORD;
+		String[] to = { TESTRECIPIENT }; // list of recipient email addresses
+		String subject = "Java send mail example";
+		String body = "Welcome to JavaMail!";
 
-        sendFromGMail(from, pass, to, subject, body);
-    }
+		sendMail(from, pass, to, subject, body);
+	}
 
-    private static void sendFromGMail(String from, String pass, String[] to, String subject, String body) {
-        Properties props = System.getProperties();
-        String host = "smtp.gmail.com";
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", host);
-        props.put("mail.smtp.user", from);
-        props.put("mail.smtp.password", pass);
-        props.put("mail.smtp.port", "587");
-        props.put("mail.smtp.auth", "true");
-
-        Session session = Session.getDefaultInstance(props);
-        MimeMessage message = new MimeMessage(session);
-
-        try {
-            message.setFrom(new InternetAddress(from));
-            InternetAddress[] toAddress = new InternetAddress[to.length];
+//	static Properties props;
+	public Email(){
+//		props = new Properties();
+//		props.put("mail.smtp.auth", "true");
+//		props.put("mail.smtp.starttls.enable", "true");
+//		props.put("mail.smtp.host", "smtp.gmail.com");
+//		props.put("mail.smtp.port", "587");
+	}
+	
+	public boolean sendMailStandardSender(String[] to, String subject, String body){
+		return sendMail(USER_NAME, PASSWORD, to, subject, body);
+	}
+	
+	public static boolean sendMail(String from, String pass, String[] to, String subject, String body){
+		Properties props;
+		props = new Properties();
+		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.starttls.enable", "true");
+		props.put("mail.smtp.host", "smtp.gmail.com");
+		props.put("mail.smtp.port", "587");
+		Session session = Session.getInstance(props,
+				new Authenticator() {
+			@Override
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(from, pass);
+			}
+		});
+		try {
+			Message message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(from));
+			InternetAddress[] toAddress = new InternetAddress[to.length];
 
             // To get the array of addresses
             for( int i = 0; i < to.length; i++ ) {
@@ -47,18 +61,25 @@ public class Email {
                 message.addRecipient(Message.RecipientType.TO, toAddress[i]);
             }
 
-            message.setSubject(subject);
-            message.setText(body);
-            Transport transport = session.getTransport("smtp");
-            transport.connect(host, from, pass);
-            transport.sendMessage(message, message.getAllRecipients());
-            transport.close();
-        }
-        catch (AddressException ae) {
-            ae.printStackTrace();
-        }
-        catch (MessagingException me) {
-            me.printStackTrace();
-        }
-    }
+			MimeMultipart multipart = new MimeMultipart();
+
+			message.setSubject(subject);
+			BodyPart messBodyPart = new MimeBodyPart();
+			messBodyPart.setContent(body, "text/html");
+
+			multipart.addBodyPart(messBodyPart);
+
+			message.setContent(multipart);
+
+
+			Transport.send(message);
+			return true;
+		}
+		catch (Exception e){
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+
 }

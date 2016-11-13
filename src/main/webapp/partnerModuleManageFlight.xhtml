@@ -31,26 +31,37 @@
 			
 			<h:form>
 				
-				<b:panelGrid colSpans="6,6" size ="sm">
+				<b:panelGrid colSpans="4,6,2" size ="sm">
 					<h:outputText value="Id: " />
 						#{partnerBean.partnerFlightId}
+						<h:outputText value= "" />
+						
 					<h:outputText
 						value="Departure date: " />
 						#{partnerBean.partnerFlight.dateOfDeparture}
+						<h:outputText value= "" />
+						
 					<h:outputText
 						value="Departure airport: " />
 						#{partnerBean.partnerFlight.departureAirport}
+						<h:outputText value= "" />
+						
 					<h:outputText
 						value="Destination airport: "/>
 						#{partnerBean.partnerFlight.destinationAirport}
+						<h:outputText value= "" />
+						
 					<h:outputText
 						value="Flight duration: " />
 						<h:outputText
-						value="#{partnerBean.partnerFlight.flightDurationInMinutes}" />
+						value="#{partnerBean.partnerFlight.flightDurationInMinutes} minutes" />
+						<h:outputText value= "" />
 						
 				</b:panelGrid>
 				
-
+				<br/>
+				<br/>
+				
 				<b:panelGrid colSpans="6,6" size="lg">
 					<h:panelGroup>
 						<h:outputLabel value="Economy seats left: #{partnerBean.numberOfSeatsLeftEconomy}" />
