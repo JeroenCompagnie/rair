@@ -29,7 +29,7 @@ public class AirportRepository {
 		return airport;
 	}
 
-	public Airport findById(Long airportId) {
+	public Airport findById(long airportId) {
 		return em.find(Airport.class, airportId);
 	}
 

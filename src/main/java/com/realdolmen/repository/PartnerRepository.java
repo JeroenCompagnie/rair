@@ -117,27 +117,9 @@ public class PartnerRepository {
 	private boolean checkForPartner(User partner) {
 		return partner.getClass().equals(Partner.class);
 	}
-	
-	public int getNumberOfSeatsLeft(User partner, Flight flight, List<SeatType> seatTypes){
-		if(checkForPartner(partner)){
-			return flightRepository.getNumberOfSeatsLeft((Partner) partner, flight, seatTypes);
-		}
-		else{
-			return -1;
-		}
-	}
-	
-	public int getNumberOfSeatsBooked(User partner, Flight flight, List<SeatType> seatTypes){
-		if(checkForPartner(partner)){
-			return flightRepository.getNumberOfSeatsBooked((Partner) partner, flight, seatTypes);
-		}
-		else{
-			return -1;
-		}
-	}
 
 	public List<String> getAirlines() {
-		return em.createQuery("SELECT DISTINCT p.name FROM Partner p").getResultList();
+		return em.createQuery("SELECT DISTINCT p.name FROM Partner p", String.class).getResultList();
 	}
 	
 	/*

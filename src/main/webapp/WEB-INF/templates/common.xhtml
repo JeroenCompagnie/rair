@@ -14,7 +14,7 @@
 		<title><ui:insert name="title">Placeholder</ui:insert></title>
 	</h:head>
 	<h:body>
-	<div class="wrapepr">
+	<div class="wrapper">
 		<b:navBar>
 			<b:navbarLinks>
 				<b:navLink value="Rair" href="index.xhtml" iconAwesome="plane" />
@@ -27,6 +27,8 @@
 					<b:navLink value="#{msgs.manageFlights}" href="partnerModuleManage.xhtml"
 						iconAwesome="book"></b:navLink>
 				</b:dropMenu>
+				<b:navLink value="#{msgs.employeeModule}" href="employeeModule.xhtml"
+					icon="star" rendered="#{loginBean.userIsEmployee}"/>
 			</b:navbarLinks>
 
 			<!-- Following line is needed for TBS 3.0.1 (panel content overflow issue) -->

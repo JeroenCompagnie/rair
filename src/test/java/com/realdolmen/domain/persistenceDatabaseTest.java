@@ -17,6 +17,7 @@ import com.realdolmen.course.utilities.persistence.JpaPersistenceTest;
 import com.realdolmen.domain.flight.Airport;
 import com.realdolmen.domain.flight.Booking;
 import com.realdolmen.domain.flight.BookingOfFlight;
+import com.realdolmen.domain.flight.Discount;
 import com.realdolmen.domain.flight.Flight;
 import com.realdolmen.domain.flight.PaymentStatus;
 import com.realdolmen.domain.flight.Seat;
@@ -199,7 +200,7 @@ public class persistenceDatabaseTest extends JpaPersistenceTest {
 
 		for (Airport entry : airportsFromCSV) {
 			Airport airport = new Airport(entry.getCity(), entry.getCountry(), entry.getCountryCode(),
-					entry.getAirportName(), entry.getId(), entry.getGlobalRegion());
+					entry.getAirportName(), entry.getInternationalAirportCode(), entry.getGlobalRegion());
 			em.persist(airport);
 		}
 
@@ -207,9 +208,11 @@ public class persistenceDatabaseTest extends JpaPersistenceTest {
 				.getResultList();
 		assertEquals(airportsFromCSV.size(), airports.size());
 
-		Airport a1 = em.find(Airport.class, "BRU");
+		;
+		
+		Airport a1 = getAirportByCode(em, "BRU");
 		assertNotNull(a1);
-		Airport a2 = em.find(Airport.class, "VCE");
+		Airport a2 = getAirportByCode(em, "VCE");
 		assertNotNull(a2);
 
 		/** BEGIN
@@ -218,8 +221,8 @@ public class persistenceDatabaseTest extends JpaPersistenceTest {
 		 * 	add it to a booking
 		 */
 		Flight flight = new Flight(partner,
-				em.find(Airport.class, "JFK"), 
-				em.find(Airport.class, "JFK"),
+				getAirportByCode(em, "JFK"), 
+				getAirportByCode(em, "JFK"),
 				new Date(), Duration.ofMinutes(9));
 		em.persist(flight);
 		assertNotNull(flight.getId());
@@ -310,13 +313,13 @@ public class persistenceDatabaseTest extends JpaPersistenceTest {
 				.getSingleResult();
 		assertEquals(3, number);
 		
-		// GET NUMBER OF SEATS BOOKED PER SEAT TYPE
+		// GET NUMBER OF SEATS left PER SEAT TYPE
 		number = (int)(long) em.createQuery(
 				"select count(f) "
 				+ "from Flight f join "
 				+ "f.seatList s WHERE f.id = :flightId "
 				+ "and s.type = :seatType")
-				.setParameter("flightId", 1L)
+				.setParameter("flightId", flight.getId())
 				.setParameter("seatType", SeatType.Economy)
 				.getSingleResult();
 		assertEquals(7, number);
@@ -327,7 +330,7 @@ public class persistenceDatabaseTest extends JpaPersistenceTest {
 				+ "FROM Flight f JOIN "
 				+ "f.seatList s WHERE f.id = :flightId "
 				+ "AND (s.type IN :seatType)")
-				.setParameter("flightId", 1L)
+				.setParameter("flightId", flight.getId())
 				.setParameter("seatType", Arrays.asList(SeatType.values()))
 				.getSingleResult();
 		assertEquals(21, number);
@@ -338,10 +341,16 @@ public class persistenceDatabaseTest extends JpaPersistenceTest {
 						+ "FROM Flight f JOIN "
 						+ "f.seatList s WHERE f.id = :flightId "
 						+ "AND (s.type IN :seatType)")
-						.setParameter("flightId", 1L)
+						.setParameter("flightId", flight.getId())
 						.setParameter("seatType", SeatType.Economy)
 						.getSingleResult();
 				assertEquals(7, number);
+				
+		// ADD some discounts to the flight:
+		flight.addDiscount(new Discount(true, true, 0.01));
+		flight.addDiscount(new Discount(false, true, 0.01));
+		flight.addDiscount(new Discount(true, false, 1.0));
+		flight.addDiscount(new Discount(false, false, 1.0));
 		/** ENDtype
 		 * Make flight, add 30 seats, 10 of each seattype
 		 * Make bookingsofflights for 9 seats, 3 of each seattype;
@@ -401,6 +410,15 @@ public class persistenceDatabaseTest extends JpaPersistenceTest {
 
 
 		}
+		
+	}
+
+	private Airport getAirportByCode(EntityManager em, String code) {
+		return em.createQuery(
+				"select a from Airport a "
+				+ "where a.internationalAirportCode = :arg", Airport.class)
+		.setParameter("arg", code)
+		.getSingleResult();
 	}
 }
 

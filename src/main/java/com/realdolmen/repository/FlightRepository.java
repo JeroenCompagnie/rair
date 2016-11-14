@@ -42,7 +42,7 @@ public class FlightRepository {
 		return flight;
 	}
 
-	public Flight findById(Long id) {
+	public Flight findById(long id) {
 		return em.find(Flight.class, id);
 	}
 
@@ -117,7 +117,8 @@ public class FlightRepository {
 	public ArrayList<Flight> getFlightsByPartner(Partner partner) {
 		ArrayList<Flight> resultList = new ArrayList<Flight>();
 		try{
-			resultList = (ArrayList<Flight>) em.createQuery("select f from Flight f where f.partner = :arg", Flight.class).setParameter("arg", partner).getResultList();
+			resultList = (ArrayList<Flight>) em.createQuery("select f from Flight f where f.partner = :arg", Flight.class)
+					.setParameter("arg", partner).getResultList();
 		}
 		catch (Exception e){
 			logger.error("No flights found for partner: " + partner.getName());
@@ -140,60 +141,40 @@ public class FlightRepository {
 		}
 		return f;
 	}
+	
+	
 
 	public void setSeatPrice(Partner partner, long partnerFlightId, SeatType seatType, double newPrice) {
 		Flight find = em.find(Flight.class, partnerFlightId);
 		if(find.getPartner().getId() == partner.getId()){
-			find.setSeatPrice(newPrice, seatType);
+			find.setSeatBasePrice(newPrice, seatType);
 			em.merge(find);
 		}
 	}
 	
-	public int getNumberOfSeatsBooked(Partner partner, Flight flight, List<SeatType> seatTypes){
+	public int getNumberOfSeatsBooked(Flight flight, List<SeatType> seatTypes){
 		if(flight == null){
 			System.err.println("flight was null");
 			return -41;
 		}
-		if(flight.getPartner() == null) {
-			System.err.println("flight partner was null");
-			return -42;
-		}
-		if(partner == null){
-			System.err.println("given partner was null");
-			return -43;
-		}
-		if(flight.getPartner().getId() == partner.getId()){
-			return (int)(long) em.createQuery(
-					"select count(s) "
-					+ "from BookingOfFlight bof join bof.seat s "
-					+ "where bof.flight = :arg1 "
-					+ "and bof.seat = s "
-					+ "and s.type IN :arg2")
-					.setParameter("arg1", flight)
-					.setParameter("arg2", seatTypes)
-					.getSingleResult();
-		}
-		else{
-			System.err.println("Partner was not the right one!");
-			return -1;
-		}
+		return (int)(long) em.createQuery(
+				"select count(s) "
+						+ "from BookingOfFlight bof join bof.seat s "
+						+ "where bof.flight = :arg1 "
+						+ "and bof.seat = s "
+						+ "and s.type IN :arg2")
+				.setParameter("arg1", flight)
+				.setParameter("arg2", seatTypes)
+				.getSingleResult();
+
 	}
-	
-	public int getNumberOfSeatsLeft(Partner partner, Flight flight, List<SeatType> seatTypes){
+
+	public int getNumberOfSeatsLeft(Flight flight, List<SeatType> seatTypes){
 		if(flight == null){
 			System.err.println("flight was null");
 			return -41;
 		}
-		if(flight.getPartner() == null) {
-			System.err.println("flight partner was null");
-			return -42;
-		}
-		if(partner == null){
-			System.err.println("given partner was null");
-			return -43;
-		}
-		if(flight.getPartner().getId() == partner.getId()){
-			return (int)(long) em.createQuery(
+		return (int)(long) em.createQuery(
 					"select count(f) "
 					+ "from Flight f join "
 					+ "f.seatList s WHERE f.id = :flightId "
@@ -201,8 +182,5 @@ public class FlightRepository {
 					.setParameter("flightId", flight.getId())
 					.setParameter("seatType", seatTypes)
 					.getSingleResult();
-		}
-		return 0;
 	}
-
 }

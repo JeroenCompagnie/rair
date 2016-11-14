@@ -20,11 +20,10 @@ import javax.validation.constraints.NotNull;
 import org.junit.Before;
 
 import com.realdolmen.domain.flight.Airport;
-import com.realdolmen.domain.flight.BookingOfFlight;
 import com.realdolmen.domain.flight.Flight;
-import com.realdolmen.domain.flight.Seat;
 import com.realdolmen.domain.flight.SeatType;
 import com.realdolmen.domain.user.Partner;
+import com.realdolmen.repository.FlightRepository;
 import com.realdolmen.repository.PartnerRepository;
 
 @Named("partnerBean")
@@ -41,6 +40,9 @@ public class PartnerBean implements Serializable{
 	
 	@EJB
 	private PartnerRepository partnerRepository;
+	
+	@EJB
+	private FlightRepository flightRepository;
 	
 	@Before
 	public void init(){
@@ -271,7 +273,7 @@ public class PartnerBean implements Serializable{
 	}
 	
 	public double getEconomySeatPrice(){
-		return getPartnerFlight().getSeatPrice(SeatType.Economy);
+		return getPartnerFlight().getSeatBasePrice(SeatType.Economy);
 	}
 	
 	public void setEconomySeatPrice(double newPrice){
@@ -284,7 +286,7 @@ public class PartnerBean implements Serializable{
 	}
 	
 	public double getBusinessSeatPrice(){
-		return getPartnerFlight().getSeatPrice(SeatType.Business);
+		return getPartnerFlight().getSeatBasePrice(SeatType.Business);
 	}
 	
 	public void setBusinessSeatPrice(double newPrice){
@@ -297,7 +299,7 @@ public class PartnerBean implements Serializable{
 	}
 	
 	public double getFirstSeatPrice(){
-		return getPartnerFlight().getSeatPrice(SeatType.FirstClass);
+		return getPartnerFlight().getSeatBasePrice(SeatType.FirstClass);
 	}
 	
 	public void setFirstSeatPrice(double newPrice){
@@ -314,13 +316,11 @@ public class PartnerBean implements Serializable{
 	 * @return
 	 */
 	public int getNumberOfSeatsLeft(Flight f){
-		return partnerRepository.getNumberOfSeatsLeft(loginBean.getUser(), 
-				f, Arrays.asList(SeatType.values()));
+		return flightRepository.getNumberOfSeatsLeft(f, Arrays.asList(SeatType.values()));
 	}
 	
 	public int getNumberOfSeatsLeft(String type){
-		return partnerRepository.getNumberOfSeatsLeft(loginBean.getUser(), 
-				getPartnerFlight(), Arrays.asList(SeatType.valueOf(type)));
+		return flightRepository.getNumberOfSeatsLeft(getPartnerFlight(), Arrays.asList(SeatType.valueOf(type)));
 		//return getPartnerFlight().getNumberOfSeatForType(SeatType.valueOf(type));
 	}
 	
@@ -341,12 +341,12 @@ public class PartnerBean implements Serializable{
 	 * @return
 	 */
 	public int getNumberOfSeatsBooked(Flight f){
-		return partnerRepository.getNumberOfSeatsBooked(loginBean.getUser(), 
+		return flightRepository.getNumberOfSeatsBooked( 
 				f, Arrays.asList(SeatType.values()));
 	}
 	
 	public int getNumberOfSeatsBooked(String type){
-		return partnerRepository.getNumberOfSeatsBooked(loginBean.getUser(), 
+		return flightRepository.getNumberOfSeatsBooked(
 				getPartnerFlight(), Arrays.asList(SeatType.valueOf(type)));
 //		return getPartnerFlight().getSeatsSold(SeatType.valueOf(type));
 	}

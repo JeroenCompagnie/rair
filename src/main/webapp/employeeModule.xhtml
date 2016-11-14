@@ -10,17 +10,18 @@
 
 <ui:composition template="WEB-INF/templates/common.xhtml">
 	<!-- TODO replace content here -->
-	<ui:define name="title">Partner module</ui:define>
+	<ui:define name="title">Employee module</ui:define>
 
 	<ui:define name="content">
 		<h:outputLabel value="You have no powers here!"
-			rendered="#{not loginBean.userIsPartner}" />
-		#{partnerBean.partnerFlightId}
-		<h:panelGroup layout="block" rendered="#{loginBean.userIsPartner}">
-			<b:dataTable value="#{partnerBean.flightsOfPartner}" var="f">
+			rendered="#{not loginBean.userIsEmployee}" />
+			
+		<h:panelGroup layout="block" rendered="#{loginBean.userIsEmployee}">
+			<b:dataTable value="#{employeeBean.flights}" var="f">
 				<b:dataTableColumn value="#{f.id}" label="#" />
-				<b:dataTableColumn value="#{partnerBean.getNumberOfSeatsLeft(f)}" label="Seats left" />
-				<b:dataTableColumn value="#{partnerBean.getNumberOfSeatsBooked(f)}" label="Seats booked" />
+				<b:dataTableColumn value="#{f.partner.name}"/>
+				<b:dataTableColumn value="#{employeeBean.getNumberOfSeatsLeft(f)}" label="Seats left" />
+				<b:dataTableColumn value="#{employeeBean.getNumberOfSeatsBooked(f)}" label="Seats booked" />
 				<b:dataTableColumn value="#{f.departureAirport}"
 					label="Departure airport" />
 				<b:dataTableColumn value="#{f.destinationAirport}"
@@ -29,17 +30,13 @@
 					label="Departure date" />
 				<b:dataTableColumn label="Manage link" >
 					<b:navLink value="Manage"
-						outcome="partnerModuleManageFlight.xhtml">
-						<f:param name="partnerFlightId" value="#{f.id}" />
+						outcome="employeeModuleManageFlight.xhtml">
+						<f:param name="flightId" value="#{f.id}" />
 					</b:navLink>
 				</b:dataTableColumn>
 			</b:dataTable>
 		</h:panelGroup>
-		
-		<h:panelGroup layout="block" rendered="#{loginBean.userIsPartner and partnerBean.partnerFlightId > 0}">
-			test
-		</h:panelGroup>
-		
+			
 
 	</ui:define>
 </ui:composition>

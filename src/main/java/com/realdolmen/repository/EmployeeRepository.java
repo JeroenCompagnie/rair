@@ -1,8 +1,10 @@
 package com.realdolmen.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -14,13 +16,23 @@ import javax.persistence.criteria.Root;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.realdolmen.domain.flight.Airport;
+import com.realdolmen.domain.flight.Flight;
 import com.realdolmen.domain.user.Employee;
+import com.realdolmen.domain.user.Partner;
+import com.realdolmen.domain.user.User;
 
 @Stateless
 public class EmployeeRepository {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
 	private CriteriaBuilder cb;
+	
+	@EJB
+	private FlightRepository flightRepository;
+	
+	@EJB
+	private AirportRepository airportRepository;
 	
 	@PersistenceContext
 	EntityManager em;
@@ -56,5 +68,5 @@ public class EmployeeRepository {
 	public void remove(long employeeId) {
 		logger.info("Removing employee with id " + employeeId);
 		em.remove(em.getReference(Employee.class, employeeId));
-	}
+	}	
 }

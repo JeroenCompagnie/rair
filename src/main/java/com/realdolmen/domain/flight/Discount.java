@@ -1,19 +1,28 @@
 package com.realdolmen.domain.flight;
 
-import java.text.SimpleDateFormat;
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.realdolmen.dateConverter.DateConverter;
 
 @Entity
-public class Discount {
+public class Discount implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4954739235029957590L;
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private long id;
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private long id = -999;
 	
 	// Determines if it is a percentage or a real number. If it is a real number € will be pre-pendend with the toString. If a percentage, "%" will be appended with the toString.
 	private boolean isPercentage;
@@ -24,17 +33,20 @@ public class Discount {
 	// Determines if it is only valid during a period
 	private boolean isPeriodical;
 	
+	private boolean byEmployee;
+	
+	@Temporal(TemporalType.DATE)
 	private Date beginDate = null;
 	
+	@Temporal(TemporalType.DATE)
 	private Date endDate = null;
-	
-	private SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 	
 	public Discount(){
 		
 	}
 
-	public Discount(boolean isPercentage, double discount, boolean isPeriodical, Date beginDate, Date endDate) {
+	public Discount(boolean byEmployee, boolean isPercentage, double discount, boolean isPeriodical, Date beginDate, Date endDate) {
+		this.byEmployee = byEmployee;
 		this.isPercentage = isPercentage;
 		this.discount = discount;
 		this.isPeriodical = isPeriodical;
@@ -44,6 +56,13 @@ public class Discount {
 		}
 	}
 	
+	public Discount(boolean byEmployee, boolean isPercentage, double discount) {
+		this.byEmployee = byEmployee;
+		this.isPercentage = isPercentage;
+		this.discount = discount;
+		this.isPeriodical = false;
+	}
+
 	public double addDiscountToPrice(double price){
 		if(isPeriodical){
 			Date d = new Date();
@@ -73,20 +92,24 @@ public class Discount {
 	
 	@Override
 	public String toString(){
-		String toString = ""+discount;
+		String result = ""+discount;
 		
 		if(isPercentage){
-			toString += "%";
+			result += "%";
 		}
 		else{
-			toString = "€" + toString();
+			result = "€" + result;
 		}
 			
 		if(isPeriodical){
-			toString += " from " + formatter.format(beginDate);
-			toString += " to " + formatter.format(endDate);
+			result += " from " + DateConverter.format(beginDate);
+			result += " to " + DateConverter.format(endDate);
 		}
-		return toString;
+		return result;
+	}
+	
+	public String getString(){
+		return toString();
 	}
 	
 	/******************************************************************
@@ -138,4 +161,15 @@ public class Discount {
 	public long getId() {
 		return id;
 	}
+
+	public boolean isByEmployee() {
+		return byEmployee;
+	}
+
+	public void setByEmployee(boolean byEmployee) {
+		this.byEmployee = byEmployee;
+	}
+	
+	
 }
+
