@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 
 import com.realdolmen.domain.flight.Airport;
 import com.realdolmen.domain.flight.Flight;
-import com.realdolmen.domain.flight.GlobalRegion;
 import com.realdolmen.domain.flight.Seat;
 import com.realdolmen.domain.flight.SeatType;
 import com.realdolmen.domain.user.Partner;
@@ -39,6 +38,12 @@ public class FlightRepository {
 		em.persist(flight);
 		return flight;
 	}
+	
+	public Flight update(Flight flight)
+	{
+		em.merge(flight);
+		return flight;
+	}
 
 	public Flight create(Flight flight) {
 		em.persist(flight);
@@ -53,7 +58,7 @@ public class FlightRepository {
 		return em.createNamedQuery("Flight.findAll", Flight.class).getResultList();
 	}
 
-	public void remove(long flightId) {
+	public void remove(Long flightId) {
 		logger.info("Removing user with id " + flightId);
 		em.remove(em.getReference(User.class, flightId));
 	}
@@ -72,7 +77,7 @@ public class FlightRepository {
 		return typedQuery.getResultList();
 	}
 
-	public List<Flight> findByParams3(SeatType t, Partner p, Date d) {
+	/*public List<Flight> findByParams3(SeatType t, Partner p, Date d) {
 //works but has duplicates
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Flight> cq = cb.createQuery(Flight.class);
@@ -85,7 +90,7 @@ public class FlightRepository {
 		TypedQuery<Flight> typedQuery = em.createQuery(cq);
 
 		return typedQuery.getResultList();
-	}
+	}*/
 
 	public List<Flight> findByParams(SeatType t, Partner partner, Date departureDate,Airport destination,Airport departure,String globalRegion) {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -96,8 +101,17 @@ public class FlightRepository {
 		c.setTime(departureDate);
 		c.add(Calendar.DATE, 1); 
 		date2 = c.getTime();
-		//departure=null;
+		Calendar c2 = Calendar.getInstance();
+		c2.setTime(departureDate);
+		c2.add(Calendar.DAY_OF_YEAR, -1);
+		c2.add(Calendar.MINUTE, 719);
+		departureDate=c2.getTime();
+		//departureDate=null;
+		//t=null;
+		//partner=null;
 		//destination=null;
+		//departure=null;
+		//globalRegion=null;
 		//System.out.println("SeatType: " + t.toString()+ " from findByParams");
 		//System.out.println("Partner: " + partner.toString()+ " from findByParams");
 		//System.out.println("DepartureDate: " + departureDate.toString()+ " from findByParams");
@@ -168,7 +182,7 @@ public class FlightRepository {
 		return (ArrayList<Flight>) resultList;
 	}
 
-	public Flight getFlightByPartner(Partner partner, long partnerFlightId) {
+	public Flight getFlightByPartner(Partner partner, Long partnerFlightId) {
 		Flight f = null;
 		try{
 			f = em.createQuery("select f from Flight f where f.partner = :arg1 and f.id = :arg2", Flight.class)
@@ -183,7 +197,7 @@ public class FlightRepository {
 		return f;
 	}
 
-	public void setSeatPrice(Partner partner, long partnerFlightId, SeatType seatType, double newPrice) {
+	public void setSeatPrice(Partner partner, Long partnerFlightId, SeatType seatType, double newPrice) {
 		Flight find = em.find(Flight.class, partnerFlightId);
 		if(find.getPartner().getId() == partner.getId()){
 			find.setSeatPrice(newPrice, seatType);

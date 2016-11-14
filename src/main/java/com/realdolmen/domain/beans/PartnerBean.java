@@ -258,7 +258,7 @@ public class PartnerBean implements Serializable{
 		if(partnerFlight != null && partnerFlightId == partnerFlight.getId()){
 			return partnerFlight;
 		}
-		return partnerRepository.getFlightByPartner(loginBean.getUser(), partnerFlightId);
+		return partnerRepository.getFlightByPartner(loginBean.getUser(), new Long(partnerFlightId));
 	}
 	
 	public boolean getPartnerFlightIdExists(){
@@ -279,7 +279,7 @@ public class PartnerBean implements Serializable{
 	}
 	
 	public String setEconomySeatPriceInDb(){
-		partnerRepository.setSeatPrice(loginBean.getUser(), partnerFlightId, SeatType.Economy, economySeatTypePrice);
+		partnerRepository.setSeatPrice(loginBean.getUser(), new Long(partnerFlightId), SeatType.Economy, economySeatTypePrice);
 		return "";
 	}
 	
@@ -292,7 +292,7 @@ public class PartnerBean implements Serializable{
 	}
 	
 	public String setBusinessSeatPriceInDb(){
-		partnerRepository.setSeatPrice(loginBean.getUser(), partnerFlightId, SeatType.Business, businessSeatTypePrice);
+		partnerRepository.setSeatPrice(loginBean.getUser(), new Long(partnerFlightId), SeatType.Business, businessSeatTypePrice);
 		return "";
 	}
 	
@@ -305,7 +305,7 @@ public class PartnerBean implements Serializable{
 	}
 	
 	public String setFirstSeatPriceInDb(){
-		partnerRepository.setSeatPrice(loginBean.getUser(), partnerFlightId, SeatType.FirstClass, firstSeatTypePrice);
+		partnerRepository.setSeatPrice(loginBean.getUser(), new Long(partnerFlightId), SeatType.FirstClass, firstSeatTypePrice);
 		return "";
 	}
 

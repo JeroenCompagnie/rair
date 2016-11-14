@@ -37,24 +37,24 @@
 				</h:panelGroup>
 				<h:panelGroup>
 					<b:label text="#{search.dateOfDeparture}">
-						
+
 					</b:label>
 				</h:panelGroup>
-				
+
 				<h:panelGroup>
 					<h:outputText span="8" value="The departure you selected is " />
 				</h:panelGroup>
 				<h:panelGroup>
 					<b:label text="#{search.selectedDeparture}" />
 				</h:panelGroup>
-				
+
 				<h:panelGroup>
 					<h:outputText span="8" value="The destination you selected is " />
 				</h:panelGroup>
 				<h:panelGroup>
 					<b:label text="#{search.selectedDestination}" />
 				</h:panelGroup>
-				
+
 				<h:panelGroup>
 					<h:outputText span="8" value="The global region you selected is " />
 				</h:panelGroup>
@@ -65,8 +65,8 @@
 		</b:jumbotron>
 
 
-		<b:dataTable value="#{search.flights2}" var="flight" id="flightId"
-			fixedHeader="true" scroll-size="400px" scroll-x="false" select="true"
+		<b:dataTable value="#{search.flights}" var="flight" id="flightId"
+			fixedHeader="true" scroll-size="400px" scroll-x="false"
 			responsive="true" searching="false">
 			<b:dataTableColumn value="#{flight.partner.name}">
 				<f:facet name="header">
@@ -97,8 +97,7 @@
 				<f:facet name="header">
 					<h:outputText value="Book now" />
 				</f:facet>
-				<b:navLink value="Book now"
-					outcome="#{search.bookFlight(flight.id)}">
+				<b:navLink value="Book now" outcome="#{search.checkFlightData(flight.id)}">
 					<f:param name="selectedFlightId" value="#{flight.id}" />
 				</b:navLink>
 			</b:dataTableColumn>

@@ -51,7 +51,7 @@ public class CustomerRepository {
 		return allQuery.getResultList();
 	}
 
-	public void remove(long customerId) {
+	public void remove(Long customerId) {
 		logger.info("Removing customer with id " + customerId);
 		em.remove(em.getReference(Customer.class, customerId));
 	}

@@ -53,7 +53,7 @@ public class EmployeeRepository {
         return allQuery.getResultList();
 	}
 
-	public void remove(long employeeId) {
+	public void remove(Long employeeId) {
 		logger.info("Removing employee with id " + employeeId);
 		em.remove(em.getReference(Employee.class, employeeId));
 	}

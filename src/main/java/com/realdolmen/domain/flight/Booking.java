@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -43,7 +45,7 @@ public class Booking implements Serializable{
 	private Date dateOfReservation;
 
 	//TODO: cascadetype nakijken!!
-	@OneToMany(fetch = FetchType.EAGER)
+	@OneToMany(cascade=CascadeType.ALL,fetch = FetchType.EAGER)
 	@JoinTable(
 			joinColumns = @JoinColumn(table = "booking",
 		            name="booking_id",
