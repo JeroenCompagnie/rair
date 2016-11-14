@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.realdolmen.domain.flight.Discount;
+import com.realdolmen.domain.flight.Airport;
 import com.realdolmen.domain.flight.Flight;
 import com.realdolmen.domain.flight.Seat;
 import com.realdolmen.domain.flight.SeatType;
@@ -40,6 +41,12 @@ public class FlightRepository {
 		em.persist(flight);
 		return flight;
 	}
+	
+	public Flight update(Flight flight)
+	{
+		em.merge(flight);
+		return flight;
+	}
 
 	public Flight create(Flight flight) {
 		em.persist(flight);
@@ -54,7 +61,7 @@ public class FlightRepository {
 		return em.createNamedQuery("Flight.findAll", Flight.class).getResultList();
 	}
 
-	public void remove(long flightId) {
+	public void remove(Long flightId) {
 		logger.info("Removing user with id " + flightId);
 		em.remove(em.getReference(User.class, flightId));
 	}
@@ -73,8 +80,10 @@ public class FlightRepository {
 		return typedQuery.getResultList();
 	}
 
-	public List<Flight> findByParams3(SeatType t, Partner p, Date d) {
-		//works but has duplicates
+
+	/*public List<Flight> findByParams3(SeatType t, Partner p, Date d) {
+//works but has duplicates
+>>>>>>> 4014ef9764278ee95b737d9b07b8ffddcc42a17a
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Flight> cq = cb.createQuery(Flight.class);
 		Root<Flight> from = cq.from(Flight.class);
@@ -86,9 +95,9 @@ public class FlightRepository {
 		TypedQuery<Flight> typedQuery = em.createQuery(cq);
 
 		return typedQuery.getResultList();
-	}
+	}*/
 
-	public List<Flight> findByParams(SeatType t, Partner partner, Date departureDate) {
+	public List<Flight> findByParams(SeatType t, Partner partner, Date departureDate,Airport destination,Airport departure,String globalRegion) {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Flight> cq = cb.createQuery(Flight.class);
 		Root<Flight> from = cq.from(Flight.class);
@@ -97,22 +106,70 @@ public class FlightRepository {
 		c.setTime(departureDate);
 		c.add(Calendar.DATE, 1); 
 		date2 = c.getTime();
-		System.out.println(date2.toString() + " added one day in flightrepository");
+		Calendar c2 = Calendar.getInstance();
+		c2.setTime(departureDate);
+		c2.add(Calendar.DAY_OF_YEAR, -1);
+		c2.add(Calendar.MINUTE, 719);
+		departureDate=c2.getTime();
+		//departureDate=null;
+		//t=null;
+		//partner=null;
+		//destination=null;
+		//departure=null;
+		//globalRegion=null;
+		//System.out.println("SeatType: " + t.toString()+ " from findByParams");
+		//System.out.println("Partner: " + partner.toString()+ " from findByParams");
+		//System.out.println("DepartureDate: " + departureDate.toString()+ " from findByParams");
+		//System.out.println("Destination: " + destination.toString()+ " from findByParams");
+		//System.out.println("Departure: " + departure.toString()+ " from findByParams");
+		//System.out.println("GlobalRegion: " + globalRegion.toString()+ " from findByParams");
+		
 		List<Predicate> predicates = new ArrayList<Predicate>();
 
 		// Adding predicates in case of parameter not being null
 		if (t != null) {
+			System.out.println("SeatType tested " + t);
 			From<Flight, Seat> join = from.join("seatList");
 			Path<Seat> s = join.get("type");
 			predicates.add(cb.equal(s, t));
+			//System.out.println(s + " seattype from database");
 		}
 		if (partner != null) {
+			System.out.println("Partner tested " + partner);
 			Path<Partner> dbPartner=from.<Partner>get("partner");
 			predicates.add(cb.equal(dbPartner, partner));
+			//System.out.println(dbPartner + " partner from database");
 		}
 		if (departureDate != null) {
+			System.out.println("departureDate tested " +departureDate);
 			Path<Date> dbDepartureDate=from.<Date>get("dateOfDeparture");
 			predicates.add(cb.between(dbDepartureDate, departureDate, date2));
+			//System.out.println(dbDepartureDate + " departuredate from database");
+		}
+		if (destination != null)
+		{
+			System.out.println("destination tested " +destination);
+			Path<Airport> dbAirport = from.<Airport>get("destinationAirport");
+			predicates.add(cb.equal(dbAirport, destination));
+			//System.out.println(dbAirport + " destinationAirports from database");
+		}
+		if (departure != null)
+		{
+			System.out.println("departure tested " + departure);
+			Path<Airport> dbAirport = from.<Airport>get("departureAirport");
+			//System.out.println(dbAirport + " destination_airport");
+			predicates.add(cb.equal(dbAirport, departure));
+		}
+		if (globalRegion != null)
+		{
+			System.out.println("GlobalRegion tested " + globalRegion);
+			Path<Airport> dbAirport = from.<Airport>get("destinationAirport");
+			Path<String> dbGlobalRegion = dbAirport.<String>get("globalRegion");
+			//System.out.println(dbAirport + " dbAirport");
+			//System.out.print(dbGlobalRegion) + " = dbGlobalRegion");
+			//System.out.println(globalRegion.toString()+ " = globalRegion");
+			//System.out.println(cq.getSelection());
+			predicates.add(cb.equal(dbGlobalRegion, globalRegion));
 		}
 		cq.select(from).where(predicates.toArray(new Predicate[] {})).distinct(true);
 		return em.createQuery(cq).getResultList();
@@ -131,7 +188,7 @@ public class FlightRepository {
 		return (ArrayList<Flight>) resultList;
 	}
 
-	public Flight getFlightByPartner(Partner partner, long partnerFlightId) {
+	public Flight getFlightByPartner(Partner partner, Long partnerFlightId) {
 		Flight f = null;
 		try{
 			f = em.createQuery("select f from Flight f where f.partner = :arg1 and f.id = :arg2", Flight.class)
@@ -146,9 +203,7 @@ public class FlightRepository {
 		return f;
 	}
 
-
-
-	public void setSeatPrice(Partner partner, long partnerFlightId, SeatType seatType, double newPrice) {
+	public void setSeatPrice(Partner partner, Long partnerFlightId, SeatType seatType, double newPrice) {
 		Flight find = em.find(Flight.class, partnerFlightId);
 		if(find.getPartner().getId() == partner.getId()){
 			find.setSeatBasePrice(newPrice, seatType);

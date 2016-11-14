@@ -37,7 +37,7 @@ public class AirportRepository {
 		return em.createQuery("select a from Airport a", Airport.class).getResultList();
 	}
 
-	public void remove(long airportId) {
+	public void remove(Long airportId) {
 		logger.info("Removing airport with id " + airportId);
 		em.remove(em.getReference(Airport.class, airportId));
 	}

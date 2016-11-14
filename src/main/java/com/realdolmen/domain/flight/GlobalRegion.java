@@ -8,5 +8,6 @@ public enum GlobalRegion implements Serializable{
 	NorthAmerica, CentralAmerica, SouthAmerica, 
 	Africa, 
 	Asia,
-	Oceania
+	Oceania,Other
 }
+	

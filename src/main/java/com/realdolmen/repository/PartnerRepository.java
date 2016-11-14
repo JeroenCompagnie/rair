@@ -60,7 +60,7 @@ public class PartnerRepository {
         return allQuery.getResultList();
 	}
 
-	public void remove(long partnerId) {
+	public void remove(Long partnerId) {
 		logger.info("Removing partner with id " + partnerId);
 		em.remove(em.getReference(Partner.class, partnerId));
 	}
@@ -100,7 +100,7 @@ public class PartnerRepository {
 		}
 	}
 
-	public Flight getFlightByPartner(User partner, long partnerFlightId) {
+	public Flight getFlightByPartner(User partner, Long partnerFlightId) {
 		if(checkForPartner(partner)){
 			Flight f = flightRepository.getFlightByPartner((Partner) partner, partnerFlightId);
 			return f;
@@ -108,7 +108,7 @@ public class PartnerRepository {
 		return null;
 	}
 
-	public void setSeatPrice(User partner, long partnerFlightId, SeatType seatType, double newPrice) {
+	public void setSeatPrice(User partner, Long partnerFlightId, SeatType seatType, double newPrice) {
 		if(checkForPartner(partner)){
 			flightRepository.setSeatPrice((Partner) partner, partnerFlightId, seatType, newPrice);
 		}

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -19,6 +20,7 @@ import javax.persistence.OneToMany;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.realdolmen.domain.user.Customer;
+import com.realdolmen.domain.user.User;
 
 @Entity
 public class Booking implements Serializable{
@@ -38,12 +40,12 @@ public class Booking implements Serializable{
 	
 	@ManyToOne
 	@JoinColumn(name="customer_id", nullable=false)
-	private Customer customer;
+	private User customer;
 	
 	private Date dateOfReservation;
 
 	//TODO: cascadetype nakijken!!
-	@OneToMany(fetch = FetchType.EAGER)
+	@OneToMany(cascade=CascadeType.ALL,fetch = FetchType.EAGER)
 	@JoinTable(
 			joinColumns = @JoinColumn(table = "booking",
 		            name="booking_id",
@@ -58,10 +60,10 @@ public class Booking implements Serializable{
 		
 	}
 	
-	public Booking(PaymentStatus paymentStatus, Customer customer, Date dateOfReservation) {
+	public Booking(PaymentStatus paymentStatus, User customer) {
 		this.paymentStatus = paymentStatus;
 		this.customer = customer;
-		this.dateOfReservation = dateOfReservation;
+		this.dateOfReservation = new Date();
 	}
 
 	public PaymentStatus getPaymentStatus() {
@@ -72,7 +74,7 @@ public class Booking implements Serializable{
 		this.paymentStatus = paymentStatus;
 	}
 
-	public Customer getCustomer() {
+	public User getCustomer() {
 		return customer;
 	}
 

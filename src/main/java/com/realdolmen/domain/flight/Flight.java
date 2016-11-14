@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -54,7 +55,7 @@ public class Flight implements Serializable {
 
 	// TODO cascadetype hier oppassen! bookingOfFlight hoort bij zowel een
 	// Booking als een Flight
-	@OneToMany(fetch=FetchType.EAGER)
+	@OneToMany(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
 	private List<BookingOfFlight> bookingOfFlightList;
 
 	@OneToOne
@@ -64,10 +65,11 @@ public class Flight implements Serializable {
 	private Airport destinationAirport;
 
 	//TODO CHECK CASCADETYPES
-	@OneToMany(fetch = FetchType.EAGER)
+	@OneToMany(cascade=CascadeType.ALL,fetch = FetchType.EAGER)
 	private List<Seat> seatList;
 
-	@Temporal(TemporalType.DATE)
+
+	//@Temporal(TemporalType.DATE)
 	private Date dateOfDeparture;
 
 	private Duration flightDuration;	

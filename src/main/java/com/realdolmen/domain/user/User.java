@@ -24,7 +24,7 @@ public class User implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected long id;
+	protected Long id;
 
 	@NotEmpty
 	protected String firstName;

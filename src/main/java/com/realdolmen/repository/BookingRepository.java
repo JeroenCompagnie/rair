@@ -31,6 +31,11 @@ public class BookingRepository {
 		return em.createQuery("select b from Booking b", Booking.class).getResultList();
 	}
 	
+	public Booking update(Booking booking)
+	{
+		return em.merge(booking);
+	}
+	
 	public void remove(String bookingId) {
 		logger.info("Removing user with id " + bookingId);
 		em.remove(em.getReference(Booking.class, bookingId));
