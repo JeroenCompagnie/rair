@@ -188,6 +188,9 @@ public class persistenceDatabaseTest extends JpaPersistenceTest {
 		/**
 		 * For airports
 		 */
+//		Airport air = new Airport("", "", "", "", "", "");
+//		em.persist(air);
+		
 		ArrayList<Airport> airportsFromCSV = CSVReader.getAirportsFromCSV();
 
 		int count = 0;
@@ -208,12 +211,14 @@ public class persistenceDatabaseTest extends JpaPersistenceTest {
 				.getResultList();
 		assertEquals(airportsFromCSV.size(), airports.size());
 
-		;
+		
 		
 		Airport a1 = getAirportByCode(em, "BRU");
 		assertNotNull(a1);
 		Airport a2 = getAirportByCode(em, "VCE");
 		assertNotNull(a2);
+		
+		
 
 		/** BEGIN
 		 * Make flight, add 30 seats, 10 of each seattype

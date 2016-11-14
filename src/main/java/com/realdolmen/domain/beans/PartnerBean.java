@@ -397,5 +397,8 @@ public class PartnerBean implements Serializable{
 		setFlightDuration(0);
 		setDateOfDeparture(null);
 	}
-	
+
+	public void setPartnerFlight(Flight flight) {
+		this.partnerFlight = flight;		
+	}
 }

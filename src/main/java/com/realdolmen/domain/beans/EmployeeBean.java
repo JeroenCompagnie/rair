@@ -7,12 +7,15 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.junit.Before;
 
 import com.realdolmen.domain.flight.Airport;
+import com.realdolmen.domain.flight.Discount;
 import com.realdolmen.domain.flight.Flight;
 import com.realdolmen.domain.flight.SeatType;
 import com.realdolmen.repository.AirportRepository;
@@ -61,8 +64,6 @@ public class EmployeeBean implements Serializable{
 	
 	private String newDefaultPriceChargeDiscountType;
 	
-	
-
 	public int getFlightId() {
 		return flightId;
 	}
@@ -228,9 +229,29 @@ public class EmployeeBean implements Serializable{
 		return types;
 	}
 
-	public void setDefaultPriceCharge(){
-		
+	public String setDefaultPriceCharge(){
+		Discount d = null;
+		if(newDefaultPriceChargeDiscountType.equals("Percentage")){
+			d = new Discount(true, true, newDefaultPriceCharge);
+		}
+		else{
+			d = new Discount(true, false, newDefaultPriceCharge);
+		}
+		if(d != null && !loginBean.getIsUserNull()){
+			
+			boolean succeeded = flightRepository.changeDefaultPriceCharge(loginBean.getUser(), d, getFlight());
+			if(succeeded){
+				FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Default charge price has been updated!", null));
+			}
+		}
+		return "";
 	}
+
+	public void setFlight(Flight flight) {
+		this.flight=flight;
+	}
+	
 	
 	
 }

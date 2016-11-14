@@ -5,8 +5,10 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -146,6 +148,7 @@ public class Flight implements Serializable {
 	}
 
 	protected double applyDiscountsToPrice(double price) {
+		getDiscountsListWithoutNull();
 		HashMap<Long, Discount> discountsRealValues = new HashMap<>(); 
 		HashMap<Long, Discount> discountsPercentages = new HashMap<>();
 		ArrayList<Discount> discounts = new ArrayList<>();
@@ -180,12 +183,11 @@ public class Flight implements Serializable {
 	}
 	
 	public List<Discount> getListOfDiscountByEmployee(){
+		getDiscountsListWithoutNull();
 		HashMap<Long, Discount> discountsMap = new HashMap<>();
-		System.err.println("Retrieving list of discounts by partner of flight with id: " +getId());
 		for(Discount d : this.discountsList){ 
 			if(d.isByEmployee()){
 				discountsMap.put(d.getId(),d);
-				System.err.println(d.toString() + " " + d.getId());
 			}
 		}
 		ArrayList<Discount> discounts = new ArrayList<>();
@@ -196,27 +198,53 @@ public class Flight implements Serializable {
 	}
 	
 	public List<Discount> getListOfDiscountByPartner(){
-		HashMap<Long, Discount> discountsMap = new HashMap<>();
-		System.err.println("Retrieving list of discounts by partner of flight with id: " +getId());
+		getDiscountsListWithoutNull();
+//		HashMap<Long, Discount> discountsMap = new HashMap<>();
+		ArrayList<Discount> discountListByPartner = new ArrayList<>();
 		for(Discount d : this.discountsList){ 
 			if(!d.isByEmployee()){
-				discountsMap.put(d.getId(),d);
-				System.err.println(d.toString() + " " + d.getId());
+				discountListByPartner.add(d);
 			}
 		}
-		ArrayList<Discount> discounts = new ArrayList<>();
-		for(Entry<Long,Discount> d : discountsMap.entrySet()){
-			discounts.add(d.getValue());
-		}
-		return discounts;
+		return discountListByPartner;
 	}
 	
 	public void addDiscount(Discount d){
+		getDiscountsListWithoutNull();
 		this.discountsList.add(d);
 	}
 
-	public boolean removeDiscount(Discount d) {
-		return this.discountsList.remove(d);
+	public void getDiscountsListWithoutNull(){
+		HashSet<Discount> hs = new HashSet<Discount>();
+		hs.addAll(discountsList);
+		discountsList.clear();
+		discountsList.addAll(hs);
+		while(discountsList.contains(null)){
+			discountsList.remove(null);
+		}
+	}
+	
+	public void removeDiscount(Discount d) {
+		getDiscountsListWithoutNull();
+		HashSet<Discount> hs = new HashSet<Discount>();
+		hs.addAll(discountsList);
+		discountsList.clear();
+		discountsList.addAll(hs);
+		for(int i = 0; i < discountsList.size(); i++){
+			if(discountsList.get(i).getId() == d.getId()){
+				System.err.println("removeDiscount: SET DISCOUNT TO BE REMOVED TO NULL");
+				discountsList.set(i, null);
+			}
+		}
+		
+//		for(int i = 0; i < discountsList.size() ; i++){
+//			if(discountsList.get(i) != null && discountsList.get(i).getId() == d.getId() ){
+//				discountsList.set(i, null);
+//			}
+//		}
+		//		while(discountsList.contains(d)){
+//			this.discountsList.remove(d);
+//		}
 	}
 
 	/**
@@ -225,12 +253,14 @@ public class Flight implements Serializable {
 	 * @return
 	 */
 	protected Seat getSeatWithType(SeatType type) {
+		Seat returnSeat = null;
 		for(int i = 0; i < seatList.size(); i++ ){
 			if(seatList.get(i).getType() == type){
-				return seatList.remove(i);
+				returnSeat = seatList.get(i);
 			}
 		}
-		return null;
+		removeSeat(returnSeat);
+		return returnSeat;
 	}
 
 	private boolean checkIfEnoughSeatsAvailable(HashMap<SeatType, Integer> list) {
@@ -253,8 +283,10 @@ public class Flight implements Serializable {
 		}
 	}
 
-	public boolean removeSeat(Seat s) {
-		return this.seatList.remove(s);
+	public void removeSeat(Seat s) {
+		while(seatList.contains(s)){
+			this.seatList.remove(s);
+		}
 	}
 
 	public Date getLandingTime() {
@@ -314,7 +346,6 @@ public class Flight implements Serializable {
 		int count = 0;
 		for(Seat s : seatList){
 			if(s.getType().toString().equals(type.toString())){
-				System.err.println("TYPE OF THE SEATTHING: " +s.getType());
 				count++;
 			}
 		}
@@ -328,8 +359,6 @@ public class Flight implements Serializable {
 		for(BookingOfFlight b : bookingOfFlightList){
 			if(b.getSeat().getType() == type){
 				count++;
-				System.err.println("Seat id: " + b.getSeat().getId());
-				System.err.println("BookingOfFlight id: " + b.getId());
 			}
 		}
 		return count;

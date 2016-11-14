@@ -12,7 +12,6 @@
 </f:metadata>
 
 <ui:composition template="WEB-INF/templates/common.xhtml">
-	<!-- TODO replace content here -->
 	<ui:define name="title">Employee module - Manage flight</ui:define>
 
 	<ui:define name="content">
@@ -30,7 +29,7 @@
 
 			<!-- You have power, id is #{partnerBean.partnerFlightId} -->
 
-			<h:form>
+			<h:form id="form1">
 
 				<b:panelGrid colSpans="4,6,2" size="sm">
 					<h:outputText value="Id: " />
@@ -63,26 +62,28 @@
 				<h:outputLabel
 					value="Default price charge: #{employeeBean.flight.defaultPriceCharge.string}" />
 				<br />
-				
-				<h:outputLabel
-					value=" HIER KNOP OM DEZE PRIJS TE WIJZIGEN NAAR PERCENTAGE OF ECHTE PRIJS" />
-				
-				<b:selectOneMenu value="#{employeeBean.newDefaultPriceChargeDiscountType}">
-					<f:selectItems value="#{employeeBean.discountTypesDefaultPriceCharge}" var="c" itemValue="#{c}" itemLabel="#{c}"></f:selectItems>
-				</b:selectOneMenu>
-				<br/>
-				
-				<b:inputText placeholder="New price default charge"
-					value="#{employeeBean.newDefaultPriceCharge}"
-					styleClass="partnerModuleInputBox" rows="2">
-					<f:facet name="prepend">
-						<b:commandButton value="Change" look="info"
-							action="#{employeeBean.setDefaultPriceCharge}" />
-					</f:facet>
-				</b:inputText>
+
+				<b:panelGrid colSpans="4,4,4" size="sm">
+					<h:panelGroup>
+						<b:inputText placeholder="New price default charge"
+							value="#{employeeBean.newDefaultPriceCharge}" rows="2">
+							<f:facet name="prepend">
+								<b:commandButton value="Change" look="info"
+									action="#{employeeBean.setDefaultPriceCharge}" />
+							</f:facet>
+						</b:inputText>
+					</h:panelGroup>
+					<h:panelGroup>
+						<b:selectOneMenu
+							value="#{employeeBean.newDefaultPriceChargeDiscountType}">
+							<f:selectItems
+								value="#{employeeBean.discountTypesDefaultPriceCharge}" var="c"
+								itemValue="#{c}" itemLabel="#{c}"></f:selectItems>
+						</b:selectOneMenu>
+					</h:panelGroup>
+				</b:panelGrid>
 				<br />
 				<!-- <h:outputLabel value="Discount list: #{employeeBean.flight.discountsList}"/>  -->
-				<br />
 
 
 				<h2>Discounts by RAir</h2>
@@ -94,6 +95,64 @@
 					<b:dataTableColumn value="#{d.string}" label="Value" />
 				</b:dataTable>
 				<br />
+				<b:inputText placeholder="New price default charge"
+					styleClass="partnerModuleInputBox"
+					value="#{discountBean.discountToRemove}" rows="2">
+					<f:facet name="prepend">
+						<b:commandButton value="Remove discount with id:" look="danger"
+							action="#{discountBean.removeDiscount}" />
+					</f:facet>
+				</b:inputText>
+				<br />
+
+				<b:panelGrid colSpans="4,4,4" size="sm">
+					<h:panelGroup>
+						<b:inputText placeholder="Add discount"
+							value="#{discountBean.newDiscount}" rows="3">
+							<f:facet name="prepend">
+								<b:commandButton value="Add discount" look="info"
+									action="#{discountBean.addNewDiscount}" />
+							</f:facet>
+							<f:facet name="prepend">
+								<h:outputText id="toUpdateId1"
+									value="#{discountBean.discountTypeSymbol}"></h:outputText>
+							</f:facet>
+						</b:inputText>
+					</h:panelGroup>
+					<h:panelGroup>					
+						<b:selectOneMenu value="#{discountBean.newDiscountType}"
+							onchange="ajax:discountBean.changeDiscountType()"
+            				update="@form **:toUpdateId1" process="@form"
+							>
+							<f:selectItems value="#{discountBean.discountTypes}" var="c"
+								itemValue="#{c}" itemLabel="#{c}"></f:selectItems>
+						</b:selectOneMenu>		
+					</h:panelGroup>
+					<h:panelGroup>
+						<!-- empty field -->
+					</h:panelGroup>
+					<h:panelGroup>
+						<h:outputLabel value="Begin date"></h:outputLabel>
+					</h:panelGroup>
+					<h:panelGroup >
+						<b:dateTimePicker placeholder="If begin or end is empty no period is set" value="#{discountBean.beginDate}" mode="popup"
+							show-date="true" show-time="true"/>
+					</h:panelGroup>
+
+					<h:panelGroup>
+						<!-- empty field -->
+					</h:panelGroup>
+					<h:panelGroup>
+						<h:outputLabel value="End date"></h:outputLabel>
+					</h:panelGroup>
+					<h:panelGroup>
+						<b:dateTimePicker placeholder="If begin or end is empty no period is set" value="#{discountBean.endDate}" mode="popup"
+							show-date="true" show-time="true"/>
+					</h:panelGroup>
+				</b:panelGrid>
+				<br />
+				
+				<br />
 				<h2>
 					<h:outputText
 						value="Discounts by #{employeeBean.flight.partner.name}" />
@@ -101,11 +160,9 @@
 				<b:dataTable value="#{employeeBean.flight.listOfDiscountByPartner}"
 					var="d">
 					<b:dataTableColumn value="#{d.id}" label="#" />
-					<b:dataTableColumn value="#{d.discount}" label="Value" />
-					<b:dataTableColumn value="#{d.string}" label="Value" />
+					<b:dataTableColumn value="#{d.discount}" label="Numeral value" />
+					<b:dataTableColumn value="#{d.string}" label="Meaning" />
 				</b:dataTable>
-
-
 			</h:form>
 		</h:panelGroup>
 	</ui:define>

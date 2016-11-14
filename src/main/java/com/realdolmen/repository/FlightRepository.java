@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -18,9 +19,12 @@ import javax.persistence.criteria.Root;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.realdolmen.domain.flight.Discount;
 import com.realdolmen.domain.flight.Flight;
 import com.realdolmen.domain.flight.Seat;
 import com.realdolmen.domain.flight.SeatType;
+import com.realdolmen.domain.user.Employee;
 import com.realdolmen.domain.user.Partner;
 import com.realdolmen.domain.user.User;
 
@@ -70,7 +74,7 @@ public class FlightRepository {
 	}
 
 	public List<Flight> findByParams3(SeatType t, Partner p, Date d) {
-//works but has duplicates
+		//works but has duplicates
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Flight> cq = cb.createQuery(Flight.class);
 		Root<Flight> from = cq.from(Flight.class);
@@ -141,8 +145,8 @@ public class FlightRepository {
 		}
 		return f;
 	}
-	
-	
+
+
 
 	public void setSeatPrice(Partner partner, long partnerFlightId, SeatType seatType, double newPrice) {
 		Flight find = em.find(Flight.class, partnerFlightId);
@@ -151,7 +155,7 @@ public class FlightRepository {
 			em.merge(find);
 		}
 	}
-	
+
 	public int getNumberOfSeatsBooked(Flight flight, List<SeatType> seatTypes){
 		if(flight == null){
 			System.err.println("flight was null");
@@ -175,12 +179,55 @@ public class FlightRepository {
 			return -41;
 		}
 		return (int)(long) em.createQuery(
-					"select count(f) "
-					+ "from Flight f join "
-					+ "f.seatList s WHERE f.id = :flightId "
-					+ "and s.type IN :seatType")
-					.setParameter("flightId", flight.getId())
-					.setParameter("seatType", seatTypes)
-					.getSingleResult();
+				"select count(f) "
+						+ "from Flight f join "
+						+ "f.seatList s WHERE f.id = :flightId "
+						+ "and s.type IN :seatType")
+				.setParameter("flightId", flight.getId())
+				.setParameter("seatType", seatTypes)
+				.getSingleResult();
+	}
+
+	public boolean changeDefaultPriceCharge(User user, Discount d, Flight f) {
+		if(user.getClass() == Employee.class){
+			f.setDefaultPriceCharge(user, d);
+			em.merge(f);
+			return true;
+		}
+		return false;
+	}
+
+	
+	public Flight removeDiscount(User user, long id, Flight flight) {
+		if(user.getClass() == Employee.class || user.getClass()==Partner.class){
+			Discount d = em.find(Discount.class, id);
+
+			if(d != null && ((d.isByEmployee() && user.getClass() == Employee.class) ||
+					!d.isByEmployee() && user.getClass()==Partner.class)){
+				
+				try{
+					System.err.println("FLIGHT REPOSITORY: begin of try");
+					flight.removeDiscount(d);
+					System.err.println("FLIGHT REPOSITORY: removed discount with id: " + d.getId()+ " from flight " + flight.getId());
+					System.err.println("Flight contains discount " +flight.getDiscountsList().contains(d));
+					Flight returnFlight = em.merge(flight);
+					em.remove(d);
+					em.flush();
+					System.err.println("Discount in db: " + em.find(Discount.class, id)!=null);
+					return returnFlight;
+				}
+				catch(Exception e){
+					System.err.println("FAILED TO REMOVE DISCOUNT, stacktrace: "+e.getMessage() + " short description  " + e.toString());
+				}
+			}
+		}
+		return flight;
+	}
+
+	public void addDiscount(Discount d, Flight f) {
+		f.addDiscount(d);
+		em.merge(f);
+			System.err.println("Id of discount " + d.getId());
+		
 	}
 }

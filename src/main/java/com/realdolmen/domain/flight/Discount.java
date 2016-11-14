@@ -22,7 +22,7 @@ public class Discount implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private long id = -999;
+	private long id;
 	
 	// Determines if it is a percentage or a real number. If it is a real number € will be pre-pendend with the toString. If a percentage, "%" will be appended with the toString.
 	private boolean isPercentage;
@@ -92,13 +92,23 @@ public class Discount implements Serializable{
 	
 	@Override
 	public String toString(){
-		String result = ""+discount;
+		String result = "";
 		
-		if(isPercentage){
-			result += "%";
+		if(discount == 0){
+			return "No discount or charge added";
+		}
+		else if(discount > 0){
+			result += "Discount of ";
 		}
 		else{
-			result = "€" + result;
+			result += "Charge of ";
+		}
+		
+		if(isPercentage){
+			result = result + Math.abs(discount) + "%";
+		}
+		else{
+			result = result + "€" + Math.abs(discount);
 		}
 			
 		if(isPeriodical){
