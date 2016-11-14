@@ -11,6 +11,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -31,9 +32,12 @@ public class Booking implements Serializable{
 	private static final long serialVersionUID = -4490556795691845585L;
 
 	@Id
-	@GenericGenerator(name = "uuid", strategy = "uuid2")
-	@GeneratedValue(generator = "uuid")
-	private String id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
+//	@GenericGenerator(name = "uuid", strategy = "uuid2")
+//	@GeneratedValue(generator = "uuid")
+//	private String id;
 	
 	@Enumerated(EnumType.STRING)
 	private PaymentStatus paymentStatus;
@@ -98,7 +102,7 @@ public class Booking implements Serializable{
 		this.bookingOfFlightList = bookingOfFlightList;
 	}
 
-	public String getId() {
+	public Long getId() {
 		return id;
 	}
 	
@@ -108,7 +112,7 @@ public class Booking implements Serializable{
 	}
 	
 	public void getQrCode(){
-		QRCode.createQrCodeForInvoice(id);
+		QRCode.createQrCodeForInvoice("" + id);
 	}
 	
 }

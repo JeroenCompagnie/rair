@@ -427,9 +427,9 @@ public class persistenceDatabaseTest extends JpaPersistenceTest {
 			assertEquals(1, em.find(Flight.class, f.getId()).getBookingOfFlightList().size());
 
 		}
-		Airport a5 = em.find(Airport.class, "BRN");
+		Airport a5 = getAirportByCode(em, "BRN");
 		assertNotNull(a5);
-		Airport a6 = em.find(Airport.class, "VCB");
+		Airport a6 = getAirportByCode(em, "VCB");
 		assertNotNull(a6);
 		Flight fl1;
 
