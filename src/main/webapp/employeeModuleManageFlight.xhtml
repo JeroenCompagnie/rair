@@ -95,11 +95,11 @@
 					<b:dataTableColumn value="#{d.string}" label="Meaning" />
 				</b:dataTable>
 				<br />
-				<b:inputText placeholder="New price default charge"
+				<b:inputText placeholder="Discount to remove"
 					styleClass="partnerModuleInputBox"
 					value="#{discountBean.discountToRemove}" rows="2">
 					<f:facet name="prepend">
-						<b:commandButton value="Remove discount with id:" look="danger"
+						<b:commandButton icon="trash" value="Remove discount with id:" look="danger"
 							action="#{discountBean.removeDiscount}" />
 					</f:facet>
 				</b:inputText>

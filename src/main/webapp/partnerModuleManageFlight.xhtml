@@ -21,55 +21,55 @@
 		<h:outputLabel value="You have no powers here!"
 			rendered="#{not loginBean.userIsPartner}" />
 
-		<h:panelGroup rendered="#{loginBean.userIsPartner and not partnerBean.partnerFlightIdExists}">
-			<h:outputLabel value="No flight with id #{partnerBean.partnerFlightId} found!"/>
+		<h:panelGroup
+			rendered="#{loginBean.userIsPartner and not partnerBean.partnerFlightIdExists}">
+			<h:outputLabel
+				value="No flight with id #{partnerBean.partnerFlightId} found!" />
 		</h:panelGroup>
 		<h:panelGroup layout="block"
 			rendered="#{loginBean.userIsPartner and partnerBean.partnerFlightIdExists and partnerBean.partnerFlightId > 0}">
-			
+
 			<!-- You have power, id is #{partnerBean.partnerFlightId} -->
-			
+
 			<h:form>
-				
-				<b:panelGrid colSpans="4,6,2" size ="sm">
+
+				<b:panelGrid colSpans="4,6,2" size="sm">
 					<h:outputText value="Id: " />
 						#{partnerBean.partnerFlightId}
-						<h:outputText value= "" />
-						
-					<h:outputText
-						value="Departure date: " />
+						<h:outputText value="" />
+
+					<h:outputText value="Departure date: " />
 						#{partnerBean.partnerFlight.dateOfDeparture}
-						<h:outputText value= "" />
-						
-					<h:outputText
-						value="Departure airport: " />
+						<h:outputText value="" />
+
+					<h:outputText value="Departure airport: " />
 						#{partnerBean.partnerFlight.departureAirport}
-						<h:outputText value= "" />
-						
-					<h:outputText
-						value="Destination airport: "/>
+						<h:outputText value="" />
+
+					<h:outputText value="Destination airport: " />
 						#{partnerBean.partnerFlight.destinationAirport}
-						<h:outputText value= "" />
-						
+						<h:outputText value="" />
+
+					<h:outputText value="Flight duration: " />
 					<h:outputText
-						value="Flight duration: " />
-						<h:outputText
 						value="#{partnerBean.partnerFlight.flightDurationInMinutes} minutes" />
-						<h:outputText value= "" />
-						
+					<h:outputText value="" />
+
 				</b:panelGrid>
-				
-				<br/>
-				<br/>
-				
+
+				<br />
+				<br />
+
 				<b:panelGrid colSpans="6,6" size="lg">
 					<h:panelGroup>
-						<h:outputLabel value="Economy seats left: #{partnerBean.numberOfSeatsLeftEconomy}" />
-						<br/>
-						<h:outputLabel value="Economy seats sold: #{partnerBean.numberOfSeatsBookedEconomy}"/>
+						<h:outputLabel
+							value="Economy seats left: #{partnerBean.numberOfSeatsLeftEconomy}" />
+						<br />
+						<h:outputLabel
+							value="Economy seats sold: #{partnerBean.numberOfSeatsBookedEconomy}" />
 					</h:panelGroup>
 					<h:panelGroup>
-						<h:outputLabel value="Economy seat price"/>
+						<h:outputLabel value="Economy seat price" />
 						<b:inputText placeholder="New price economy seat"
 							value="#{partnerBean.economySeatPrice}"
 							styleClass="partnerModuleInputBox" rows="2">
@@ -79,14 +79,16 @@
 							</f:facet>
 						</b:inputText>
 					</h:panelGroup>
-					
+
 					<h:panelGroup>
-						<h:outputLabel value="Business seats left: #{partnerBean.numberOfSeatsLeftBusiness}" />
-						<br/>
-						<h:outputLabel value="Business seats sold: #{partnerBean.numberOfSeatsBookedBusiness}"/>
+						<h:outputLabel
+							value="Business seats left: #{partnerBean.numberOfSeatsLeftBusiness}" />
+						<br />
+						<h:outputLabel
+							value="Business seats sold: #{partnerBean.numberOfSeatsBookedBusiness}" />
 					</h:panelGroup>
 					<h:panelGroup>
-						<h:outputLabel value="Business seat price"/>
+						<h:outputLabel value="Business seat price" />
 						<b:inputText placeholder="New price business seat"
 							value="#{partnerBean.businessSeatPrice}"
 							styleClass="partnerModuleInputBox" rows="2">
@@ -96,15 +98,17 @@
 							</f:facet>
 						</b:inputText>
 					</h:panelGroup>
-					
-					
+
+
 					<h:panelGroup>
-						<h:outputLabel value="First class seats left: #{partnerBean.numberOfSeatsLeftFirst}" />
-						<br/>
-						<h:outputLabel value="First class  seats sold: #{partnerBean.numberOfSeatsBookedFirst}"/>
+						<h:outputLabel
+							value="First class seats left: #{partnerBean.numberOfSeatsLeftFirst}" />
+						<br />
+						<h:outputLabel
+							value="First class  seats sold: #{partnerBean.numberOfSeatsBookedFirst}" />
 					</h:panelGroup>
 					<h:panelGroup>
-						<h:outputLabel value="First class seat price"/>
+						<h:outputLabel value="First class seat price" />
 						<b:inputText placeholder="New price first class seat"
 							value="#{partnerBean.firstSeatPrice}"
 							styleClass="partnerModuleInputBox" rows="2">
@@ -115,19 +119,33 @@
 						</b:inputText>
 					</h:panelGroup>
 				</b:panelGrid>
-				
-				<br/>
+
+				<br />
 				<h2>Discounts by you</h2>
 				<br />
-				<b:dataTable value="#{partnerBean.partnerFlight.listOfDiscountByPartner}"
+				<b:dataTable
+					value="#{partnerBean.partnerFlight.listOfDiscountByPartner}"
 					var="d">
 					<b:dataTableColumn value="#{d.id}" label="#" />
 					<b:dataTableColumn value="#{d.discount}" label="Numeral value" />
 					<b:dataTableColumn value="#{d.string}" label="Meaning" />
 				</b:dataTable>
 				<br />
-				
-				
+
+				<br />
+				<b:panelGrid colSpans="5,4,3" size="sm">
+					<h:panelGroup>
+						<b:inputText placeholder="Discount to remove"
+							styleClass="partnerModuleInputBox"
+							value="#{discountBean.discountToRemove}" rows="2">
+							<f:facet name="prepend">
+								<b:commandButton icon="trash" value="Remove discount with id:"
+									look="danger" action="#{discountBean.removeDiscount}" />
+							</f:facet>
+						</b:inputText>
+					</h:panelGroup>
+				</b:panelGrid>
+
 				<b:panelGrid colSpans="4,4,4" size="sm">
 					<h:panelGroup>
 						<b:inputText placeholder="Add discount"
@@ -142,14 +160,13 @@
 							</f:facet>
 						</b:inputText>
 					</h:panelGroup>
-					<h:panelGroup>					
+					<h:panelGroup>
 						<b:selectOneMenu value="#{discountBean.newDiscountType}"
 							onchange="ajax:discountBean.changeDiscountType()"
-            				update="@form **:toUpdateId1" process="@form"
-							>
+							update="@form **:toUpdateId1" process="@form">
 							<f:selectItems value="#{discountBean.discountTypes}" var="c"
 								itemValue="#{c}" itemLabel="#{c}"></f:selectItems>
-						</b:selectOneMenu>		
+						</b:selectOneMenu>
 					</h:panelGroup>
 					<h:panelGroup>
 						<!-- empty field -->
@@ -157,9 +174,11 @@
 					<h:panelGroup>
 						<h:outputLabel value="Begin date"></h:outputLabel>
 					</h:panelGroup>
-					<h:panelGroup >
-						<b:dateTimePicker placeholder="If begin or end is empty no period is set" value="#{discountBean.beginDate}" mode="popup"
-							show-date="true" show-time="true"/>
+					<h:panelGroup>
+						<b:dateTimePicker
+							placeholder="If begin or end is empty no period is set"
+							value="#{discountBean.beginDate}" mode="popup" show-date="true"
+							show-time="true" />
 					</h:panelGroup>
 
 					<h:panelGroup>
@@ -169,25 +188,27 @@
 						<h:outputLabel value="End date"></h:outputLabel>
 					</h:panelGroup>
 					<h:panelGroup>
-						<b:dateTimePicker placeholder="If begin or end is empty no period is set" value="#{discountBean.endDate}" mode="popup"
-							show-date="true" show-time="true"/>
+						<b:dateTimePicker
+							placeholder="If begin or end is empty no period is set"
+							value="#{discountBean.endDate}" mode="popup" show-date="true"
+							show-time="true" />
 					</h:panelGroup>
 				</b:panelGrid>
 				<br />
-				
+
 				<br />
 				<h2>
-					<h:outputText
-						value="Discounts by RAir" />
+					<h:outputText value="Discounts by RAir" />
 				</h2>
-				<b:dataTable value="#{partnerBean.partnerFlight.listOfDiscountByEmployee}"
+				<b:dataTable
+					value="#{partnerBean.partnerFlight.listOfDiscountByEmployee}"
 					var="d">
 					<b:dataTableColumn value="#{d.id}" label="#" />
 					<b:dataTableColumn value="#{d.discount}" label="Numeral value" />
 					<b:dataTableColumn value="#{d.string}" label="Meaning" />
 				</b:dataTable>
-				
-				
+
+
 			</h:form>
 		</h:panelGroup>
 
