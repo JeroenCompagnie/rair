@@ -128,7 +128,7 @@ public class Flight implements Serializable {
 	 */
 	public Booking addBooking(HashMap<SeatType, Integer> list, Booking booking){
 		/**
-		 * TODO: add discounts to price of seat => DONE; add to UI's
+		 * TODO: add discounts to price of seat => DONE; add to UI's => mostly done
 		 * TODO: add locking!!
 		 */
 		if(checkIfEnoughSeatsAvailable(list)){
