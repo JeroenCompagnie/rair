@@ -160,11 +160,6 @@ public class SearchBean implements Serializable {
 		airports = airportRepository.findAll();
 		setFlights(new ArrayList<Flight>());
 		setFlights(entityManager.createQuery("select f from Flight f", Flight.class).getResultList());
-		// setFlights2(entityManager.createNamedQuery("Flight.findAll",Flight.class).getResultList());;
-		
-		// System.out.println("partnerName="+partner.getName());
-		// setFlights2(flightRepository.findByParams(SeatType.Economy, partner,
-		// new Date()));
 		flightclasses = new ArrayList<SeatType>();
 		for(SeatType st : SeatType.values())
 		{
@@ -202,7 +197,6 @@ public class SearchBean implements Serializable {
 	
 	public String bookFlight()
 	{	
-		System.out.println("zzzzzzzzzzzzzzzzzzzzzzzzz");
 		if (loginBean.getUserIsCustomer())
 		{
 			System.out.println(selectedFlightId + " Flight Id");
@@ -213,6 +207,7 @@ public class SearchBean implements Serializable {
 			HashMap<SeatType,Integer> hm =	new HashMap<SeatType,Integer>();
 			hm.put(getSelectedFlightClass(), 1);
 			f.addBooking(hm, booking);
+			
 			bookingRepository.update(booking);
 			flightRepository.update(f);
 			System.out.println(f.getNumberOfSeatForType(getSelectedFlightClass())+ " free seats after booking");
