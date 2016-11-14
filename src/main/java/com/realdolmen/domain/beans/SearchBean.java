@@ -9,6 +9,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.event.ActionEvent;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -19,10 +20,13 @@ import javax.validation.constraints.NotNull;
 import com.realdolmen.domain.flight.Flight;
 import com.realdolmen.domain.flight.GlobalRegion;
 import com.realdolmen.domain.flight.PaymentMethod;
+import com.realdolmen.domain.flight.PaymentStatus;
 import com.realdolmen.domain.flight.SeatType;
 import com.realdolmen.domain.flight.Airport;
+import com.realdolmen.domain.flight.Booking;
 import com.realdolmen.domain.user.Partner;
 import com.realdolmen.repository.AirportRepository;
+import com.realdolmen.repository.BookingRepository;
 import com.realdolmen.repository.FlightRepository;
 import com.realdolmen.repository.PartnerRepository;
 
@@ -49,6 +53,12 @@ public class SearchBean implements Serializable {
 	
 	@EJB
 	private AirportRepository airportRepository;
+	
+	@EJB
+	private BookingRepository bookingRepository;
+	
+	@ManagedProperty(value="#{loginBean}")
+	private LoginBean loginBean;
 	
 
 	// @ManagedProperty("#{flightclasses}")
@@ -89,6 +99,12 @@ public class SearchBean implements Serializable {
 	
 	public SeatType getSelectedFlightClass() {
 		return selectedFlightClass;
+	}
+	
+	public String bookFlight()
+	{
+		bookingRepository.save(new Booking(PaymentStatus.SUCCESS,loginBean.getUser()));
+		return "thankyou?faces-redirect=true";
 	}
 
 	public void setSelectedFlightClass(SeatType selectedFlightClass) {
@@ -135,12 +151,6 @@ public class SearchBean implements Serializable {
 		this.selectedFlightId = selectedFlightId;
 	}
 	
-	public void selectedFlightIdAttr(ActionEvent ae)
-	{
-		System.out.println("this shit works");
-		setSelectedFlightId((Long) ae.getComponent().getAttributes().get("selectedFlightIdAttr"));
-	}
-
 	@PostConstruct
 	public void init() {
 		calendar = Calendar.getInstance();

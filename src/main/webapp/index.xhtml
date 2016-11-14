@@ -35,6 +35,7 @@
 			<b:dateTimePicker value="#{search.dateOfReturn}" id="return" mode="popup" show-date="true" show-time="false" styleClass="datePicker" />
 			<h:outputLabel for="global_region" value="Select a global region"></h:outputLabel>
 			<b:selectOneMenu id="global_region"	value="#{search.selectedGlobalRegion}" styleClass="datePicker">
+				<f:selectItem itemValue="#{null}" itemLabel="#{null}" />
 				<f:selectItems value="#{search.globalRegions}" />
 			</b:selectOneMenu>
 			<h:outputLabel for="departure" value="Select a departure airport"></h:outputLabel>
@@ -44,7 +45,7 @@
 			</b:selectOneMenu>
 			<h:outputLabel for="destination" value="Select a destination airport"></h:outputLabel>
 			<b:selectOneMenu id="destination" value="#{search.selectedDestination}" styleClass="datePicker">
-				<f:selectItem itemValue="#{null}" itemLabel="--select--" />
+				<f:selectItem itemValue="#{null}" itemLabel="#{null}" />
 				<f:selectItems value="#{search.airports}" />
 			</b:selectOneMenu>
 			<b:commandButton value="Search now" action="#{search.search}" look="info" />

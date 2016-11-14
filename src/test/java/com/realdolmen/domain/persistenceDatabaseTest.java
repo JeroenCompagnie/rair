@@ -115,7 +115,7 @@ public class persistenceDatabaseTest extends JpaPersistenceTest {
 		assertEquals("KLM", persistedFlight.getPartner().getUserName());
 
 		// Make Booking b, persist and check Id for null
-		Booking b = new Booking(PaymentStatus.PENDING, c, new Date());
+		Booking b = new Booking(PaymentStatus.PENDING, c);
 		em.persist(b);
 		assertNotNull(b.getId());
 
@@ -253,7 +253,7 @@ public class persistenceDatabaseTest extends JpaPersistenceTest {
 		map.put(SeatType.Economy, 3);
 		map.put(SeatType.FirstClass, 3);
 
-		Booking addBooking = new Booking(PaymentStatus.PENDING, customer, new Date());
+		Booking addBooking = new Booking(PaymentStatus.PENDING, customer);
 		assertNull(addBooking.getId());
 		em.persist(addBooking);
 		assertNotNull(addBooking.getId());
@@ -372,7 +372,7 @@ public class persistenceDatabaseTest extends JpaPersistenceTest {
 				}
 			}
 
-			Booking b = new Booking(PaymentStatus.SUCCESS, customer, new Date());
+			Booking b = new Booking(PaymentStatus.SUCCESS, customer);
 			em.persist(b);
 			assertNotNull(b.getId());
 

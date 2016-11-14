@@ -13,22 +13,22 @@ import com.realdolmen.domain.flight.PaymentStatus;
 import com.realdolmen.domain.user.Address;
 import com.realdolmen.domain.user.Customer;
 import com.realdolmen.domain.user.Employee;
+import com.realdolmen.domain.user.User;
 
 public class BookingTest {
 	
 	Booking b;
 	Address a;
-	Customer c;
+	User c;
 	Date d;
 	//Employee e;
 	@Before
 	public void init()
 	{
 		//b = new Booking(PaymentStatus.PENDING, c, Calendar.getInstance());
-		a = new Address("teststreet",1,3670,"Hasselt","Belgium");
-		c = new Customer(a,"email@address.com","firstName","lastName","password","userName");
-		d = new Date();
-		b  = new Booking(PaymentStatus.PENDING,c,d);
+		//a = new Address("teststreet",1,3670,"Hasselt","Belgium");
+		c = new User("firstName","lastName","password","userName");
+		b  = new Booking(PaymentStatus.PENDING,c);
 		//e = new Employee("firstName","lastName","password","username");
 	}
 
@@ -36,10 +36,10 @@ public class BookingTest {
 	public void bookingUnitTest() {
 		assertEquals(PaymentStatus.PENDING,b.getPaymentStatus());
 		System.out.println("PaymentStatus = " +PaymentStatus.PENDING.toString());
-		assertEquals(a,b.getCustomer().getAddress());//Test address
+		//assertEquals(a,b.getCustomer().getAddress());//Test address
 		assertEquals(c,b.getCustomer());//Test Customer
 		assertEquals(d,b.getDateOfReservation());//Test reservationDate
-		assertNotEquals(b,new Booking(PaymentStatus.PENDING,c,d));//Test Id
+		assertNotEquals(b,new Booking(PaymentStatus.PENDING,c));//Test Id
 		
 		
 		
