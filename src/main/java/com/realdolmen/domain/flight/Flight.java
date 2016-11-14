@@ -98,6 +98,8 @@ public class Flight implements Serializable {
 	}
 
 	public int getNumberOfSeatForType(SeatType st) {
+		getSeatListWithoutNull();
+		
 		int count = 0;
 		for (int i = 0; i < seatList.size(); i++) {
 			if (seatList.get(i).getType().equals(st)) {
@@ -108,12 +110,14 @@ public class Flight implements Serializable {
 	}
 
 	public void addBookingOfFlight(BookingOfFlight bof) {
+		getBookingOfFlightsListWithoutNull();
 		if(bookingOfFlightList.contains(bof)){
 			System.err.println("9999988888  TRIED TO ADD BookingOfFlight that was already there");
 			return;
 		}
 		System.err.println("Booking of flight with id: " + bof.getId() + " added");
 		this.bookingOfFlightList.add(bof);
+		getBookingOfFlightsListWithoutNull();
 	}
 
 	/**
@@ -226,6 +230,26 @@ public class Flight implements Serializable {
 		}
 	}
 	
+	public void getBookingOfFlightsListWithoutNull(){
+		HashSet<BookingOfFlight> hs = new HashSet<BookingOfFlight>();
+		hs.addAll(bookingOfFlightList);
+		bookingOfFlightList.clear();
+		bookingOfFlightList.addAll(hs);
+		while(bookingOfFlightList.contains(null)){
+			bookingOfFlightList.remove(null);
+		}
+	}
+	
+	public void getSeatListWithoutNull(){
+		HashSet<Seat> hs = new HashSet<Seat>();
+		hs.addAll(seatList);
+		seatList.clear();
+		seatList.addAll(hs);
+		while(seatList.contains(null)){
+			seatList.remove(null);
+		}
+	}
+	
 	public void removeDiscount(Discount d) {
 		getDiscountsListWithoutNull();
 		HashSet<Discount> hs = new HashSet<Discount>();
@@ -255,6 +279,7 @@ public class Flight implements Serializable {
 	 * @return
 	 */
 	protected Seat getSeatWithType(SeatType type) {
+		getSeatListWithoutNull();
 		Seat returnSeat = null;
 		for(int i = 0; i < seatList.size(); i++ ){
 			if(seatList.get(i).getType() == type){
@@ -276,6 +301,7 @@ public class Flight implements Serializable {
 	}
 
 	public void addSeat(Seat s) {
+		getSeatListWithoutNull();
 		this.seatList.add(s);
 	}
 
@@ -286,9 +312,15 @@ public class Flight implements Serializable {
 	}
 
 	public void removeSeat(Seat s) {
-		while(seatList.contains(s)){
-			this.seatList.remove(s);
+		getSeatListWithoutNull();
+		for(int i = 0; i < seatList.size(); i++){
+			if(seatList.get(i).getId() == s.getId()){
+				seatList.set(i, null);
+			}
 		}
+//		while(seatList.contains(s)){
+//			this.seatList.remove(s);
+//		}
 	}
 
 	public Date getLandingTime() {
@@ -296,6 +328,7 @@ public class Flight implements Serializable {
 	}
 
 	public int getSeatsLeft(){
+		getSeatListWithoutNull();
 		return seatList.size();
 	}
 
@@ -305,6 +338,7 @@ public class Flight implements Serializable {
 	 * @return
 	 */
 	public double getSeatBasePrice(SeatType type){
+		getSeatListWithoutNull();
 		for(Seat s: seatList){
 			if(s.getType() == type){
 				return s.getBasePrice();
@@ -314,6 +348,7 @@ public class Flight implements Serializable {
 	}
 
 	public void setSeatBasePrice(double newPrice, SeatType type){
+		getSeatListWithoutNull();
 		for(Seat s : seatList){
 			if(s.getType().equals(type)){
 				s.setBasePrice(newPrice);
@@ -322,6 +357,7 @@ public class Flight implements Serializable {
 	}
 	
 	public double getSeatPriceAfterDiscounts(SeatType type){
+		getSeatListWithoutNull();
 		for(Seat s: seatList){
 			if(s.getType() == type){
 				return applyDiscountsToPrice(s.getBasePrice());
@@ -345,6 +381,7 @@ public class Flight implements Serializable {
 	}
 
 	public int getSeatsLeft(SeatType type){
+		getSeatListWithoutNull();
 		int count = 0;
 		for(Seat s : seatList){
 			if(s.getType().toString().equals(type.toString())){
@@ -356,6 +393,7 @@ public class Flight implements Serializable {
 	}
 
 	public int getSeatsSold(SeatType type){
+		getBookingOfFlightsListWithoutNull();
 		int count = 0;
 		System.err.println("999999999999999 --- " + bookingOfFlightList.size());
 		for(BookingOfFlight b : bookingOfFlightList){
@@ -385,11 +423,13 @@ public class Flight implements Serializable {
 	}
 
 	public List<BookingOfFlight> getBookingOfFlightList() {
+		getBookingOfFlightsListWithoutNull();
 		return bookingOfFlightList;
 	}
 
 	public void setBookingOfFlightList(List<BookingOfFlight> bookingOfFlightList) {
 		this.bookingOfFlightList = bookingOfFlightList;
+		getBookingOfFlightsListWithoutNull();
 	}
 
 	public Airport getDepartureAirport() {
@@ -409,11 +449,13 @@ public class Flight implements Serializable {
 	}
 
 	public List<Seat> getSeatList() {
+		getSeatListWithoutNull();
 		return seatList;
 	}
 
 	public void setSeatList(List<Seat> seatList) {
 		this.seatList = seatList;
+		getSeatListWithoutNull();
 	}
 
 	public Date getDateOfDeparture() {
