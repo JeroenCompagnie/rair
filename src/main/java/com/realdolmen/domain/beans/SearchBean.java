@@ -208,7 +208,7 @@ public class SearchBean implements Serializable {
 			hm.put(getSelectedFlightClass(), 1);
 			f.addBooking(hm, booking);
 			
-			bookingRepository.update(booking);
+		//	bookingRepository.update(booking);
 			flightRepository.update(f);
 			System.out.println(f.getNumberOfSeatForType(getSelectedFlightClass())+ " free seats after booking");
 			clearAll();
