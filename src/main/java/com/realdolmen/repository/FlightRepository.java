@@ -102,16 +102,7 @@ public class FlightRepository {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Flight> cq = cb.createQuery(Flight.class);
 		Root<Flight> from = cq.from(Flight.class);
-		Date date2;
-		Calendar c = Calendar.getInstance();
-		c.setTime(departureDate);
-		c.add(Calendar.DATE, 1); 
-		date2 = c.getTime();
-		Calendar c2 = Calendar.getInstance();
-		c2.setTime(departureDate);
-		c2.add(Calendar.DAY_OF_YEAR, -1);
-		c2.add(Calendar.MINUTE, 719);
-		departureDate=c2.getTime();
+		
 		//departureDate=null;
 		//t=null;
 		//partner=null;
@@ -142,6 +133,16 @@ public class FlightRepository {
 			//System.out.println(dbPartner + " partner from database");
 		}
 		if (departureDate != null) {
+			Date date2;
+			Calendar c = Calendar.getInstance();
+			c.setTime(departureDate);
+			c.add(Calendar.DATE, 1); 
+			date2 = c.getTime();
+			Calendar c2 = Calendar.getInstance();
+			c2.setTime(departureDate);
+			c2.add(Calendar.DAY_OF_YEAR, -1);
+			c2.add(Calendar.MINUTE, 719);
+			departureDate=c2.getTime();
 			System.out.println("departureDate tested " +departureDate);
 			Path<Date> dbDepartureDate=from.<Date>get("dateOfDeparture");
 			predicates.add(cb.between(dbDepartureDate, departureDate, date2));
