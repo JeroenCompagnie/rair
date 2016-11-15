@@ -156,15 +156,11 @@ public class SearchBean implements Serializable {
 		{
 			globalRegions.add(gr);
 		}
+		setNumberOfSeats(1);
 		airports = new ArrayList<Airport>();
 		airports = airportRepository.findAll();
 		setFlights(new ArrayList<Flight>());
 		setFlights(entityManager.createQuery("select f from Flight f", Flight.class).getResultList());
-		// setFlights2(entityManager.createNamedQuery("Flight.findAll",Flight.class).getResultList());;
-		
-		// System.out.println("partnerName="+partner.getName());
-		// setFlights2(flightRepository.findByParams(SeatType.Economy, partner,
-		// new Date()));
 		flightclasses = new ArrayList<SeatType>();
 		for(SeatType st : SeatType.values())
 		{
@@ -198,11 +194,16 @@ public class SearchBean implements Serializable {
 		setSelectedPaymentMethod(null);
 		setDateOfDeparture(null);
 		setDateOfReturn(null);
+		setNumberOfSeats(1);
+	}
+	
+	public String edit()
+	{
+		return "index?faces-redirect=true";
 	}
 	
 	public String bookFlight()
 	{	
-		System.out.println("zzzzzzzzzzzzzzzzzzzzzzzzz");
 		if (loginBean.getUserIsCustomer())
 		{
 			System.out.println(selectedFlightId + " Flight Id");
@@ -211,9 +212,10 @@ public class SearchBean implements Serializable {
 			Flight f = flightRepository.findById(selectedFlightId);
 			System.out.println(f.getNumberOfSeatForType(getSelectedFlightClass())+ " free seats before booking");
 			HashMap<SeatType,Integer> hm =	new HashMap<SeatType,Integer>();
-			hm.put(getSelectedFlightClass(), 1);
+			hm.put(getSelectedFlightClass(), getNumberOfSeats());
 			f.addBooking(hm, booking);
-			bookingRepository.update(booking);
+			
+		//	bookingRepository.update(booking);
 			flightRepository.update(f);
 			System.out.println(f.getNumberOfSeatForType(getSelectedFlightClass())+ " free seats after booking");
 			clearAll();
@@ -299,7 +301,7 @@ public class SearchBean implements Serializable {
 	public String search()
 	{
 		System.out.println("called search from searchbean");
-		setFlights(flightRepository.findByParams(getSelectedFlightclass(), getSelectedPartner(), getDateOfDeparture(),getSelectedDestination(),getSelectedDeparture(),getSelectedGlobalRegion()));
+		setFlights(flightRepository.findByParams(getSelectedFlightclass(), getSelectedPartner(), getDateOfDeparture(),getSelectedDestination(),getSelectedDeparture(),getSelectedGlobalRegion(),getNumberOfSeats()));
 		return "search.xhtml";
 	}
 
