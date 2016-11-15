@@ -1,10 +1,13 @@
 package com.realdolmen.domain.beans;
 
 import java.io.Serializable;
+import java.util.PropertyResourceBundle;
 
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -27,6 +30,8 @@ public class RegisterCustomerBean implements Serializable{
 
 	@Inject
     UserRepository userRepository;
+	
+	private transient @Inject PropertyResourceBundle bundle;
 	
 	@NotEmpty(message= "{firstNameNotEmpty}")
 	@Size(min = 1, max = 50, message = "{firstNameError}")
@@ -100,12 +105,29 @@ public class RegisterCustomerBean implements Serializable{
 	}
 	
 	public String register(){
-		Customer c = new Customer(address, email, firstName,
+		if(userRepository.findCustomer(userName) == null){
+			Customer c = new Customer(address, email, firstName,
 				lastName, unhashedPassword, userName);
-		userRepository.saveCustomer(c);
+			userRepository.saveCustomer(c);
+			clearAll();
+			return "registrationSuccessful.xhtml";
+		}
+		else{
+			String message = bundle.getString("usernameAlreadyExistsInDb");
+			FacesContext.getCurrentInstance().addMessage(null, 
+			        new FacesMessage(FacesMessage.SEVERITY_ERROR, message, null));
+			return "";
+		}
+	}
+	
+	public void clearAll(){
 		// Refresh address, otherwise address has an ID and can't be registered again
 		address = new Address();
+		firstName="";
+		lastName="";
+		userName="";
+		unhashedPassword="";
+		email="";
 		
-		return "registrationSuccessful.xhtml";
 	}
 }
