@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.validation.constraints.NotNull;
 
 import com.realdolmen.domain.flight.Airport;
 import com.realdolmen.domain.flight.Booking;
@@ -81,26 +82,28 @@ public class SearchBean implements Serializable {
 	private List<Airport> airports;
 	
 	private Airport selectedDestination;
-	
+	@NotNull
 	private Airport selectedDeparture;
 	
 	private List<GlobalRegion> globalRegions;
 	
 	private GlobalRegion selectedGlobalRegion;
-	
+	@NotNull
 	private int numberOfSeats;
 
-
+	
 	public Long getSelectedFlightId() {
 		return selectedFlightId;
 	}
 	
 	private Partner selectedPartner;
 	
+
 	public SeatType getSelectedFlightClass() {
 		return selectedFlightClass;
 	}
 	
+
 	public void setSelectedFlightClass(SeatType selectedFlightClass) {
 		this.selectedFlightClass = selectedFlightClass;
 	}
