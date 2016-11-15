@@ -222,7 +222,15 @@ public class SearchBean implements Serializable {
 			System.out.println(f.getNumberOfSeatForType(getSelectedFlightClass())+ " free seats before booking");
 			HashMap<SeatType,Integer> hm =	new HashMap<SeatType,Integer>();
 			hm.put(getSelectedFlightClass(), getNumberOfSeats());
+			
+			//TODO: HERE ADD DISCOUNT IF ps == PaymentStatus.SUCCESS on each BookingOfFlight
+				// or give it as an extra discount in addBookingOfFlight
+			
 			booking = f.addBooking(hm, booking);
+			
+			// TODO: THIS with f2 the retour flight to add it to the booking (normally)
+			//booking = f2.addBooking(hm, booking);
+			
 			//bookingRepository.update(booking);
 			
 		//	bookingRepository.update(booking);
