@@ -70,6 +70,9 @@ public class BookingOfFlight implements Serializable{
 		this.flight = flight;
 		this.booking = booking;
 		this.seat = seat;
+		this.discountsPercentages = discountsPercentages;
+		this.discountsRealvalues=discountsRealvalues;
+		this.extraDiscount = extraDiscount;
 		this.rairCharge = rairCharge;
 	}
 
@@ -139,7 +142,7 @@ public class BookingOfFlight implements Serializable{
 
 	public String getDiscounts(){
 		String result = "";
-		if(discountsPercentages != 0.0 && discountsRealvalues != 0.0 && extraDiscount != 0.0){
+		if(discountsPercentages != 0.0 || discountsRealvalues != 0.0 || extraDiscount != 0.0){
 //			ArrayList<Double> discs = new ArrayList<Double>();
 			result += "with discount(s): ";
 			if(discountsPercentages != 0.0){
@@ -154,9 +157,14 @@ public class BookingOfFlight implements Serializable{
 //				discs.add(extraDiscount);
 				result += extraDiscount + "% ";
 			}
-			if(result.charAt(result.length()-1) == '&'){
-				result = result.substring(0,result.length());
+			if(result != null && result.length() > 0 && 
+					result.charAt(result.length()-1) == '&'){
+				result = result.substring(0,result.length()-1);
 			}
+			
+		}
+		else{
+			result += "No discounts.";
 		}
 		return result;
 	}

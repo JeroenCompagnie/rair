@@ -58,4 +58,8 @@ public class VolumeDiscountPercentage extends DiscountPercentage implements Seri
 	protected double addDiscountToPrice2(double price) {
 		return super.addDiscountToPrice2(price);
 	}
+	
+	public String getString(){
+		return toString();
+	}
 }

@@ -39,7 +39,7 @@
 			<h:outputText value="#{search.selectedDestination}"></h:outputText>
 			<br />
 		</b:jumbotron>
-		<h:form>
+		<h:form rendered="#{not search.selectedFlightIdIsNull}">
 			<h:outputLabel styleClass="rair-attention" value="Please make sure the data above is correct"/><br/>
 			<h:outputLabel value="Select a payment method"/>
 			<b:selectOneMenu id="selectedPaymentMethod" value="#{search.selectedPaymentMethod}" styleClass="datePicker">
@@ -48,6 +48,10 @@
 			<b:commandButton value="Book" action="#{search.bookFlight}" look="info"></b:commandButton>
 			<b:commandButton value="Edit Selection" action="#{search.edit}" look="info"></b:commandButton>
 		</h:form>
-	</ui:define>
+		
+		<h:form rendered="#{search.selectedFlightIdIsNull}">
+			<b:commandButton value="Go to search" action="#{search.edit}" look="info"></b:commandButton>
+		</h:form>
+	</ui:define>	
 </ui:composition>
 </html>

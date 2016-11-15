@@ -3,7 +3,6 @@ package com.realdolmen.domain.beans;
 import java.io.Serializable;
 import java.util.PropertyResourceBundle;
 
-import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -45,7 +44,7 @@ public class RegisterCustomerBean implements Serializable{
 	@Size(min = 4, max = 50, message = "{userNameError}")
 	private String userName;
 	
-	@NotEmpty(message="{passwordError}")
+	@NotEmpty(message="{passwordNotEmpty}")
 	@Size(min=8, max=30, message="{passwordError}")
 	private String unhashedPassword;
 	
@@ -113,6 +112,7 @@ public class RegisterCustomerBean implements Serializable{
 			return "registrationSuccessful.xhtml";
 		}
 		else{
+			userRepository.log("LOG: Registration attempt with user name which already exists in DB: " + userName);
 			String message = bundle.getString("usernameAlreadyExistsInDb");
 			FacesContext.getCurrentInstance().addMessage(null, 
 			        new FacesMessage(FacesMessage.SEVERITY_ERROR, message, null));

@@ -22,6 +22,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.hibernate.engine.jdbc.env.internal.ExtractedDatabaseMetaDataImpl;
+
 import com.realdolmen.domain.user.Employee;
 import com.realdolmen.domain.user.Partner;
 import com.realdolmen.domain.user.User;
@@ -144,6 +146,10 @@ public class Flight implements Serializable {
 					double extraDiscount2 = 0.0;
 					if(extraDiscount != null){
 						extraDiscount2 = extraDiscount.getDiscount();
+						System.err.println("ExtraDiscount2 = " + extraDiscount2);
+					}
+					else{
+						System.err.println("ExtraDiscount2 is null");
 					}
 
 					BookingOfFlight bof = new BookingOfFlight(price, this, booking, seat, 

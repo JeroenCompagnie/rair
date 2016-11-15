@@ -23,6 +23,7 @@ public class UserRepository {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
+	
 	@PersistenceContext
 	private EntityManager em;
 	
@@ -102,6 +103,7 @@ public class UserRepository {
 		}
 		catch (NoResultException e){
 			System.err.println("No user with user name: " + userName + " found in DB.");
+			logger.info("LOG: No user with user name: " + userName + " found in DB." );
 			return null;
 		}
 	}
@@ -115,5 +117,9 @@ public class UserRepository {
 		catch (NoResultException e){
 			return null;
 		}
+	}
+
+	public void log(String msg) {
+		logger.info(msg);
 	}
 }

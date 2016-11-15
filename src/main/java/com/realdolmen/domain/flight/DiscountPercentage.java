@@ -42,6 +42,12 @@ public class DiscountPercentage extends DiscountSuper implements Serializable{
 		result = result + Math.abs(discount) + "%";
 		result += super.getStringIfPeriodical();
 		return result;
+	}
+
+	public String getString() {
+		return toString();
 	}	
+	
+	
 }
 

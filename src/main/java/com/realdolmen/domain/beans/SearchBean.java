@@ -148,6 +148,10 @@ public class SearchBean implements Serializable {
 		this.selectedFlightId = selectedFlightId;
 	}
 	
+	public boolean getSelectedFlightIdIsNull(){
+		return selectedFlightId == null;
+	}
+	
 	@PostConstruct
 	public void init() {
 		globalRegions = new ArrayList<GlobalRegion>();
@@ -231,8 +235,9 @@ public class SearchBean implements Serializable {
 				// or give it as an extra discount in addBookingOfFlight
 			
 			DiscountPercentage discountCredit = null;
-			if(ps == PaymentStatus.PENDING){
+			if(getSelectedPaymentMethod()==PaymentMethod.CreditCard){
 				discountCredit = new DiscountPercentage(true, PaymentMethod.CreditCard.getDiscount());
+				System.err.println("MADE CREDITCARD DISCOUNT WITH DISCOUNT: " + PaymentMethod.CreditCard.getDiscount());
 			}
 			booking = f.addBooking(hm, booking, discountCredit); //TODO in addBooking de discountCredit discount toepassen indien niet null 
 			
@@ -253,6 +258,7 @@ public class SearchBean implements Serializable {
 			clearAll();
 
 			bookingBean.setUrlCode(booking.getId());
+			bookingBean.setAfterBooking(true);
 			return "invoice.xhtml";
 		}
 		else 
