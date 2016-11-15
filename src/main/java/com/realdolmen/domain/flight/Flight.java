@@ -138,7 +138,7 @@ public class Flight implements Serializable {
 					Seat seat = getSeatWithType(entry.getKey());
 
 					double price = seat.getBasePrice();
-					price = applyDiscountsToPrice(price);
+					price = applyDiscountsToPrice(price,totalNrOfSeatsForBooking);
 
 
 					BookingOfFlight bof = new BookingOfFlight(price, this, booking, seat);
@@ -153,7 +153,7 @@ public class Flight implements Serializable {
 		}
 	}
 
-	protected double applyDiscountsToPrice(double price) {
+	protected double applyDiscountsToPrice(double price, int seats) {
 		getDiscountsListWithoutNull();
 		HashMap<Long, DiscountSuper> discountsRealValues = new HashMap<>(); 
 		HashMap<Long, DiscountSuper> discountsPercentages = new HashMap<>();
@@ -163,11 +163,11 @@ public class Flight implements Serializable {
 		for(DiscountSuper d : discounts){
 			// SEPARATE PERCENTAGES FROM REAL VALUES + make sure that each id is only put in a map once
 			
-			if(d.getClass() == DiscountPercentage.class){
+			if(d.getClass() == DiscountPercentage.class || d.getClass() == VolumeDiscountPercentage.class){
 				discountsPercentages.put(d.getId(), d);
 				System.err.println(d.toString() + " " + d.getId());
 			}
-			else{
+			else if(d.getClass() == DiscountRealvalue.class || d.getClass() == VolumeDiscountRealvalue.class){
 				discountsRealValues.put(d.getId(), d);
 				System.err.println(d.toString() + " " + d.getId());
 			}
@@ -176,12 +176,23 @@ public class Flight implements Serializable {
 		
 		// FIRST APPLY DISCOUNT PERCENTAGES
 		for(Entry<Long, DiscountSuper> entry : discountsPercentages.entrySet()){
-			price = entry.getValue().addDiscountToPrice(price);
+			if(entry.getValue().getClass() == VolumeDiscountPercentage.class){
+				price = ((VolumeDiscountPercentage)entry.getValue()).addDiscountToPrice(price, seats);
+			}
+			else{
+				price = entry.getValue().addDiscountToPrice(price);
+			}
 			System.err.println(price + " from:" + entry.getValue().toString());
 		}
 		// SECOND APPLY DISCOUNT REAL VALUES
 		for(Entry<Long, DiscountSuper> entry : discountsRealValues.entrySet()){
-			price = entry.getValue().addDiscountToPrice(price);
+			if(entry.getValue().getClass() == VolumeDiscountRealvalue.class){
+				price = ((VolumeDiscountRealvalue)entry.getValue()).addDiscountToPrice(price, seats);
+				
+			}
+			else{
+				price = entry.getValue().addDiscountToPrice(price);
+			}
 			System.err.println(price + " from:" + entry.getValue().toString());
 		}
 		
@@ -361,9 +372,10 @@ public class Flight implements Serializable {
 	
 	public double getSeatPriceAfterDiscounts(SeatType type){
 		getSeatListWithoutNull();
+		System.err.println("FLIGHT: EXECUTES getseatpriceafterdicounts("+type.toString()+")");
 		for(Seat s: seatList){
 			if(s.getType() == type){
-				return applyDiscountsToPrice(s.getBasePrice());
+				return applyDiscountsToPrice(s.getBasePrice(),-1);
 			}
 		}
 		return -1.0;

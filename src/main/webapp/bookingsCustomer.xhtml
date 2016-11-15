@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui">
+<ui:composition template="WEB-INF/templates/common.xhtml">
+	<!-- TODO replace content here -->
+	<ui:define name="title">Partner module</ui:define>
+
+	<ui:define name="content">
+		<h:outputLabel value="You need to be logged in as a customer!"
+			rendered="#{not loginBean.userIsCustomer}" />
+
+		<h:form rendered="#{loginBean.userIsCustomer}">
+			<b:dataTable value="#{customerBookingBean.bookingsList}" var="b">
+				<b:dataTableColumn value="#{b.id}" label="code" />
+				<b:dataTableColumn value="#{b.paymentStatus}" label="Payment status"/>
+				<b:dataTableColumn value="#{b.dateOfReservation}" label="Date of reservation"/>
+				<b:dataTableColumn label="Details link" >
+					<b:navLink value="Details"
+						outcome="invoice.xhtml">
+						<f:param name="id" value="#{b.id}" />
+					</b:navLink>
+				</b:dataTableColumn>
+			</b:dataTable>
+
+
+
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

@@ -23,7 +23,7 @@ public class BookingRepository {
 		return b;
 	}
 
-	public Booking findById(String id) {
+	public Booking findById(Long id) {
 		return em.find(Booking.class, id);
 	}
 

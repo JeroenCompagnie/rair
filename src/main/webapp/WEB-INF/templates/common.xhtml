@@ -43,7 +43,8 @@
 						rendered="#{loginBean.isUserNull}"></b:navLink>
 					<b:navLink value="#{msgs.registerNav}" href="register.xhtml"
 						iconAwesome="list-alt" rendered="#{loginBean.isUserNull}"></b:navLink>
-
+					<b:navLink value="#{msgs.bookings}" href="bookingsCustomer.xhtml"
+						iconAwesome="list" rendered="#{loginBean.userIsCustomer}"></b:navLink>
 				</b:navbarLinks>
 
 				<!-- logout button must be in form and out of navbarLinks -->

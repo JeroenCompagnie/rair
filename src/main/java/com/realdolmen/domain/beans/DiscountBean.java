@@ -12,6 +12,8 @@ import com.realdolmen.domain.flight.DiscountPercentage;
 import com.realdolmen.domain.flight.DiscountRealvalue;
 import com.realdolmen.domain.flight.DiscountSuper;
 import com.realdolmen.domain.flight.Flight;
+import com.realdolmen.domain.flight.VolumeDiscountPercentage;
+import com.realdolmen.domain.flight.VolumeDiscountRealvalue;
 import com.realdolmen.repository.FlightRepository;
 
 @Named("discountBean")
@@ -40,6 +42,8 @@ public class DiscountBean implements Serializable{
 	private double newDiscount;
 
 	private String newDiscountType = "Percentage";
+	
+	private int newDiscountVolume;
 
 	private Boolean withDates = false;
 
@@ -116,12 +120,24 @@ public class DiscountBean implements Serializable{
 		DiscountSuper d;
 		Boolean isPeriodical = (beginDate != null && endDate != null);
 		if(isPercentage){
-		d = new DiscountPercentage((loginBean.getUserIsEmployee()), newDiscount,
+			if(newDiscountVolume < 0){
+				d = new DiscountPercentage((loginBean.getUserIsEmployee()), newDiscount,
 				isPeriodical, beginDate, endDate);
+			}
+			else{
+				d = new VolumeDiscountPercentage((loginBean.getUserIsEmployee()), newDiscount,
+						isPeriodical, beginDate, endDate, newDiscountVolume);
+			}
 		}
 		else{
-			d = new DiscountRealvalue((loginBean.getUserIsEmployee()), newDiscount,
-					isPeriodical, beginDate, endDate);
+			if(newDiscountVolume < 1){
+				d = new DiscountRealvalue((loginBean.getUserIsEmployee()), newDiscount,
+						isPeriodical, beginDate, endDate);
+			}
+			else{
+				d = new VolumeDiscountRealvalue((loginBean.getUserIsEmployee()), newDiscount,
+						isPeriodical, beginDate, endDate, newDiscountVolume);
+			}
 		}
 		
 		if(loginBean.getUserIsEmployee()){
@@ -184,4 +200,16 @@ public class DiscountBean implements Serializable{
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
+
+	/**
+	 * For volume discounts
+	 */
+	public int getNewDiscountVolume() {
+		return newDiscountVolume;
+	}
+	
+	public void setNewDiscountVolume(int newDiscountVolume) {
+		this.newDiscountVolume = newDiscountVolume;
+	}
+	
 }

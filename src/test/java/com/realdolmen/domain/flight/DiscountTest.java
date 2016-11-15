@@ -98,7 +98,7 @@ public class DiscountTest extends JpaPersistenceTest{
 	@Test
 	public void testFlightWithStandardDiscount(){
 		assertEquals("partnerName", flight.getPartner().getName());
-		assertEquals(110.0, flight.applyDiscountsToPrice(100.0),0.0001);
+		assertEquals(110.0, flight.applyDiscountsToPrice(100.0,-1),0.0001);
 	}
 	
 	@Test
@@ -128,8 +128,41 @@ public class DiscountTest extends JpaPersistenceTest{
 		System.err.println("-----");
 		
 		assertEquals(expectedSelf, expected, 0.0001);
-		assertEquals(expected, flight.applyDiscountsToPrice(100.0),0.0001);
+		assertEquals(expected, flight.applyDiscountsToPrice(100.0,-1),0.0001);
 	}
+	
+	@Test public void testVolumeDiscounts(){
+		flight.addDiscount(new VolumeDiscountPercentage(true, 0.01, 3));
+		flight.addDiscount(new VolumeDiscountPercentage(false, 0.02, 3));
+		flight.addDiscount(new VolumeDiscountRealvalue(true, 1.0, 3));
+		flight.addDiscount(new VolumeDiscountRealvalue(false, 2.0, 3));
+		em.merge(flight);
+		
+		double expected = 100.0;
+		expected = new VolumeDiscountPercentage(true, 0.01,3).addDiscountToPrice(expected,2);
+		System.err.println(expected);
+		expected = new VolumeDiscountPercentage(true, 0.02,3).addDiscountToPrice(expected,2);
+		System.err.println(expected);
+		expected = new VolumeDiscountRealvalue(true, 2.0,3).addDiscountToPrice(expected,2);
+		System.err.println(expected);
+		expected = new VolumeDiscountRealvalue(true, 1.0,3).addDiscountToPrice(expected,2);
+		System.err.println(expected);
+		expected = flight.getDefaultPriceCharge().addDiscountToPrice(expected);
+		
+		double expectedSelf = 100.0;
+		expectedSelf = expectedSelf -expectedSelf*0.01;
+		expectedSelf = expectedSelf -expectedSelf*0.02;
+		expectedSelf = expectedSelf -1;
+		expectedSelf = expectedSelf -2;
+		expectedSelf = expectedSelf + expectedSelf*0.1;
+		
+		assertEquals(expectedSelf, flight.applyDiscountsToPrice(100.0,3),0.0001);
+		assertEquals(expectedSelf, flight.applyDiscountsToPrice(100.0,4),0.0001);
+		assertEquals(110.0,expected,0.0001);
+		assertEquals(110.0, flight.applyDiscountsToPrice(100.0,2),0.0001);
+	}
+	
 }
+
 
 

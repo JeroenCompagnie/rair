@@ -18,8 +18,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import org.hibernate.annotations.GenericGenerator;
-
 import com.realdolmen.domain.user.Customer;
 import com.realdolmen.domain.user.User;
 

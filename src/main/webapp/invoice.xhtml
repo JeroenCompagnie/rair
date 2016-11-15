@@ -11,7 +11,6 @@
 </f:metadata>
 
 <ui:composition template="WEB-INF/templates/common.xhtml">
-	<!-- TODO replace content here -->
 	<ui:define name="title">Invoice</ui:define>
 
 	<ui:define name="content">
@@ -32,7 +31,6 @@
 				<b:dataTableColumn value="#{b.numberInBooking}" label="#"/>
 				<b:dataTableColumn value="#{b.flight.partner.name}" label="Flight company"/>
 				<b:dataTableColumn value="#{b.price}" label="Ticket price"/>
-				
 			</b:dataTable>
 		</h:panelGroup>
 		
@@ -67,7 +65,8 @@
 			</c:forEach>
 		</div>
 	
-	<b:button iconAwesome="print" type="button" onclick="printDiv('printableArea')" value="Print this page!" />
+	<b:button iconAwesome="print" type="button" onclick="printDiv('printableArea')" 
+	value="Print this page!" rendered="#{not bookingBean.bookingIsNull}"/>
 
 	</ui:define>
 </ui:composition>
