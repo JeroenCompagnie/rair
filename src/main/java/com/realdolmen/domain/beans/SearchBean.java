@@ -143,7 +143,6 @@ public class SearchBean implements Serializable {
 
 	private List<Partner> partners;
 	
-	private Calendar calendar;
 
 	public void setSelectedFlightId(Long selectedFlightId) {
 		this.selectedFlightId = selectedFlightId;
@@ -151,7 +150,6 @@ public class SearchBean implements Serializable {
 	
 	@PostConstruct
 	public void init() {
-		calendar = Calendar.getInstance();
 		globalRegions = new ArrayList<GlobalRegion>();
 		for(GlobalRegion gr : GlobalRegion.values())
 		{
@@ -228,11 +226,10 @@ public class SearchBean implements Serializable {
 		//	bookingRepository.update(booking);
 			flightRepository.update(f);
 			System.out.println(f.getNumberOfSeatForType(getSelectedFlightClass())+ " free seats after booking");
-			Email email = new Email();
 			String [] addresses= {"thomas.simons@realdolmen.com"};
-			email.sendMailStandardSender(addresses, "Booking Confirmation", booking.printBooking(),"");
+			Email.sendMailStandardSender(addresses, "Booking Confirmation", booking.printBooking());
 			clearAll();
-			return "invoice.xhtml?id="+booking.getId()+"faces-redirect=true";
+			return "invoice.xhtml?id="+booking.getId();
 		}
 		else 
 		{
