@@ -97,7 +97,7 @@ public class FlightRepository {
 		return typedQuery.getResultList();
 	}*/
 
-	public List<Flight> findByParams(SeatType t, Partner partner, Date departureDate,Airport destination,Airport departure,String globalRegion) {
+	public List<Flight> findByParams(SeatType t, Partner partner, Date departureDate,Airport destination,Airport departure,String globalRegion,int numberOfSeats) {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Flight> cq = cb.createQuery(Flight.class);
 		Root<Flight> from = cq.from(Flight.class);
@@ -130,7 +130,7 @@ public class FlightRepository {
 		if (t != null) {
 			System.out.println("SeatType tested " + t);
 			From<Flight, Seat> join = from.join("seatList");
-			Path<Seat> s = join.get("type");
+			Path<Seat> s = join.get("type")	;
 			predicates.add(cb.equal(s, t));
 			//System.out.println(s + " seattype from database");
 		}
@@ -171,7 +171,9 @@ public class FlightRepository {
 			//System.out.println(cq.getSelection());
 			predicates.add(cb.equal(dbGlobalRegion, globalRegion));
 		}
-		cq.select(from).where(predicates.toArray(new Predicate[] {})).distinct(true);
+		cq.select(from).where(predicates.toArray(new Predicate[] {}));
+		//cq.select(from).where(predicates.toArray(new Predicate[] {})).distinct(true);
+		//cq.having(cb.in(from.get("seatList")))
 		return em.createQuery(cq).getResultList();
 	}
 

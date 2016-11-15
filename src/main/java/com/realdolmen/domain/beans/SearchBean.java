@@ -195,6 +195,11 @@ public class SearchBean implements Serializable {
 		setDateOfReturn(null);
 	}
 	
+	public String edit()
+	{
+		return "index?faces-redirect=true";
+	}
+	
 	public String bookFlight()
 	{	
 		if (loginBean.getUserIsCustomer())
@@ -205,7 +210,7 @@ public class SearchBean implements Serializable {
 			Flight f = flightRepository.findById(selectedFlightId);
 			System.out.println(f.getNumberOfSeatForType(getSelectedFlightClass())+ " free seats before booking");
 			HashMap<SeatType,Integer> hm =	new HashMap<SeatType,Integer>();
-			hm.put(getSelectedFlightClass(), 1);
+			hm.put(getSelectedFlightClass(), getNumberOfSeats());
 			f.addBooking(hm, booking);
 			
 		//	bookingRepository.update(booking);
@@ -294,7 +299,7 @@ public class SearchBean implements Serializable {
 	public String search()
 	{
 		System.out.println("called search from searchbean");
-		setFlights(flightRepository.findByParams(getSelectedFlightclass(), getSelectedPartner(), getDateOfDeparture(),getSelectedDestination(),getSelectedDeparture(),getSelectedGlobalRegion()));
+		setFlights(flightRepository.findByParams(getSelectedFlightclass(), getSelectedPartner(), getDateOfDeparture(),getSelectedDestination(),getSelectedDeparture(),getSelectedGlobalRegion(),getNumberOfSeats()));
 		return "search.xhtml";
 	}
 

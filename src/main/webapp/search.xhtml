@@ -19,7 +19,13 @@
 					value="You have selected the following flight options:" />
 			</f:facet>
 			<b:panelGrid colSpans="6,6" size="xs">
-
+				
+				<h:panelGroup>
+					<h:outputText span="8" value="The number of seats you selected is " />
+				</h:panelGroup>
+				<h:panelGroup>
+					<b:label text="#{search.numberOfSeats}" />
+				</h:panelGroup>
 				<h:panelGroup>
 					<h:outputText span="8" value="The flightClass you selected is " />
 				</h:panelGroup>
