@@ -4,13 +4,16 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.realdolmen.domain.flight.Discount;
+import com.realdolmen.domain.flight.DiscountPercentage;
+import com.realdolmen.domain.flight.DiscountRealvalue;
+import com.realdolmen.domain.flight.DiscountSuper;
 import com.realdolmen.domain.flight.Flight;
+import com.realdolmen.domain.flight.VolumeDiscountPercentage;
+import com.realdolmen.domain.flight.VolumeDiscountRealvalue;
 import com.realdolmen.repository.FlightRepository;
 
 @Named("discountBean")
@@ -22,7 +25,7 @@ public class DiscountBean implements Serializable{
 	 */
 	private static final long serialVersionUID = 4305676802381146759L;
 
-	@EJB
+	@Inject
 	private FlightRepository flightRepository;
 	
 	@Inject
@@ -39,6 +42,8 @@ public class DiscountBean implements Serializable{
 	private double newDiscount;
 
 	private String newDiscountType = "Percentage";
+	
+	private int newDiscountVolume;
 
 	private Boolean withDates = false;
 
@@ -112,9 +117,28 @@ public class DiscountBean implements Serializable{
 		if(newDiscountType.equals("Percentage")){
 			isPercentage = true;
 		}
+		DiscountSuper d;
 		Boolean isPeriodical = (beginDate != null && endDate != null);
-		Discount d = new Discount((loginBean.getUserIsEmployee()), isPercentage, newDiscount,
+		if(isPercentage){
+			if(newDiscountVolume < 0){
+				d = new DiscountPercentage((loginBean.getUserIsEmployee()), newDiscount,
 				isPeriodical, beginDate, endDate);
+			}
+			else{
+				d = new VolumeDiscountPercentage((loginBean.getUserIsEmployee()), newDiscount,
+						isPeriodical, beginDate, endDate, newDiscountVolume);
+			}
+		}
+		else{
+			if(newDiscountVolume < 1){
+				d = new DiscountRealvalue((loginBean.getUserIsEmployee()), newDiscount,
+						isPeriodical, beginDate, endDate);
+			}
+			else{
+				d = new VolumeDiscountRealvalue((loginBean.getUserIsEmployee()), newDiscount,
+						isPeriodical, beginDate, endDate, newDiscountVolume);
+			}
+		}
 		
 		if(loginBean.getUserIsEmployee()){
 			flightRepository.addDiscount(d, employeeBean.getFlight());
@@ -176,4 +200,16 @@ public class DiscountBean implements Serializable{
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
+
+	/**
+	 * For volume discounts
+	 */
+	public int getNewDiscountVolume() {
+		return newDiscountVolume;
+	}
+	
+	public void setNewDiscountVolume(int newDiscountVolume) {
+		this.newDiscountVolume = newDiscountVolume;
+	}
+	
 }

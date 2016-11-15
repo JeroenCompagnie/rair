@@ -32,7 +32,8 @@ public class DiscountTest extends JpaPersistenceTest{
 	
 	@Test
 	public void testBasicPercentageDiscount(){
-		Discount discountPercentage = new Discount(true, true, 0.05, false, null, null);
+//		Discount discountPercentage = new Discount(true, true, 0.05, false, null, null);
+		DiscountSuper discountPercentage = new DiscountPercentage(true, 0.05);
 		Double baseprice = 100.0;
 		
 		Double discountedPrice = discountPercentage.addDiscountToPrice(baseprice);
@@ -42,7 +43,8 @@ public class DiscountTest extends JpaPersistenceTest{
 	
 	@Test
 	public void testBasicRealvalueDiscount(){
-		Discount discountRealvalue = new Discount(true, false, 9.99, false, null, null);
+//		Discount discountRealvalue = new Discount(true, false, 9.99, false, null, null);
+		DiscountSuper discountRealvalue = new DiscountRealvalue(true, 9.99);
 		Double baseprice = 100.0;
 		
 		Double discountedPrice = discountRealvalue.addDiscountToPrice(baseprice);
@@ -56,7 +58,8 @@ public class DiscountTest extends JpaPersistenceTest{
 		Date begin= DateConverter.getDateXDaysAfterToday(5);
 		Date end= DateConverter.getDateXDaysAfterToday(7);
 		
-		Discount discountPercentage = new Discount(true, true, 0.05, true, begin, end);
+//		Discount discountPercentage = new Discount(true, true, 0.05, true, begin, end);
+		DiscountSuper discountPercentage = new DiscountPercentage(true, 0.05, true, begin, end);
 		Double baseprice = 100.0;
 		
 		Double discountedPrice = discountPercentage.addDiscountToPrice(baseprice);
@@ -69,7 +72,8 @@ public class DiscountTest extends JpaPersistenceTest{
 		Date begin= DateConverter.getDateXDaysBeforeToday(7);
 		Date end = DateConverter.getDateXDaysBeforeToday(5);
 		
-		Discount discountPercentage = new Discount(true, true, 0.05, true, begin, end);
+//		Discount discountPercentage = new Discount(true, true, 0.05, true, begin, end);
+		DiscountSuper discountPercentage = new DiscountPercentage(true, 0.05, true, begin, end);
 		Double baseprice = 100.0;
 		
 		Double discountedPrice = discountPercentage.addDiscountToPrice(baseprice);
@@ -82,7 +86,8 @@ public class DiscountTest extends JpaPersistenceTest{
 		Date begin= DateConverter.getDateXDaysBeforeToday(1);
 		Date end = DateConverter.getDateXDaysAfterToday(1);
 		
-		Discount discountPercentage = new Discount(true, true, 0.05, true, begin, end);
+//		Discount discountPercentage = new Discount(true, true, 0.05, true, begin, end);
+		DiscountSuper discountPercentage = new DiscountPercentage(true, 0.05, true, begin, end);
 		Double baseprice = 100.0;
 		
 		Double discountedPrice = discountPercentage.addDiscountToPrice(baseprice);
@@ -93,38 +98,71 @@ public class DiscountTest extends JpaPersistenceTest{
 	@Test
 	public void testFlightWithStandardDiscount(){
 		assertEquals("partnerName", flight.getPartner().getName());
-		assertEquals(110.0, flight.applyDiscountsToPrice(100.0),0.0001);
+		assertEquals(110.0, flight.applyDiscountsToPrice(100.0,-1),0.0001);
 	}
 	
 	@Test
 	public void testFlightWithAFewDiscounts(){
-		flight.addDiscount(new Discount(true, true, 0.01));
-		flight.addDiscount(new Discount(false, true, 0.01));
-		flight.addDiscount(new Discount(true, false, 1.0));
-		flight.addDiscount(new Discount(false, false, 1.0));
+		flight.addDiscount(new DiscountPercentage(true, 0.01));
+		flight.addDiscount(new DiscountPercentage(false, 0.01));
+		flight.addDiscount(new DiscountRealvalue(true, 1.0));
+		flight.addDiscount(new DiscountRealvalue(false, 1.0));
 		em.merge(flight);
-		double expectedSelf = 100.0 + 100.0*0.1;
+		double expectedSelf = 100.0;
 		expectedSelf = expectedSelf -expectedSelf*0.01;
 		expectedSelf = expectedSelf -expectedSelf*0.01;
 		expectedSelf = expectedSelf -1;
 		expectedSelf = expectedSelf -1;
+		expectedSelf = expectedSelf + expectedSelf*0.1;
 		
 		double expected = 100.0;
-		expected = new Discount(true, true, -0.1).addDiscountToPrice(expected);
+		expected = new DiscountPercentage(true, 0.01).addDiscountToPrice(expected);
 		System.err.println(expected);
-		expected = new Discount(true, true, 0.01).addDiscountToPrice(expected);
+		expected = new DiscountPercentage(true, 0.01).addDiscountToPrice(expected);
 		System.err.println(expected);
-		expected = new Discount(true, true, 0.01).addDiscountToPrice(expected);
+		expected = new DiscountRealvalue(true, 1.0).addDiscountToPrice(expected);
 		System.err.println(expected);
-		expected = new Discount(true, false, 1.0).addDiscountToPrice(expected);
+		expected = new DiscountRealvalue(true, 1.0).addDiscountToPrice(expected);
 		System.err.println(expected);
-		expected = new Discount(true, false, 1.0).addDiscountToPrice(expected);
-		System.err.println(expected);
+		expected = flight.getDefaultPriceCharge().addDiscountToPrice(expected);
 		System.err.println("-----");
 		
 		assertEquals(expectedSelf, expected, 0.0001);
-		assertEquals(expected, flight.applyDiscountsToPrice(100.0),0.0001);
+		assertEquals(expected, flight.applyDiscountsToPrice(100.0,-1),0.0001);
 	}
+	
+	@Test public void testVolumeDiscounts(){
+		flight.addDiscount(new VolumeDiscountPercentage(true, 0.01, 3));
+		flight.addDiscount(new VolumeDiscountPercentage(false, 0.02, 3));
+		flight.addDiscount(new VolumeDiscountRealvalue(true, 1.0, 3));
+		flight.addDiscount(new VolumeDiscountRealvalue(false, 2.0, 3));
+		em.merge(flight);
+		
+		double expected = 100.0;
+		expected = new VolumeDiscountPercentage(true, 0.01,3).addDiscountToPrice(expected,2);
+		System.err.println(expected);
+		expected = new VolumeDiscountPercentage(true, 0.02,3).addDiscountToPrice(expected,2);
+		System.err.println(expected);
+		expected = new VolumeDiscountRealvalue(true, 2.0,3).addDiscountToPrice(expected,2);
+		System.err.println(expected);
+		expected = new VolumeDiscountRealvalue(true, 1.0,3).addDiscountToPrice(expected,2);
+		System.err.println(expected);
+		expected = flight.getDefaultPriceCharge().addDiscountToPrice(expected);
+		
+		double expectedSelf = 100.0;
+		expectedSelf = expectedSelf -expectedSelf*0.01;
+		expectedSelf = expectedSelf -expectedSelf*0.02;
+		expectedSelf = expectedSelf -1;
+		expectedSelf = expectedSelf -2;
+		expectedSelf = expectedSelf + expectedSelf*0.1;
+		
+		assertEquals(expectedSelf, flight.applyDiscountsToPrice(100.0,3),0.0001);
+		assertEquals(expectedSelf, flight.applyDiscountsToPrice(100.0,4),0.0001);
+		assertEquals(110.0,expected,0.0001);
+		assertEquals(110.0, flight.applyDiscountsToPrice(100.0,2),0.0001);
+	}
+	
 }
+
 
 

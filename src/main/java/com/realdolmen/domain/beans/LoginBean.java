@@ -26,7 +26,7 @@ public class LoginBean implements Serializable{
 	 */
 	private static final long serialVersionUID = -3191611829476459272L;
 
-	@EJB
+	@Inject
     UserRepository userRepository;
 	
 	

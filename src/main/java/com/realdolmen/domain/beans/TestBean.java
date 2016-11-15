@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.realdolmen.domain.user.Employee;
@@ -13,7 +14,7 @@ import com.realdolmen.repository.EmployeeRepository;
 @RequestScoped
 public class TestBean {
 	
-		@EJB
+		@Inject
 		EmployeeRepository er;
 		
 		public List<Employee> getAllEmploye()

@@ -18,8 +18,7 @@ public class Email {
 		String[] to = { TESTRECIPIENT }; // list of recipient email addresses
 		String subject = "Java send mail example";
 		String body = "Welcome to JavaMail!";
-		String path = "";
-		sendMail(from, pass, to, subject, body,path);
+		sendMail(from, pass, to, subject, body);
 	}
 
 //	static Properties props;
@@ -31,11 +30,12 @@ public class Email {
 //		props.put("mail.smtp.port", "587");
 	}
 	
-	public boolean sendMailStandardSender(String[] to, String subject, String body,String imgPath){
-		return sendMail(USER_NAME, PASSWORD, to, subject, body,imgPath);
+
+	public static boolean sendMailStandardSender(String[] to, String subject, String body){
+		return sendMail(USER_NAME, PASSWORD, to, subject, body);
 	}
 	
-	public static boolean sendMail(String from, String pass, String[] to, String subject, String body,String imgPath){
+	public static boolean sendMail(String from, String pass, String[] to, String subject, String body){
 		Properties props;
 		props = new Properties();
 		props.put("mail.smtp.auth", "true");

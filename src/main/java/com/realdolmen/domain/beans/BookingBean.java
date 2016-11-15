@@ -22,20 +22,20 @@ public class BookingBean implements Serializable{
 	@Inject
 	private LoginBean loginBean;
 	
-	@EJB
+	@Inject
 	private BookingRepository bookingRepository;
 	
-	private String urlCode = "";
+	private Long urlCode;
 	
 	private Booking booking;
 	
 	private boolean bookingIsNull = true;
 
-	public String getUrlCode() {
+	public Long getUrlCode() {
 		return urlCode;
 	}
 
-	public void setUrlCode(String urlCode) {
+	public void setUrlCode(Long urlCode) {
 		this.urlCode = urlCode;
 	}
 	
@@ -49,8 +49,15 @@ public class BookingBean implements Serializable{
 	public void setBookingIsNull(boolean bookingIsNull) {
 		this.bookingIsNull = bookingIsNull;
 	}
+	
+	public boolean getBookingIsNull(){
+		return getBooking() == null;
+	}
 
 	public Booking getBooking() {
+		if(urlCode == null){
+			return null;
+		}
 		System.err.println("Trying to fetch booking");
 //		if(true){
 //			return new Booking();

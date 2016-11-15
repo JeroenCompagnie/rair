@@ -38,10 +38,10 @@ public class PartnerBean implements Serializable{
 	@Inject
 	private LoginBean loginBean;
 	
-	@EJB
+	@Inject
 	private PartnerRepository partnerRepository;
 	
-	@EJB
+	@Inject
 	private FlightRepository flightRepository;
 	
 	@Before
@@ -361,6 +361,35 @@ public class PartnerBean implements Serializable{
 	
 	public int getNumberOfSeatsBookedFirst(){
 		return getNumberOfSeatsBooked(SeatType.FirstClass.toString());
+	}
+	
+	public double getEconomySeatPriceAfterDiscounts(){
+		if(getPartnerFlight() != null){
+			return getPartnerFlight().getSeatPriceAfterDiscounts(SeatType.Economy);
+		}
+		else{
+			return -2.0;
+		}
+	}
+	
+	public double getBusinessSeatPriceAfterDiscounts(){
+		if(getPartnerFlight() != null){
+			System.err.println("PARTNER FLIGHT IS NOT NULL!!!");
+			return getPartnerFlight().getSeatPriceAfterDiscounts(SeatType.Business);
+		}
+		else{
+			System.err.println("PARTNER FLIGHT IS NULL");
+			return -2.0;
+		}
+	}
+	
+	public double getFirstSeatPriceAfterDiscounts(){
+		if(getPartnerFlight() != null){
+			return getPartnerFlight().getSeatPriceAfterDiscounts(SeatType.FirstClass);
+		}
+		else{
+			return -2.0;
+		}
 	}
 	
 	public String addFlight(){

@@ -1,5 +1,6 @@
 package com.realdolmen.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -13,7 +14,9 @@ import javax.persistence.criteria.Root;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.realdolmen.domain.flight.Booking;
 import com.realdolmen.domain.user.Customer;
+import com.realdolmen.domain.user.User;
 
 @Stateless
 public class CustomerRepository {
@@ -54,5 +57,21 @@ public class CustomerRepository {
 	public void remove(Long customerId) {
 		logger.info("Removing customer with id " + customerId);
 		em.remove(em.getReference(Customer.class, customerId));
+	}
+
+	public ArrayList<Booking> getAllBookingsBy(User user) {
+		ArrayList<Booking> list = new ArrayList<>();
+		if(user.getClass() == Customer.class){
+			ArrayList<Booking> resultList = (ArrayList<Booking>) em.createQuery(
+					"select b from Booking b where b.customer = :cust",
+					Booking.class)
+			.setParameter("cust", user)
+			.getResultList();
+			if(resultList != null){
+				return resultList;
+			}
+			
+		}
+		return list;
 	}
 }

@@ -8,17 +8,18 @@ import java.util.HashSet;
 
 import org.junit.Test;
 
-import com.realdolmen.domain.flight.Discount;
+import com.realdolmen.domain.flight.DiscountPercentage;
+import com.realdolmen.domain.flight.DiscountSuper;
 
 public class HashSetTest {
 
 	@Test
 	public void testMethodListWithoutNullOrDuplicates(){
-		Discount d1 = new Discount();
-		Discount d2 = new Discount();
-		Discount d3 = new Discount();
-		Discount d4 = new Discount();
-		ArrayList<Discount> list = new ArrayList<>();
+		DiscountSuper d1 = new DiscountPercentage();
+		DiscountSuper d2 = new DiscountPercentage();
+		DiscountSuper d3 = new DiscountPercentage();
+		DiscountSuper d4 = new DiscountPercentage();
+		ArrayList<DiscountSuper> list = new ArrayList<>();
 		for(int i = 0; i < 3; i++){
 			list.add(d1);
 			list.add(d2);
@@ -35,13 +36,13 @@ public class HashSetTest {
 	
 	@Test
 	public void testMethodWithEmptyList(){
-		ArrayList<Discount> list = new ArrayList<>();
+		ArrayList<DiscountSuper> list = new ArrayList<>();
 		list=getListWithoutNullOrDuplicates(list);
 		assertEquals(0, list.size());
 	}
 	
-	public ArrayList<Discount> getListWithoutNullOrDuplicates(ArrayList<Discount> discounts){
-		HashSet<Discount> hs = new HashSet<Discount>();
+	public ArrayList<DiscountSuper> getListWithoutNullOrDuplicates(ArrayList<DiscountSuper> discounts){
+		HashSet<DiscountSuper> hs = new HashSet<DiscountSuper>();
 		hs.addAll(discounts);
 		discounts.clear();
 		discounts.addAll(hs);

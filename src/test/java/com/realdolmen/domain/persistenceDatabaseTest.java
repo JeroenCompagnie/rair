@@ -17,7 +17,8 @@ import com.realdolmen.course.utilities.persistence.JpaPersistenceTest;
 import com.realdolmen.domain.flight.Airport;
 import com.realdolmen.domain.flight.Booking;
 import com.realdolmen.domain.flight.BookingOfFlight;
-import com.realdolmen.domain.flight.Discount;
+import com.realdolmen.domain.flight.DiscountPercentage;
+import com.realdolmen.domain.flight.DiscountRealvalue;
 import com.realdolmen.domain.flight.Flight;
 import com.realdolmen.domain.flight.PaymentStatus;
 import com.realdolmen.domain.flight.Seat;
@@ -355,10 +356,10 @@ public class persistenceDatabaseTest extends JpaPersistenceTest {
 				assertEquals(7, number);
 				
 		// ADD some discounts to the flight:
-		flight.addDiscount(new Discount(true, true, 0.01));
-		flight.addDiscount(new Discount(false, true, 0.01));
-		flight.addDiscount(new Discount(true, false, 1.0));
-		flight.addDiscount(new Discount(false, false, 1.0));
+		flight.addDiscount(new DiscountPercentage(true, 0.01));
+		flight.addDiscount(new DiscountPercentage(false, 0.01));
+		flight.addDiscount(new DiscountRealvalue(true , 1.0));
+		flight.addDiscount(new DiscountRealvalue(false , 1.0));
 		/** ENDtype
 		 * Make flight, add 30 seats, 10 of each seattype
 		 * Make bookingsofflights for 9 seats, 3 of each seattype;

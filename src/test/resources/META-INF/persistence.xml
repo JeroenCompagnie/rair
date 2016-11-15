@@ -48,7 +48,11 @@
 		<class>com.realdolmen.domain.flight.PaymentStatus</class>
 		<class>com.realdolmen.domain.flight.Seat</class>
 		<class>com.realdolmen.domain.flight.SeatType</class>
-		<class>com.realdolmen.domain.flight.Discount</class>
+		<class>com.realdolmen.domain.flight.DiscountSuper</class>
+		<class>com.realdolmen.domain.flight.DiscountRealvalue</class>
+		<class>com.realdolmen.domain.flight.DiscountPercentage</class>
+		<class>com.realdolmen.domain.flight.VolumeDiscountRealvalue</class>
+		<class>com.realdolmen.domain.flight.VolumeDiscountPercentage</class>
 
 		<class>com.realdolmen.domain.user.Address</class>
 		<class>com.realdolmen.domain.user.Customer</class>
