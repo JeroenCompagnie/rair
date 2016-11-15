@@ -97,8 +97,13 @@ public class UserRepository {
 		
 		TypedQuery<Customer> query = em.createQuery("select c from Customer c where c.userName = :arg1", Customer.class);
 		query.setParameter("arg1", userName);
-		
-		return query.getSingleResult();
+		try{
+			return query.getSingleResult();
+		}
+		catch (NoResultException e){
+			System.err.println("No user with user name: " + userName + " found in DB.");
+			return null;
+		}
 	}
 
 	public User findUser(String userName) {

@@ -215,9 +215,12 @@ public class SearchBean implements Serializable {
 			{
 				ps=PaymentStatus.PENDING;
 			}
+
 			Customer c = null;
 			Booking booking = new Booking(ps,loginBean.getUser());
+			System.err.println("Booking: 2");
 			bookingRepository.save(booking);
+			System.err.println("Booking: 3");
 			Flight f = flightRepository.findById(selectedFlightId);
 			System.out.println(f.getNumberOfSeatForType(getSelectedFlightClass())+ " free seats before booking");
 			HashMap<SeatType,Integer> hm =	new HashMap<SeatType,Integer>();
@@ -235,6 +238,7 @@ public class SearchBean implements Serializable {
 			String [] addresses= {c.getEmail()};
 			Email.sendMailStandardSender(addresses, "Booking Confirmation", booking.printBooking());
 			clearAll();
+
 			bookingBean.setUrlCode(booking.getId());
 			return "invoice.xhtml";
 		}
