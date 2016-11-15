@@ -98,7 +98,7 @@ public class DiscountTest extends JpaPersistenceTest{
 	@Test
 	public void testFlightWithStandardDiscount(){
 		assertEquals("partnerName", flight.getPartner().getName());
-		assertEquals(110.0, flight.applyDiscountsToPrice(100.0,-1),0.0001);
+		assertEquals(110.0, flight.applyDiscountsToPrice(100.0,-1,null),0.0001);
 	}
 	
 	@Test
@@ -128,7 +128,7 @@ public class DiscountTest extends JpaPersistenceTest{
 		System.err.println("-----");
 		
 		assertEquals(expectedSelf, expected, 0.0001);
-		assertEquals(expected, flight.applyDiscountsToPrice(100.0,-1),0.0001);
+		assertEquals(expected, flight.applyDiscountsToPrice(100.0,-1,null),0.0001);
 	}
 	
 	@Test public void testVolumeDiscounts(){
@@ -156,10 +156,10 @@ public class DiscountTest extends JpaPersistenceTest{
 		expectedSelf = expectedSelf -2;
 		expectedSelf = expectedSelf + expectedSelf*0.1;
 		
-		assertEquals(expectedSelf, flight.applyDiscountsToPrice(100.0,3),0.0001);
-		assertEquals(expectedSelf, flight.applyDiscountsToPrice(100.0,4),0.0001);
+		assertEquals(expectedSelf, flight.applyDiscountsToPrice(100.0,3,null),0.0001);
+		assertEquals(expectedSelf, flight.applyDiscountsToPrice(100.0,4,null),0.0001);
 		assertEquals(110.0,expected,0.0001);
-		assertEquals(110.0, flight.applyDiscountsToPrice(100.0,2),0.0001);
+		assertEquals(110.0, flight.applyDiscountsToPrice(100.0,2,null),0.0001);
 	}
 	
 }

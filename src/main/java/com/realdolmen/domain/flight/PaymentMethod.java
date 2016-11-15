@@ -19,4 +19,9 @@ public enum PaymentMethod {
 		}
 		else return this.name();
 	}
+	
+	public double getDiscount(){
+		double disc = discount;
+		return disc/100.0;
+	}
 }

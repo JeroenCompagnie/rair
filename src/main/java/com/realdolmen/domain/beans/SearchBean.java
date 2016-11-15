@@ -16,6 +16,7 @@ import javax.validation.constraints.NotNull;
 
 import com.realdolmen.domain.flight.Airport;
 import com.realdolmen.domain.flight.Booking;
+import com.realdolmen.domain.flight.DiscountPercentage;
 import com.realdolmen.domain.flight.Flight;
 import com.realdolmen.domain.flight.GlobalRegion;
 import com.realdolmen.domain.flight.PaymentMethod;
@@ -229,7 +230,11 @@ public class SearchBean implements Serializable {
 			//TODO: HERE ADD DISCOUNT IF ps == PaymentStatus.SUCCESS on each BookingOfFlight
 				// or give it as an extra discount in addBookingOfFlight
 			
-			booking = f.addBooking(hm, booking);
+			DiscountPercentage discountCredit = null;
+			if(ps == PaymentStatus.PENDING){
+				discountCredit = new DiscountPercentage(true, PaymentMethod.CreditCard.getDiscount());
+			}
+			booking = f.addBooking(hm, booking, discountCredit); //TODO in addBooking de discountCredit discount toepassen indien niet null 
 			
 			// TODO: THIS with f2 the retour flight to add it to the booking (normally)
 			//booking = f2.addBooking(hm, booking);
