@@ -1,6 +1,5 @@
 package com.realdolmen.repository;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -13,11 +12,6 @@ import javax.persistence.TypedQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.realdolmen.domain.flight.Booking;
-import com.realdolmen.domain.flight.BookingOfFlight;
-import com.realdolmen.domain.flight.Flight;
-import com.realdolmen.domain.flight.PaymentStatus;
-import com.realdolmen.domain.user.Address;
 import com.realdolmen.domain.user.Customer;
 import com.realdolmen.domain.user.User;
 
