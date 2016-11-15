@@ -29,6 +29,7 @@ import com.realdolmen.domain.flight.SeatType;
 import com.realdolmen.domain.flight.Airport;
 import com.realdolmen.domain.flight.Booking;
 import com.realdolmen.domain.user.Partner;
+import com.realdolmen.email.Email;
 import com.realdolmen.repository.AirportRepository;
 import com.realdolmen.repository.BookingRepository;
 import com.realdolmen.repository.FlightRepository;
@@ -205,9 +206,18 @@ public class SearchBean implements Serializable {
 	public String bookFlight()
 	{	
 		if (loginBean.getUserIsCustomer())
-		{
+		{	
 			System.out.println(selectedFlightId + " Flight Id");
-			Booking booking = new Booking(PaymentStatus.SUCCESS,loginBean.getUser());
+			PaymentStatus ps;
+			if(getSelectedPaymentMethod()==PaymentMethod.CreditCard)
+			{
+				ps=PaymentStatus.SUCCESS;
+			}
+			else
+			{
+				ps=PaymentStatus.PENDING;
+			}
+			Booking booking = new Booking(ps,loginBean.getUser());
 			bookingRepository.save(booking);
 			Flight f = flightRepository.findById(selectedFlightId);
 			System.out.println(f.getNumberOfSeatForType(getSelectedFlightClass())+ " free seats before booking");
@@ -218,8 +228,11 @@ public class SearchBean implements Serializable {
 		//	bookingRepository.update(booking);
 			flightRepository.update(f);
 			System.out.println(f.getNumberOfSeatForType(getSelectedFlightClass())+ " free seats after booking");
+			Email email = new Email();
+			String [] addresses= {"thomas.simons@realdolmen.com"};
+			email.sendMailStandardSender(addresses, "Booking Confirmation", booking.printBooking(),"");
 			clearAll();
-			return "thankyou?faces-redirect=true";
+			return "invoice.xhtml?id="+booking.getId()+"faces-redirect=true";
 		}
 		else 
 		{

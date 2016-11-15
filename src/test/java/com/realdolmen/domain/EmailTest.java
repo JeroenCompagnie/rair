@@ -11,6 +11,6 @@ public class EmailTest {
 	public void sendEmail(){
 		Email email = new Email();
 		String[] recipients = {"jeroen.compagnie@gmail.com"};
-		email.sendMailStandardSender(recipients, "Java test", "This was sent from java :3 at " + new Date().toString());
+		email.sendMailStandardSender(recipients, "Java test", "This was sent from java :3 at " + new Date().toString(),"");
 	}
 }

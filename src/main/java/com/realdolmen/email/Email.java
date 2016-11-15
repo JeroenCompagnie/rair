@@ -1,5 +1,8 @@
 package com.realdolmen.email;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 import javax.mail.*;
 import javax.mail.internet.*;
 import java.util.Properties;
@@ -15,8 +18,8 @@ public class Email {
 		String[] to = { TESTRECIPIENT }; // list of recipient email addresses
 		String subject = "Java send mail example";
 		String body = "Welcome to JavaMail!";
-
-		sendMail(from, pass, to, subject, body);
+		String path = "";
+		sendMail(from, pass, to, subject, body,path);
 	}
 
 //	static Properties props;
@@ -28,11 +31,11 @@ public class Email {
 //		props.put("mail.smtp.port", "587");
 	}
 	
-	public boolean sendMailStandardSender(String[] to, String subject, String body){
-		return sendMail(USER_NAME, PASSWORD, to, subject, body);
+	public boolean sendMailStandardSender(String[] to, String subject, String body,String imgPath){
+		return sendMail(USER_NAME, PASSWORD, to, subject, body,imgPath);
 	}
 	
-	public static boolean sendMail(String from, String pass, String[] to, String subject, String body){
+	public static boolean sendMail(String from, String pass, String[] to, String subject, String body,String imgPath){
 		Properties props;
 		props = new Properties();
 		props.put("mail.smtp.auth", "true");
@@ -67,7 +70,7 @@ public class Email {
 			messBodyPart.setContent(body, "text/html");
 
 			multipart.addBodyPart(messBodyPart);
-
+			
 			message.setContent(multipart);
 
 

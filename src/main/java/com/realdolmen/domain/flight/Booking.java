@@ -101,6 +101,26 @@ public class Booking implements Serializable{
 	public void setBookingOfFlightList(List<BookingOfFlight> bookingOfFlightList) {
 		this.bookingOfFlightList = bookingOfFlightList;
 	}
+	
+	public String printBooking()
+	{
+		String bookingOverview;
+		String sub = null;
+		Double totPrice=0.0;
+		String seatType = this.bookingOfFlightList.get(0).getSeat().getType().toString();
+		String airline = this.bookingOfFlightList.get(0).getFlight().getPartner().getUserName();
+		int count=0;
+		for (BookingOfFlight bof :this.bookingOfFlightList)
+		{
+			totPrice+=bof.getPrice();
+			count++;
+		}
+		bookingOverview="<html><body>Dear " + this.getCustomer().getFirstName() + " " + this.getCustomer().getLastName() +"<br/>";
+		bookingOverview+="<p>You booked <b>"+count+"</b> seats with airline <b>" + airline +"</b></p>";
+		bookingOverview+= "<p>The price for <b>"+count+"</b> seats was <b>" + totPrice+"</b></p>"; 
+		bookingOverview+="</body></html>";
+		return bookingOverview;
+	}
 
 	public Long getId() {
 		return id;
