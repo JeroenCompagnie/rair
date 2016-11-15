@@ -22,7 +22,7 @@ public class BookingBean implements Serializable{
 	@Inject
 	private LoginBean loginBean;
 	
-	@EJB
+	@Inject
 	private BookingRepository bookingRepository;
 	
 	private String urlCode = "";

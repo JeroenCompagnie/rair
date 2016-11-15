@@ -48,16 +48,16 @@ public class SearchBean implements Serializable {
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	@EJB
+	@Inject
 	private FlightRepository flightRepository;
 
-	@EJB
+	@Inject
 	private PartnerRepository partnerRepository;
 	
-	@EJB
+	@Inject
 	private AirportRepository airportRepository;
 	
-	@EJB
+	@Inject
 	private BookingRepository bookingRepository;
 	
 	@Inject

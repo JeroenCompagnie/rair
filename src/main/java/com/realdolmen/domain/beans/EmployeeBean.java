@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -15,7 +14,9 @@ import javax.inject.Named;
 import org.junit.Before;
 
 import com.realdolmen.domain.flight.Airport;
-import com.realdolmen.domain.flight.Discount;
+import com.realdolmen.domain.flight.DiscountPercentage;
+import com.realdolmen.domain.flight.DiscountRealvalue;
+import com.realdolmen.domain.flight.DiscountSuper;
 import com.realdolmen.domain.flight.Flight;
 import com.realdolmen.domain.flight.SeatType;
 import com.realdolmen.repository.AirportRepository;
@@ -34,13 +35,13 @@ public class EmployeeBean implements Serializable{
 	@Inject
 	private LoginBean loginBean;
 
-	@EJB
+	@Inject
 	private EmployeeRepository employeeRepository;
 
-	@EJB
+	@Inject
 	private FlightRepository flightRepository;
 
-	@EJB
+	@Inject
 	private AirportRepository airportReposistory;
 
 	@Before
@@ -230,12 +231,12 @@ public class EmployeeBean implements Serializable{
 	}
 
 	public String setDefaultPriceCharge(){
-		Discount d = null;
+		DiscountSuper d = null;
 		if(newDefaultPriceChargeDiscountType.equals("Percentage")){
-			d = new Discount(true, true, newDefaultPriceCharge);
+			d = new DiscountPercentage(true, newDefaultPriceCharge);
 		}
 		else{
-			d = new Discount(true, false, newDefaultPriceCharge);
+			d = new DiscountRealvalue(true, newDefaultPriceCharge);
 		}
 		if(d != null && !loginBean.getIsUserNull()){
 			

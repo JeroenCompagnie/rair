@@ -8,10 +8,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -23,8 +21,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import com.realdolmen.domain.user.Employee;
 import com.realdolmen.domain.user.Partner;
@@ -75,10 +71,10 @@ public class Flight implements Serializable {
 	private Duration flightDuration;	
 	
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-	private List<Discount> discountsList = new ArrayList<Discount>();
+	private List<DiscountSuper> discountsList = new ArrayList<DiscountSuper>();
 	
 	@OneToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-	private Discount defaultPriceCharge;
+	private DiscountSuper defaultPriceCharge;
 
 	public Flight() {
 
@@ -93,8 +89,8 @@ public class Flight implements Serializable {
 		this.flightDuration = flightDuration;
 		this.bookingOfFlightList = new ArrayList<>();
 		this.seatList = new ArrayList<>();
-		this.discountsList = new ArrayList<Discount>();
-		this.defaultPriceCharge = new Discount(true, true, STANDARD_CHARGING_RAIR);
+		this.discountsList = new ArrayList<DiscountSuper>();
+		this.defaultPriceCharge = new DiscountPercentage(true, STANDARD_CHARGING_RAIR);
 	}
 
 	public int getNumberOfSeatForType(SeatType st) {
@@ -132,7 +128,11 @@ public class Flight implements Serializable {
 		 * TODO: add locking!!
 		 */
 		if(checkIfEnoughSeatsAvailable(list)){
-
+			int totalNrOfSeatsForBooking=0;
+			for(Entry<SeatType, Integer> entry : list.entrySet()){
+				totalNrOfSeatsForBooking += entry.getValue();
+			}
+			
 			for(Entry<SeatType, Integer> entry : list.entrySet()){
 				for(int i = 0; i < entry.getValue();i++){
 					Seat seat = getSeatWithType(entry.getKey());
@@ -155,14 +155,15 @@ public class Flight implements Serializable {
 
 	protected double applyDiscountsToPrice(double price) {
 		getDiscountsListWithoutNull();
-		HashMap<Long, Discount> discountsRealValues = new HashMap<>(); 
-		HashMap<Long, Discount> discountsPercentages = new HashMap<>();
-		ArrayList<Discount> discounts = new ArrayList<>();
+		HashMap<Long, DiscountSuper> discountsRealValues = new HashMap<>(); 
+		HashMap<Long, DiscountSuper> discountsPercentages = new HashMap<>();
+		ArrayList<DiscountSuper> discounts = new ArrayList<>();
 		discounts.addAll(discountsList);
 		
-		for(Discount d : discounts){
-			// SEPARATE PERCENTAGES FROM REAL VALUES + make sure that each id is only put in a map once 
-			if(d.isPercentage()){
+		for(DiscountSuper d : discounts){
+			// SEPARATE PERCENTAGES FROM REAL VALUES + make sure that each id is only put in a map once
+			
+			if(d.getClass() == DiscountPercentage.class){
 				discountsPercentages.put(d.getId(), d);
 				System.err.println(d.toString() + " " + d.getId());
 			}
@@ -172,42 +173,44 @@ public class Flight implements Serializable {
 			}
 		}
 		System.err.println("-+-+-");
-		// FIRST APPLY STANDARD RAIR PERCENTAGE:
-		price = defaultPriceCharge.addDiscountToPrice(price);
-		System.err.println(price + " from:" + defaultPriceCharge.toString());
+		
 		// FIRST APPLY DISCOUNT PERCENTAGES
-		for(Entry<Long, Discount> entry : discountsPercentages.entrySet()){
+		for(Entry<Long, DiscountSuper> entry : discountsPercentages.entrySet()){
 			price = entry.getValue().addDiscountToPrice(price);
 			System.err.println(price + " from:" + entry.getValue().toString());
 		}
 		// SECOND APPLY DISCOUNT REAL VALUES
-		for(Entry<Long, Discount> entry : discountsRealValues.entrySet()){
+		for(Entry<Long, DiscountSuper> entry : discountsRealValues.entrySet()){
 			price = entry.getValue().addDiscountToPrice(price);
 			System.err.println(price + " from:" + entry.getValue().toString());
 		}
+		
+		// LASTLY APPLY RAir CHARGE FOR PROFIT OF RAir
+		price = defaultPriceCharge.addDiscountToPrice(price);
+		System.err.println(price + " from:" + defaultPriceCharge.toString());
 		return price;
 	}
 	
-	public List<Discount> getListOfDiscountByEmployee(){
+	public List<DiscountSuper> getListOfDiscountByEmployee(){
 		getDiscountsListWithoutNull();
-		HashMap<Long, Discount> discountsMap = new HashMap<>();
-		for(Discount d : this.discountsList){ 
+		HashMap<Long, DiscountSuper> discountsMap = new HashMap<>();
+		for(DiscountSuper d : this.discountsList){ 
 			if(d.isByEmployee()){
 				discountsMap.put(d.getId(),d);
 			}
 		}
-		ArrayList<Discount> discounts = new ArrayList<>();
-		for(Entry<Long,Discount> d : discountsMap.entrySet()){
+		ArrayList<DiscountSuper> discounts = new ArrayList<>();
+		for(Entry<Long,DiscountSuper> d : discountsMap.entrySet()){
 			discounts.add(d.getValue());
 		}
 		return discounts;
 	}
 	
-	public List<Discount> getListOfDiscountByPartner(){
+	public List<DiscountSuper> getListOfDiscountByPartner(){
 		getDiscountsListWithoutNull();
-//		HashMap<Long, Discount> discountsMap = new HashMap<>();
-		ArrayList<Discount> discountListByPartner = new ArrayList<>();
-		for(Discount d : this.discountsList){ 
+//		HashMap<Long, DiscountSuper> discountsMap = new HashMap<>();
+		ArrayList<DiscountSuper> discountListByPartner = new ArrayList<>();
+		for(DiscountSuper d : this.discountsList){ 
 			if(!d.isByEmployee()){
 				discountListByPartner.add(d);
 			}
@@ -215,13 +218,13 @@ public class Flight implements Serializable {
 		return discountListByPartner;
 	}
 	
-	public void addDiscount(Discount d){
+	public void addDiscount(DiscountSuper d){
 		getDiscountsListWithoutNull();
 		this.discountsList.add(d);
 	}
 
 	public void getDiscountsListWithoutNull(){
-		HashSet<Discount> hs = new HashSet<Discount>();
+		HashSet<DiscountSuper> hs = new HashSet<DiscountSuper>();
 		hs.addAll(discountsList);
 		discountsList.clear();
 		discountsList.addAll(hs);
@@ -250,9 +253,9 @@ public class Flight implements Serializable {
 		}
 	}
 	
-	public void removeDiscount(Discount d) {
+	public void removeDiscount(DiscountSuper d) {
 		getDiscountsListWithoutNull();
-		HashSet<Discount> hs = new HashSet<Discount>();
+		HashSet<DiscountSuper> hs = new HashSet<DiscountSuper>();
 		hs.addAll(discountsList);
 		discountsList.clear();
 		discountsList.addAll(hs);
@@ -367,14 +370,14 @@ public class Flight implements Serializable {
 	}
 	
 	public double getTotalDiscountPercentagePartner(){
-		HashMap<Long, Discount> discountsByPartner = new HashMap<Long, Discount>();
-		for(Discount d : discountsList){
+		HashMap<Long, DiscountSuper> discountsByPartner = new HashMap<Long, DiscountSuper>();
+		for(DiscountSuper d : discountsList){
 			if(!d.isByEmployee()){
 				discountsByPartner.put(d.getId(), d);
 			}
 		}
 		double totalPercentage = 0.0;
-		for(Entry<Long, Discount> entry : discountsByPartner.entrySet()){
+		for(Entry<Long, DiscountSuper> entry : discountsByPartner.entrySet()){
 			totalPercentage += entry.getValue().getDiscount();
 		}
 		return totalPercentage;
@@ -480,15 +483,15 @@ public class Flight implements Serializable {
 	}
 
 
-	public List<Discount> getDiscountsList() {
+	public List<DiscountSuper> getDiscountsList() {
 		return discountsList;
 	}
 
-	public Discount getDefaultPriceCharge() {
+	public DiscountSuper getDefaultPriceCharge() {
 		return defaultPriceCharge;
 	}
 
-	public void setDefaultPriceCharge(User employee, Discount defaultPriceCharge) {
+	public void setDefaultPriceCharge(User employee, DiscountSuper defaultPriceCharge) {
 		if(employee.getClass() == Employee.class){
 			this.defaultPriceCharge = defaultPriceCharge;
 		}

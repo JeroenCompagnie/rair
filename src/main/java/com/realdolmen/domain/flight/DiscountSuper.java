@@ -7,13 +7,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
 import com.realdolmen.dateConverter.DateConverter;
 
 @Entity
-public class Discount implements Serializable{
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+public abstract class DiscountSuper implements Serializable{
 	
 	/**
 	 * 
@@ -22,32 +23,26 @@ public class Discount implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private long id;
-	
-	// Determines if it is a percentage or a real number. If it is a real number € will be pre-pendend with the toString. If a percentage, "%" will be appended with the toString.
-	private boolean isPercentage;
+	protected long id;
 	
 	// This can be a percentage or a real number, depending on the boolean isPercentage
-	private double discount;
+	protected double discount;
 	
 	// Determines if it is only valid during a period
-	private boolean isPeriodical;
+	protected boolean isPeriodical;
 	
-	private boolean byEmployee;
+	protected boolean byEmployee;
 	
-	@Temporal(TemporalType.DATE)
-	private Date beginDate = null;
+	protected Date beginDate = null;
 	
-	@Temporal(TemporalType.DATE)
-	private Date endDate = null;
+	protected Date endDate = null;
 	
-	public Discount(){
+	public DiscountSuper(){
 		
 	}
 
-	public Discount(boolean byEmployee, boolean isPercentage, double discount, boolean isPeriodical, Date beginDate, Date endDate) {
+	public DiscountSuper(boolean byEmployee, double discount, boolean isPeriodical, Date beginDate, Date endDate) {
 		this.byEmployee = byEmployee;
-		this.isPercentage = isPercentage;
 		this.discount = discount;
 		this.isPeriodical = isPeriodical;
 		if(this.isPeriodical){
@@ -56,14 +51,13 @@ public class Discount implements Serializable{
 		}
 	}
 	
-	public Discount(boolean byEmployee, boolean isPercentage, double discount) {
+	public DiscountSuper(boolean byEmployee, double discount) {
 		this.byEmployee = byEmployee;
-		this.isPercentage = isPercentage;
 		this.discount = discount;
 		this.isPeriodical = false;
 	}
 
-	public double addDiscountToPrice(double price){
+	protected double addDiscountToPrice(double price){
 		if(isPeriodical){
 			Date d = new Date();
 			// Test if its in the right period
@@ -81,14 +75,7 @@ public class Discount implements Serializable{
 		}
 	}
 	
-	private double addDiscountToPrice2(double price){
-		if(isPercentage){
-			return price - price * discount;
-		}
-		else{
-			return price - discount;
-		}
-	}
+	protected abstract double addDiscountToPrice2(double price);
 	
 	@Override
 	public String toString(){
@@ -103,14 +90,11 @@ public class Discount implements Serializable{
 		else{
 			result += "Charge of ";
 		}
-		
-		if(isPercentage){
-			result = result + Math.abs(discount) + "%";
-		}
-		else{
-			result = result + "€" + Math.abs(discount);
-		}
-			
+		return result;
+	}
+	
+	protected String getStringIfPeriodical(){
+		String result = "";
 		if(isPeriodical){
 			result += " from " + DateConverter.format(beginDate);
 			result += " to " + DateConverter.format(endDate);
@@ -127,14 +111,6 @@ public class Discount implements Serializable{
 	 * GETTERS AND SETTERS
 	 * 
 	 ******************************************************************/
-
-	public boolean isPercentage() {
-		return isPercentage;
-	}
-
-	public void setPercentage(boolean isPercentage) {
-		this.isPercentage = isPercentage;
-	}
 
 	public double getDiscount() {
 		return discount;

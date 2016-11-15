@@ -20,7 +20,7 @@ import javax.persistence.criteria.Root;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.realdolmen.domain.flight.Discount;
+import com.realdolmen.domain.flight.DiscountSuper;
 import com.realdolmen.domain.flight.Airport;
 import com.realdolmen.domain.flight.Flight;
 import com.realdolmen.domain.flight.Seat;
@@ -243,7 +243,7 @@ public class FlightRepository {
 				.getSingleResult();
 	}
 
-	public boolean changeDefaultPriceCharge(User user, Discount d, Flight f) {
+	public boolean changeDefaultPriceCharge(User user, DiscountSuper d, Flight f) {
 		if(user.getClass() == Employee.class){
 			f.setDefaultPriceCharge(user, d);
 			em.merge(f);
@@ -255,7 +255,7 @@ public class FlightRepository {
 	
 	public Flight removeDiscount(User user, long id, Flight flight) {
 		if(user.getClass() == Employee.class || user.getClass()==Partner.class){
-			Discount d = em.find(Discount.class, id);
+			DiscountSuper d = em.find(DiscountSuper.class, id);
 
 			if(d != null && ((d.isByEmployee() && user.getClass() == Employee.class) ||
 					!d.isByEmployee() && user.getClass()==Partner.class)){
@@ -268,7 +268,7 @@ public class FlightRepository {
 					Flight returnFlight = em.merge(flight);
 					em.remove(d);
 					em.flush();
-					System.err.println("Discount in db: " + em.find(Discount.class, id)!=null);
+					System.err.println("Discount in db: " + em.find(DiscountSuper.class, id)!=null);
 					return returnFlight;
 				}
 				catch(Exception e){
@@ -279,7 +279,7 @@ public class FlightRepository {
 		return flight;
 	}
 
-	public void addDiscount(Discount d, Flight f) {
+	public void addDiscount(DiscountSuper d, Flight f) {
 		f.addDiscount(d);
 		em.merge(f);
 			System.err.println("Id of discount " + d.getId());

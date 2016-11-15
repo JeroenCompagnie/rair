@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -24,7 +25,7 @@ public class RegisterCustomerBean implements Serializable{
 	 */
 	private static final long serialVersionUID = 6755111819514599581L;
 
-	@EJB
+	@Inject
     UserRepository userRepository;
 	
 	@NotEmpty(message= "{firstNameNotEmpty}")

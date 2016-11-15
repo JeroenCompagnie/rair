@@ -38,10 +38,10 @@ public class PartnerBean implements Serializable{
 	@Inject
 	private LoginBean loginBean;
 	
-	@EJB
+	@Inject
 	private PartnerRepository partnerRepository;
 	
-	@EJB
+	@Inject
 	private FlightRepository flightRepository;
 	
 	@Before

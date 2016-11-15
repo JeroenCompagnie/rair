@@ -4,12 +4,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.realdolmen.domain.flight.Discount;
+import com.realdolmen.domain.flight.DiscountPercentage;
+import com.realdolmen.domain.flight.DiscountRealvalue;
+import com.realdolmen.domain.flight.DiscountSuper;
 import com.realdolmen.domain.flight.Flight;
 import com.realdolmen.repository.FlightRepository;
 
@@ -22,7 +23,7 @@ public class DiscountBean implements Serializable{
 	 */
 	private static final long serialVersionUID = 4305676802381146759L;
 
-	@EJB
+	@Inject
 	private FlightRepository flightRepository;
 	
 	@Inject
@@ -112,9 +113,16 @@ public class DiscountBean implements Serializable{
 		if(newDiscountType.equals("Percentage")){
 			isPercentage = true;
 		}
+		DiscountSuper d;
 		Boolean isPeriodical = (beginDate != null && endDate != null);
-		Discount d = new Discount((loginBean.getUserIsEmployee()), isPercentage, newDiscount,
+		if(isPercentage){
+		d = new DiscountPercentage((loginBean.getUserIsEmployee()), newDiscount,
 				isPeriodical, beginDate, endDate);
+		}
+		else{
+			d = new DiscountRealvalue((loginBean.getUserIsEmployee()), newDiscount,
+					isPeriodical, beginDate, endDate);
+		}
 		
 		if(loginBean.getUserIsEmployee()){
 			flightRepository.addDiscount(d, employeeBean.getFlight());

@@ -28,7 +28,7 @@ public class Email {
 //		props.put("mail.smtp.port", "587");
 	}
 	
-	public boolean sendMailStandardSender(String[] to, String subject, String body){
+	public static boolean sendMailStandardSender(String[] to, String subject, String body){
 		return sendMail(USER_NAME, PASSWORD, to, subject, body);
 	}
 	
