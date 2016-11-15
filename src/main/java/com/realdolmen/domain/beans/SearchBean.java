@@ -2,32 +2,25 @@ package com.realdolmen.domain.beans;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.validation.constraints.Future;
-import javax.validation.constraints.NotNull;
 
+import com.realdolmen.domain.flight.Airport;
+import com.realdolmen.domain.flight.Booking;
 import com.realdolmen.domain.flight.Flight;
 import com.realdolmen.domain.flight.GlobalRegion;
 import com.realdolmen.domain.flight.PaymentMethod;
 import com.realdolmen.domain.flight.PaymentStatus;
 import com.realdolmen.domain.flight.SeatType;
-import com.realdolmen.domain.flight.Airport;
-import com.realdolmen.domain.flight.Booking;
+import com.realdolmen.domain.user.Customer;
 import com.realdolmen.domain.user.Partner;
 import com.realdolmen.email.Email;
 import com.realdolmen.repository.AirportRepository;
@@ -62,6 +55,9 @@ public class SearchBean implements Serializable {
 	private BookingRepository bookingRepository;
 	
 	@Inject
+	private BookingBean bookingBean;
+	
+	@Inject
 	private LoginBean loginBean;
 	
 
@@ -90,7 +86,7 @@ public class SearchBean implements Serializable {
 	
 	private List<GlobalRegion> globalRegions;
 	
-	private String selectedGlobalRegion;
+	private GlobalRegion selectedGlobalRegion;
 	
 	private int numberOfSeats;
 
@@ -194,6 +190,7 @@ public class SearchBean implements Serializable {
 		setDateOfDeparture(null);
 		setDateOfReturn(null);
 		setNumberOfSeats(1);
+		setFlights(null);
 	}
 	
 	public String edit()
@@ -215,7 +212,8 @@ public class SearchBean implements Serializable {
 			{
 				ps=PaymentStatus.PENDING;
 			}
-			System.err.println("Booking: 1");
+
+			Customer c = null;
 			Booking booking = new Booking(ps,loginBean.getUser());
 			System.err.println("Booking: 2");
 			bookingRepository.save(booking);
@@ -224,16 +222,22 @@ public class SearchBean implements Serializable {
 			System.out.println(f.getNumberOfSeatForType(getSelectedFlightClass())+ " free seats before booking");
 			HashMap<SeatType,Integer> hm =	new HashMap<SeatType,Integer>();
 			hm.put(getSelectedFlightClass(), getNumberOfSeats());
-			f.addBooking(hm, booking);
+			booking = f.addBooking(hm, booking);
+			//bookingRepository.update(booking);
 			
 		//	bookingRepository.update(booking);
 			flightRepository.update(f);
 			System.out.println(f.getNumberOfSeatForType(getSelectedFlightClass())+ " free seats after booking");
-			String [] addresses= {"thomas.simons@realdolmen.com"};
+			if(loginBean.getUserIsCustomer())
+			{
+				c =(Customer)loginBean.getUser();
+			}
+			String [] addresses= {c.getEmail()};
 			Email.sendMailStandardSender(addresses, "Booking Confirmation", booking.printBooking());
 			clearAll();
-			System.err.println("HAS TO GO TO INVOICE NOW!!!");
-			return "invoice.xhtml?id="+booking.getId();
+
+			bookingBean.setUrlCode(booking.getId());
+			return "invoice.xhtml";
 		}
 		else 
 		{
@@ -343,11 +347,11 @@ public class SearchBean implements Serializable {
 		this.numberOfSeats = numberOfSeats;
 	}
 
-	public String getSelectedGlobalRegion() {
+	public GlobalRegion getSelectedGlobalRegion() {
 		return selectedGlobalRegion;
 	}
 
-	public void setSelectedGlobalRegion(String selectedGlobalRegion) {
+	public void setSelectedGlobalRegion(GlobalRegion selectedGlobalRegion) {
 		this.selectedGlobalRegion = selectedGlobalRegion;
 	}
 

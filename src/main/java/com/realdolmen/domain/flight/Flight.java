@@ -51,7 +51,7 @@ public class Flight implements Serializable {
 
 	// TODO cascadetype hier oppassen! bookingOfFlight hoort bij zowel een
 	// Booking als een Flight
-	@OneToMany(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
+	@OneToMany(cascade=CascadeType.MERGE,fetch=FetchType.EAGER)
 	private List<BookingOfFlight> bookingOfFlightList;
 
 	@OneToOne

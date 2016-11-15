@@ -45,8 +45,8 @@
 			<b:selectOneMenu id="selectedPaymentMethod" value="#{search.selectedPaymentMethod}" styleClass="datePicker">
 				<f:selectItems value="#{search.paymentMethods}" />
 			</b:selectOneMenu><br/>
-			<b:commandButton value="Book" action="#{search.bookFlight}"></b:commandButton>
-			<b:commandButton value="Edit Selection" action="#{search.edit}"></b:commandButton>
+			<b:commandButton value="Book" action="#{search.bookFlight}" look="info"></b:commandButton>
+			<b:commandButton value="Edit Selection" action="#{search.edit}" look="info"></b:commandButton>
 		</h:form>
 	</ui:define>
 </ui:composition>
