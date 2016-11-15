@@ -48,16 +48,16 @@ public class SearchBean implements Serializable {
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	@EJB
+	@Inject
 	private FlightRepository flightRepository;
 
-	@EJB
+	@Inject
 	private PartnerRepository partnerRepository;
 	
-	@EJB
+	@Inject
 	private AirportRepository airportRepository;
 	
-	@EJB
+	@Inject
 	private BookingRepository bookingRepository;
 	
 	@Inject
@@ -156,6 +156,7 @@ public class SearchBean implements Serializable {
 		{
 			globalRegions.add(gr);
 		}
+		setNumberOfSeats(1);
 		airports = new ArrayList<Airport>();
 		airports = airportRepository.findAll();
 		setFlights(new ArrayList<Flight>());
@@ -193,6 +194,7 @@ public class SearchBean implements Serializable {
 		setSelectedPaymentMethod(null);
 		setDateOfDeparture(null);
 		setDateOfReturn(null);
+		setNumberOfSeats(1);
 	}
 	
 	public String edit()

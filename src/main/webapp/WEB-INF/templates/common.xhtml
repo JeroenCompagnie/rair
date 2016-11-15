@@ -14,68 +14,76 @@
 		<title><ui:insert name="title">Placeholder</ui:insert></title>
 	</h:head>
 	<h:body>
-	<div class="wrapper">
-		<b:navBar>
-			<b:navbarLinks>
-				<b:navLink value="Rair" href="index.xhtml" iconAwesome="plane" />
-				<b:navLink value="#{msgs.searchFlight}" href="#" iconAwesome="search"></b:navLink>
-				<b:navLink value="#{msgs.bookFlight}" href="#" iconAwesome="book"></b:navLink>
-				<b:dropMenu value="Partner Module" href="partnerModule.xhtml"
-					icon="plane" rendered="#{loginBean.userIsPartner}">
-					<b:navLink value="#{msgs.addFlight}" href="partnerModule.xhtml"
-						iconAwesome="book"></b:navLink>
-					<b:navLink value="#{msgs.manageFlights}" href="partnerModuleManage.xhtml"
-						iconAwesome="book"></b:navLink>
-				</b:dropMenu>
-				<b:navLink value="#{msgs.employeeModule}" href="employeeModule.xhtml"
-					icon="star" rendered="#{loginBean.userIsEmployee}"/>
-			</b:navbarLinks>
+		<div class="wrapper">
+			<b:navBar>
+								
+				<b:navbarLinks>
+					<b:navLink value="Rair" href="index.xhtml" iconAwesome="plane" />
+					<b:navLink value="#{msgs.searchFlight}" href="#"
+						iconAwesome="search"></b:navLink>
+					<b:navLink value="#{msgs.bookFlight}" href="#" iconAwesome="book"></b:navLink>
+					<b:dropMenu value="Partner Module" href="partnerModule.xhtml"
+						icon="plane" rendered="#{loginBean.userIsPartner}">
+						<b:navLink value="#{msgs.addFlight}" href="partnerModule.xhtml"
+							iconAwesome="book"></b:navLink>
+						<b:navLink value="#{msgs.manageFlights}"
+							href="partnerModuleManage.xhtml" iconAwesome="book"></b:navLink>
+					</b:dropMenu>
+					<b:navLink value="#{msgs.employeeModule}"
+						href="employeeModule.xhtml" icon="star"
+						rendered="#{loginBean.userIsEmployee}" />
+				</b:navbarLinks>
 
-			<!-- Following line is needed for TBS 3.0.1 (panel content overflow issue) -->
-			<b:navbarLinks pull="right">
-				<b:navLink value="    " href="#"></b:navLink>
-			</b:navbarLinks>
-			<b:navbarLinks pull="right" styleClass="hidden-xs">
-				<b:navLink value="Login" href="login.xhtml" iconAwesome="user"
-					rendered="#{loginBean.isUserNull}"></b:navLink>
-				<b:navLink value="#{msgs.registerNav}" href="register.xhtml"
-					iconAwesome="list-alt" rendered="#{loginBean.isUserNull}"></b:navLink>
+				<!-- Following line is needed for TBS 3.0.1 (panel content overflow issue) -->
+				<b:navbarLinks pull="right">
+					<b:navLink value="    " href="#"></b:navLink>
+				</b:navbarLinks>
+				<b:navbarLinks pull="right" styleClass="hidden-xs">
+					<b:navLink value="Login" href="login.xhtml" iconAwesome="user"
+						rendered="#{loginBean.isUserNull}"></b:navLink>
+					<b:navLink value="#{msgs.registerNav}" href="register.xhtml"
+						iconAwesome="list-alt" rendered="#{loginBean.isUserNull}"></b:navLink>
 
-			</b:navbarLinks>
+				</b:navbarLinks>
 
-			<!-- logout button must be in form and out of navbarLinks -->
-			<h:form
-				class="navbar-form navbar-right hidden-md hidden-sm hidden-xs"
-				role="submit">
-				<b:commandButton
-					value="Logout #{loginBean.userName} #{loginBean.userType}"
-					action="#{loginBean.logout}" iconAwesome="user"
-					rendered="#{not loginBean.isUserNull}"></b:commandButton>
+				<!-- logout button must be in form and out of navbarLinks -->
+				<h:form
+					class="navbar-form navbar-right hidden-md hidden-sm hidden-xs"
+					role="submit">
+					<b:commandButton
+						value="Logout #{loginBean.userName} #{loginBean.userType}"
+						action="#{loginBean.logout}" iconAwesome="user"
+						rendered="#{not loginBean.isUserNull}"></b:commandButton>
 
-			</h:form>
+				</h:form>
 
-		</b:navBar>
+			</b:navBar>
 
 
-		<b:container>
-			<header>
-				<h1>
-					<ui:insert name="title">Placeholder</ui:insert>
-				</h1>
-			</header>
-			<main> <ui:insert name="content">
+			<b:container styleClass="bg-adjust">
+				<header>
+					<h1>
+						<ui:insert name="title">Placeholder</ui:insert>
+					</h1>
+				</header>
+				<main> <ui:insert name="content">
 				default content
 		</ui:insert> </main>
-			<br/>		
-			<p> <h:outputText value="#{msgs.footerLine1}"/> </p>
-			<p> <h:outputText value="#{msgs.footerLine2}"/></p>
-		</b:container>
-		<div class="push"></div>
-        </div>
-        <div class="footer">
-            <p>Copyright (c) - Realdolmen 2016</p>
-        </div>
-		
+				<br />
+				<p>
+					<h:outputText value="#{msgs.footerLine1}" />
+				</p>
+				<p>
+					<h:outputText value="#{msgs.footerLine2}" />
+				</p>
+				<b:socialShare shares="twitter,linkedin,facebook" />
+			</b:container>
+			<div class="push"></div>
+		</div>
+		<div class="footer">
+			<p>Copyright (c) - Realdolmen 2016</p> 				
+		</div>
+
 	</h:body>
 </f:view>
 </html>

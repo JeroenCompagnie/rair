@@ -16,7 +16,9 @@ html, body {
 }
 
 
-
+.bg-adjust{
+	background-color: #bbcce8;
+}
 
 .datePicker {
 	min-width: 25%;

@@ -171,10 +171,20 @@ public class FlightRepository {
 			//System.out.println(cq.getSelection());
 			predicates.add(cb.equal(dbGlobalRegion, globalRegion));
 		}
-		cq.select(from).where(predicates.toArray(new Predicate[] {}));
-		//cq.select(from).where(predicates.toArray(new Predicate[] {})).distinct(true);
-		//cq.having(cb.in(from.get("seatList")))
-		return em.createQuery(cq).getResultList();
+
+		cq.select(from).where(predicates.toArray(new Predicate[] {})).distinct(true);
+		List<Flight> flights = em.createQuery(cq).getResultList();
+		List<Flight> controlled = new ArrayList<Flight>();
+		for(Flight f : flights)
+		{
+			System.out.println(f.getNumberOfSeatForType(t) + " = number of seats for seattype " + t.toString());
+			System.out.println(numberOfSeats + " = number of seats requested");
+			if(f.getNumberOfSeatForType(t) >= numberOfSeats)
+			{	
+				controlled.add(f);
+			}
+		}
+		return controlled;
 	}
 
 	public ArrayList<Flight> getFlightsByPartner(Partner partner) {
