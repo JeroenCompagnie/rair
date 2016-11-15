@@ -114,8 +114,8 @@ public class Booking implements Serializable{
 			count++;
 		}
 		bookingOverview="<html><body>Dear " + this.getCustomer().getFirstName() + " " + this.getCustomer().getLastName() +"<br/>";
-		bookingOverview+="<p>You booked <b>"+count+"</b> seats with airline <b>" + airline +"</b></p>";
-		bookingOverview+= "<p>The price for <b>"+count+"</b> seats was <b>" + totPrice+"</b></p>"; 
+		bookingOverview+="<p>You booked <b>"+count+"</b>" + seatType + " seat(s) with airline <b>" + airline +"</b></p>";
+		bookingOverview+= "<p>The price for <b>"+count+"</b> seat(s) was <b>" + totPrice+"</b></p>"; 
 		bookingOverview+="</body></html>";
 		return bookingOverview;
 	}

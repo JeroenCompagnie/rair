@@ -33,7 +33,7 @@ public class BookingOfFlight implements Serializable{
 	private Flight flight;
 	
 	@NotNull
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.MERGE)
 	@JoinColumn(name="booking_id")
 	private Booking booking;
 	

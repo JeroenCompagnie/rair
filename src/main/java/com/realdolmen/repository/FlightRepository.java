@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import com.realdolmen.domain.flight.DiscountSuper;
 import com.realdolmen.domain.flight.Airport;
 import com.realdolmen.domain.flight.Flight;
+import com.realdolmen.domain.flight.GlobalRegion;
 import com.realdolmen.domain.flight.Seat;
 import com.realdolmen.domain.flight.SeatType;
 import com.realdolmen.domain.user.Employee;
@@ -97,7 +98,7 @@ public class FlightRepository {
 		return typedQuery.getResultList();
 	}*/
 
-	public List<Flight> findByParams(SeatType t, Partner partner, Date departureDate,Airport destination,Airport departure,String globalRegion,int numberOfSeats) {
+	public List<Flight> findByParams(SeatType t, Partner partner, Date departureDate,Airport destination,Airport departure,GlobalRegion globalRegion,int numberOfSeats) {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Flight> cq = cb.createQuery(Flight.class);
 		Root<Flight> from = cq.from(Flight.class);
@@ -169,7 +170,7 @@ public class FlightRepository {
 			//System.out.print(dbGlobalRegion) + " = dbGlobalRegion");
 			//System.out.println(globalRegion.toString()+ " = globalRegion");
 			//System.out.println(cq.getSelection());
-			predicates.add(cb.equal(dbGlobalRegion, globalRegion));
+			predicates.add(cb.equal(dbGlobalRegion, globalRegion.toString()));
 		}
 
 		cq.select(from).where(predicates.toArray(new Predicate[] {})).distinct(true);
