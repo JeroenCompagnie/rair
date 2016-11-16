@@ -15,7 +15,7 @@
 	<ui:define name="content">
 		<h:outputLabel value="You have no powers here!"
 			rendered="#{not loginBean.userIsPartner}" />
-		#{partnerBean.partnerFlightId}
+		<h:outputLabel value="#{partnerBean.partnerFlightId}" rendered="false"/>
 		<h:panelGroup layout="block" rendered="#{loginBean.userIsPartner}">
 			<b:dataTable value="#{partnerBean.flightsOfPartner}" var="f">
 				<b:dataTableColumn value="#{f.id}" label="#" />

@@ -109,7 +109,7 @@ public class RegisterCustomerBean implements Serializable{
 				lastName, unhashedPassword, userName);
 			userRepository.saveCustomer(c);
 			clearAll();
-			return "registrationSuccessful.xhtml";
+			return "login.xhtml";
 		}
 		else{
 			userRepository.log("LOG: Registration attempt with user name which already exists in DB: " + userName);
