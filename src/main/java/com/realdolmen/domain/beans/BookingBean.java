@@ -30,11 +30,20 @@ public class BookingBean implements Serializable{
 	private Booking booking;
 	
 	private boolean bookingIsNull = true;
+	
+	private boolean afterBooking = false;
 
 	public Long getUrlCode() {
+		if(urlCode == null){
+			return -55L;
+		}
 		return urlCode;
 	}
 
+	public void setUrlCode(int urlCode) {
+		this.urlCode = new Long(urlCode);
+	}
+	
 	public void setUrlCode(Long urlCode) {
 		this.urlCode = urlCode;
 	}
@@ -88,5 +97,13 @@ public class BookingBean implements Serializable{
 	
 	public String print(){
 		return "invoicePrintVersion";
+	}
+
+	public void setAfterBooking(boolean afterBooking) {
+		this.afterBooking = afterBooking;
+	}
+	
+	public boolean getAfterBooking(){
+		return afterBooking;
 	}
 }

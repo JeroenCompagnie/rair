@@ -58,4 +58,8 @@ public class VolumeDiscountRealvalue extends DiscountRealvalue implements Serial
 	protected double addDiscountToPrice2(double price) {
 		return super.addDiscountToPrice2(price);
 	}
+	
+	public String getString(){
+		return toString();
+	}
 }

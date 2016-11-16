@@ -120,7 +120,7 @@ public class DiscountBean implements Serializable{
 		DiscountSuper d;
 		Boolean isPeriodical = (beginDate != null && endDate != null);
 		if(isPercentage){
-			if(newDiscountVolume < 0){
+			if(newDiscountVolume < 1){
 				d = new DiscountPercentage((loginBean.getUserIsEmployee()), newDiscount,
 				isPeriodical, beginDate, endDate);
 			}

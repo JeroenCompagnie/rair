@@ -8,6 +8,7 @@
 	xmlns:b="http://bootsfaces.net/ui">
 <f:metadata>
 	<f:viewParam name="urlCode" value="#{bookingBean.urlCode}" />
+	<f:viewParam name="afterBooking" value="#{bookingBean.afterBooking}" />
 </f:metadata>
 
 <ui:composition template="WEB-INF/templates/common.xhtml">
@@ -17,7 +18,7 @@
 	
 		<h:panelGroup layout="block" rendered="#{bookingBean.bookingIsNull}">
 			<h:outputLabel value ="Something went wrong. Either the code is not correct
-				or the correct user is not logged in!"/>
+				or the correct user is not logged in! #{bookingBean.urlCode}"/>
 		 	<br/>
 		</h:panelGroup>
 		
@@ -27,10 +28,12 @@
 			<h:outputLabel value="Invoice with number #{bookingBean.urlCode}"/>
 			<br/>
 			<h:outputLabel value="Tickets booked:" rendered="#{not bookingBean.bookingIsNull}"/>
-			<b:dataTable value="#{bookingBean.booking.bookingOfFlightList}" var="b">
-				<b:dataTableColumn value="#{b.numberInBooking}" label="#"/>
-				<b:dataTableColumn value="#{b.flight.partner.name}" label="Flight company"/>
-				<b:dataTableColumn value="#{b.price}" label="Ticket price"/>
+			<b:dataTable value="#{bookingBean.booking.bookingOfFlightList}" var="bof">
+				<b:dataTableColumn value="#{bof.numberInBooking}" label="#"/>
+				<b:dataTableColumn value="#{bof.flight.partner.name}" label="Flight company"/>
+				<b:dataTableColumn value="€#{bof.price}" label="Ticket price"/>
+				<b:dataTableColumn value="#{bof.discounts}" label="Discounts"/>
+				
 			</b:dataTable>
 		</h:panelGroup>
 		
@@ -57,7 +60,9 @@
 			<c:forEach items="#{bookingBean.booking.bookingOfFlightList}" var="bof">
 					Ticket number : #{bof.numberInBooking}	 
 					<br />
-					Price: #{bof.price}
+					Price: € #{bof.price}
+					<br />
+					Discounts: #{bof.discounts}
 					<br />
 					Flight company: #{bof.flight.partner.name}
 					<br />
@@ -67,7 +72,8 @@
 	
 	<b:button iconAwesome="print" type="button" onclick="printDiv('printableArea')" 
 	value="Print this page!" rendered="#{not bookingBean.bookingIsNull}"/>
-	<b:button iconAwesome="arrow-right" look="info" type="button"  value="Continue" outcome="thankyou?faces-redirect=true"/>
+	<b:button iconAwesome="arrow-right" look="info" type="button" 
+	rendered = "#{bookingBean.afterBooking}" value="Continue" outcome="thankyou?faces-redirect=true"/>
 
 
 	</ui:define>

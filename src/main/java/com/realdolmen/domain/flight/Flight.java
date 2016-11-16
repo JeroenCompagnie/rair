@@ -22,6 +22,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.hibernate.engine.jdbc.env.internal.ExtractedDatabaseMetaDataImpl;
+
 import com.realdolmen.domain.user.Employee;
 import com.realdolmen.domain.user.Partner;
 import com.realdolmen.domain.user.User;
@@ -122,7 +124,7 @@ public class Flight implements Serializable {
 	 * @param customer
 	 * @return
 	 */
-	public Booking addBooking(HashMap<SeatType, Integer> list, Booking booking){
+	public Booking addBooking(HashMap<SeatType, Integer> list, Booking booking, DiscountSuper extraDiscount){
 		/**
 		 * TODO: add discounts to price of seat => DONE; add to UI's => mostly done
 		 * TODO: add locking!!
@@ -138,10 +140,21 @@ public class Flight implements Serializable {
 					Seat seat = getSeatWithType(entry.getKey());
 
 					double price = seat.getBasePrice();
-					price = applyDiscountsToPrice(price,totalNrOfSeatsForBooking);
+					price = applyDiscountsToPrice(price,totalNrOfSeatsForBooking, extraDiscount);
+					double discountsPercentages = getTotalDiscountPercentage(totalNrOfSeatsForBooking);
+					double discountsRealvalues = getTotalDiscountRealvalue(totalNrOfSeatsForBooking);
+					double extraDiscount2 = 0.0;
+					if(extraDiscount != null){
+						extraDiscount2 = extraDiscount.getDiscount();
+						System.err.println("ExtraDiscount2 = " + extraDiscount2);
+					}
+					else{
+						System.err.println("ExtraDiscount2 is null");
+					}
 
-
-					BookingOfFlight bof = new BookingOfFlight(price, this, booking, seat);
+					BookingOfFlight bof = new BookingOfFlight(price, this, booking, seat, 
+							discountsPercentages, discountsRealvalues,extraDiscount2,
+							defaultPriceCharge.getDiscount());
 					this.addBookingOfFlight(bof);
 					booking.addBookingOfFlight(bof);
 				}
@@ -153,7 +166,43 @@ public class Flight implements Serializable {
 		}
 	}
 
-	protected double applyDiscountsToPrice(double price, int seats) {
+	private double getTotalDiscountRealvalue(int totalNrOfSeatsForBooking) {
+		getDiscountsListWithoutNull();
+		double totalDiscountRealvalue = 0.0;
+		for(DiscountSuper d : discountsList){
+			if(d.getClass() == DiscountRealvalue.class ){
+				if(100.0 != d.addDiscountToPrice(100.0)){
+					totalDiscountRealvalue += d.discount;
+				}
+			}
+			if(d.getClass() == VolumeDiscountRealvalue.class){
+				if(100.0 != ((VolumeDiscountRealvalue) d).addDiscountToPrice(100.0, totalNrOfSeatsForBooking)){
+					totalDiscountRealvalue += d.discount;
+				}
+			}
+		}
+		return totalDiscountRealvalue;
+	}
+
+	private double getTotalDiscountPercentage(int totalNrOfSeatsForBooking) {
+		getDiscountsListWithoutNull();
+		double totalDiscountPercentage = 0.0;
+		for(DiscountSuper d : discountsList){
+			if(d.getClass() == DiscountPercentage.class ){
+				if(100.0 != d.addDiscountToPrice(100.0)){
+					totalDiscountPercentage += d.discount;
+				}
+			}
+			if(d.getClass() == VolumeDiscountPercentage.class){
+				if(100.0 != ((VolumeDiscountPercentage) d).addDiscountToPrice(100.0, totalNrOfSeatsForBooking)){
+					totalDiscountPercentage += d.discount;
+				}
+			}
+		}
+		return totalDiscountPercentage;
+	}
+
+	protected double applyDiscountsToPrice(double price, int seats, DiscountSuper extraDiscount) {
 		getDiscountsListWithoutNull();
 		HashMap<Long, DiscountSuper> discountsRealValues = new HashMap<>(); 
 		HashMap<Long, DiscountSuper> discountsPercentages = new HashMap<>();
@@ -195,7 +244,10 @@ public class Flight implements Serializable {
 			}
 			System.err.println(price + " from:" + entry.getValue().toString());
 		}
-		
+		// ONE BEFORE LAST: add extra discount in case of paying with credit card
+		if(extraDiscount != null){
+			price = extraDiscount.addDiscountToPrice(price);
+		}
 		// LASTLY APPLY RAir CHARGE FOR PROFIT OF RAir
 		price = defaultPriceCharge.addDiscountToPrice(price);
 		System.err.println(price + " from:" + defaultPriceCharge.toString());
@@ -375,7 +427,7 @@ public class Flight implements Serializable {
 		System.err.println("FLIGHT: EXECUTES getseatpriceafterdicounts("+type.toString()+")");
 		for(Seat s: seatList){
 			if(s.getType() == type){
-				return applyDiscountsToPrice(s.getBasePrice(),-1);
+				return applyDiscountsToPrice(s.getBasePrice(),-1,null);
 			}
 		}
 		return -1.0;

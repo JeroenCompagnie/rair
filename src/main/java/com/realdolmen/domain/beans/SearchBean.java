@@ -16,6 +16,7 @@ import javax.validation.constraints.NotNull;
 
 import com.realdolmen.domain.flight.Airport;
 import com.realdolmen.domain.flight.Booking;
+import com.realdolmen.domain.flight.DiscountPercentage;
 import com.realdolmen.domain.flight.Flight;
 import com.realdolmen.domain.flight.GlobalRegion;
 import com.realdolmen.domain.flight.PaymentMethod;
@@ -156,6 +157,11 @@ public class SearchBean implements Serializable {
 		this.selectedFlightId = selectedFlightId;
 	}
 
+	public boolean getSelectedFlightIdIsNull(){
+		return selectedFlightId == null;
+	}
+	
+
 	@PostConstruct
 	public void init() {
 		globalRegions = new ArrayList<GlobalRegion>();
@@ -229,31 +235,21 @@ public class SearchBean implements Serializable {
 			Flight f = flightRepository.findById(selectedFlightId);
 			HashMap<SeatType, Integer> hm = new HashMap<SeatType, Integer>();
 			hm.put(getSelectedFlightClass(), getNumberOfSeats());
-			booking = f.addBooking(hm, booking);
+			
+			DiscountPercentage discountCredit = null;
+			if(getSelectedPaymentMethod()==PaymentMethod.CreditCard){
+				discountCredit = new DiscountPercentage(true, PaymentMethod.CreditCard.getDiscount());
+				System.err.println("MADE CREDITCARD DISCOUNT WITH DISCOUNT: " + PaymentMethod.CreditCard.getDiscount());
+			}
+			booking = f.addBooking(hm, booking,discountCredit);
 			flightRepository.update(f);
 			if(getSelectedReturnFlightId() != null)
 			{
 				Flight f2 = flightRepository.findById(selectedReturnFlightId);
-				booking = f2.addBooking(hm, booking);
+				booking = f2.addBooking(hm, booking,discountCredit);
 				flightRepository.update(f2);
 			}
-			
-			System.out.println(f.getNumberOfSeatForType(getSelectedFlightClass()) + " free seats before booking");
-			
 
-			// TODO: HERE ADD DISCOUNT IF ps == PaymentStatus.SUCCESS on each
-			// BookingOfFlight
-			// or give it as an extra discount in addBookingOfFlight
-
-			
-
-			// TODO: THIS with f2 the retour flight to add it to the booking
-			// (normally)
-			
-
-			// bookingRepository.update(booking);
-
-			// bookingRepository.update(booking);
 			
 			System.out.println(f.getNumberOfSeatForType(getSelectedFlightClass()) + " free seats after booking");
 			if (loginBean.getUserIsCustomer()) {
@@ -264,6 +260,7 @@ public class SearchBean implements Serializable {
 			clearAll();
 
 			bookingBean.setUrlCode(booking.getId());
+			bookingBean.setAfterBooking(true);
 			return "invoice.xhtml";
 		} else {
 			return "login.xhtml?nouser=true";

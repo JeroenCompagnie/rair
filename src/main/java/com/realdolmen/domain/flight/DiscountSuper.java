@@ -102,9 +102,6 @@ public abstract class DiscountSuper implements Serializable{
 		return result;
 	}
 	
-	public String getString(){
-		return toString();
-	}
 	
 	/******************************************************************
 	 * 

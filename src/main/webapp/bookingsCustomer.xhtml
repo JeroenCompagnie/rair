@@ -22,7 +22,8 @@
 				<b:dataTableColumn label="Details link" >
 					<b:navLink value="Details"
 						outcome="invoice.xhtml">
-						<f:param name="id" value="#{b.id}" />
+						<f:param name="urlCode" value="#{b.id}" />
+						<f:param name="afterBooking" value="false" />
 					</b:navLink>
 				</b:dataTableColumn>
 			</b:dataTable>
