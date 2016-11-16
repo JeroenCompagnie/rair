@@ -113,13 +113,33 @@ public class Booking implements Serializable{
 			totPrice+=bof.getPrice();
 			count++;
 		}
-		bookingOverview="<html><body>Dear " + this.getCustomer().getFirstName() + " " + this.getCustomer().getLastName() +"<br/>";
-		bookingOverview+="<p>You booked <b>"+count+"</b>" + seatType + " seat(s) with airline <b>" + airline +"</b></p>";
-		bookingOverview+= "<p>The price for <b>"+count+"</b> seat(s) was <b>" + totPrice+"</b></p>"; 
+		bookingOverview="<html><body>Dear " + this.getCustomer().getFirstName() + " " + this.getCustomer().getLastName() +",<br/>";
+		bookingOverview+="<p>You booked <b>"+count+"</b> " + seatType + " seat(s) with airline <b>" + airline +"</b></p>";
+		bookingOverview+= "<p>The price for <b>"+count+"</b> seat(s) was &euro;<b>" + totPrice+"</b></p>";
+		
+		bookingOverview+="<br/><br/>You can find this invoice online through this link:<br/>";
+		bookingOverview+="http://localhost:8080/rair/invoice.xhtml?urlCode="+id;
+		bookingOverview+="<br/>";
+		
+		for(BookingOfFlight bof : this.bookingOfFlightList){
+			bookingOverview += bof.printBookingOfFlight(); 
+		}
+		
+		bookingOverview+="<br/>";
+		bookingOverview+="Kind regards from RAir!";
+		
 		bookingOverview+="</body></html>";
 		return bookingOverview;
 	}
 
+	public double getTotalPrice(){
+		double totPrice = 0.0; 
+		for (BookingOfFlight bof :this.bookingOfFlightList){
+			totPrice+=bof.getPrice();
+		}
+		return totPrice;
+	}
+	
 	public Long getId() {
 		return id;
 	}

@@ -1,6 +1,8 @@
 package com.realdolmen.domain.flight;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
@@ -251,7 +253,7 @@ public class Flight implements Serializable {
 		// LASTLY APPLY RAir CHARGE FOR PROFIT OF RAir
 		price = defaultPriceCharge.addDiscountToPrice(price);
 		System.err.println(price + " from:" + defaultPriceCharge.toString());
-		return price;
+		return round(price,2);
 	}
 	
 	public List<DiscountSuper> getListOfDiscountByEmployee(){
@@ -554,10 +556,32 @@ public class Flight implements Serializable {
 	public DiscountSuper getDefaultPriceCharge() {
 		return defaultPriceCharge;
 	}
+	
+	public String getDefaultPriceChargeString(){
+		System.err.println("JA, 98888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888");
+		if(defaultPriceCharge.getClass() == DiscountPercentage.class){
+			return ((DiscountPercentage)defaultPriceCharge).getString();
+		}
+		else if(defaultPriceCharge.getClass() == DiscountRealvalue.class){
+			return ((DiscountRealvalue)defaultPriceCharge).getString();
+		}
+		else{
+			return "////";
+		}
+	}
 
 	public void setDefaultPriceCharge(User employee, DiscountSuper defaultPriceCharge) {
 		if(employee.getClass() == Employee.class){
 			this.defaultPriceCharge = defaultPriceCharge;
 		}
 	}
+	
+	public static double round(double value, int places) {
+	    if (places < 0) throw new IllegalArgumentException();
+
+	    BigDecimal bd = new BigDecimal(value);
+	    bd = bd.setScale(places, RoundingMode.HALF_UP);
+	    return bd.doubleValue();
+	}
+	
 }
