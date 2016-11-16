@@ -18,15 +18,20 @@
 				<h:panelGroup>
 					<b:panel title="Seats" collapsible="true">
 						<h:outputLabel for="minMax" value="# of seats" />
-
+						<f:facet name="prepend">
+								<b:icon name="tags" size=""></b:icon>
+							</f:facet>
 						<b:inputText id="minMax" value="#{search.numberOfSeats}" min="1"
 							max="200" type="number" />
 						<h:outputLabel for="flightClass" value="Select Class" />
 						<b:selectOneMenu id="flightClass"
 							value="#{search.selectedFlightClass}">
+							<f:facet name="prepend">
+								<b:icon name="tags" size=""></b:icon>
+							</f:facet>
 							<f:selectItems value="#{search.flightclasses}" />
 						</b:selectOneMenu>
-						
+						<b:message/>
 					</b:panel>
 					<b:panel title="Period" collapsible="true">
 						<h:outputLabel for="departureDay" value="Select Day Of Departure"></h:outputLabel>
@@ -36,40 +41,53 @@
 						<h:outputLabel for="return" value="Select Day Of Return"></h:outputLabel>
 						<b:dateTimePicker value="#{search.dateOfReturn}" id="return"
 							mode="popup" show-date="true" show-time="false" />
+						<b:message />
 					</b:panel>
 				</h:panelGroup>
 				<h:panelGroup>
-					
+
 					<b:panel title="Airline" collapsible="true">
 						<h:outputLabel for="preferedAirline" value="Prefered Airline" />
 						<b:selectOneMenu id="preferedAirline"
 							value="#{search.selectedPartner}">
+							<f:facet name="prepend">
+								<b:icon name="plane" size=""></b:icon>
+							</f:facet>
 							<f:selectItems value="#{search.partners}" />
 						</b:selectOneMenu>
+						<b:message />
 					</b:panel>
-					<b:panel title="Destination" collapsible="true"
-						>
+					<b:panel title="Destination" collapsible="true">
 						<h:outputLabel for="departure" value="Select a departure airport"></h:outputLabel>
 						<b:selectOneMenu id="departure"
 							value="#{search.selectedDeparture}">
-							<f:selectItem itemValue="#{null}" itemLabel="#{null}" />
+							<f:facet name="prepend">
+								<b:icon name="globe" size=""></b:icon>
+							</f:facet>
 							<f:selectItems value="#{search.airports}" />
 						</b:selectOneMenu>
-
+						<b:message />
 						<h:outputLabel for="destination"
 							value="Select a destination airport"></h:outputLabel>
 						<b:selectOneMenu id="destination"
 							value="#{search.selectedDestination}">
-							<f:selectItem itemValue="#{null}" itemLabel="#{null}" />
+							<f:facet name="prepend">
+								<b:icon name="globe" size=""></b:icon>
+							</f:facet>
+							<f:selectItem itemValue="" itemLabel="#{null}" />
 							<f:selectItems value="#{search.airports}" />
 						</b:selectOneMenu>
-
+						<b:message />
 						<h:outputLabel for="globalRegion" value="Select a global region"></h:outputLabel>
 						<b:selectOneMenu id="globalRegion"
 							value="#{search.selectedGlobalRegion}">
-							<f:selectItem itemValue="#{null}" itemLabel="#{null}" />
+							<f:facet name="prepend">
+								<b:icon name="globe" size=""></b:icon>
+							</f:facet>
+							<f:selectItem itemValue="" itemLabel="#{null}" />
 							<f:selectItems value="#{search.globalRegions}" />
 						</b:selectOneMenu>
+						<b:message />
 					</b:panel>
 				</h:panelGroup>
 			</b:panelGrid>

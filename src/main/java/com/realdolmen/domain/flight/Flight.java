@@ -61,7 +61,7 @@ public class Flight implements Serializable {
 	private Airport destinationAirport;
 
 	//TODO CHECK CASCADETYPES
-	@OneToMany(cascade=CascadeType.ALL,fetch = FetchType.EAGER)
+	@OneToMany(cascade=CascadeType.MERGE,fetch = FetchType.EAGER)
 	private List<Seat> seatList;
 
 

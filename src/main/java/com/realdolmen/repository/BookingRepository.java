@@ -19,6 +19,7 @@ public class BookingRepository {
 	private EntityManager em;
 	
 	public Booking save(Booking b) {
+		System.out.println("save booking");
 		em.persist(b);
 		return b;
 	}
@@ -33,6 +34,7 @@ public class BookingRepository {
 	
 	public Booking update(Booking booking)
 	{
+		System.out.println("update booking");
 		return em.merge(booking);
 	}
 	

@@ -29,7 +29,6 @@ import com.realdolmen.repository.BookingRepository;
 import com.realdolmen.repository.FlightRepository;
 import com.realdolmen.repository.PartnerRepository;
 
-
 @Named("search")
 @SessionScoped ////////////////////////////////// IF DONT WORK TRY SESSIONSCOPE
 public class SearchBean implements Serializable {
@@ -39,6 +38,7 @@ public class SearchBean implements Serializable {
 	 */
 	private static final long serialVersionUID = -7245024228992246453L;
 	private List<Flight> flights;
+	private List<Flight> returnFlights;
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -48,61 +48,70 @@ public class SearchBean implements Serializable {
 
 	@Inject
 	private PartnerRepository partnerRepository;
-	
+
 	@Inject
 	private AirportRepository airportRepository;
-	
+
 	@Inject
 	private BookingRepository bookingRepository;
-	
+
 	@Inject
 	private BookingBean bookingBean;
-	
+
 	@Inject
 	private LoginBean loginBean;
-	
 
 	// @ManagedProperty("#{flightclasses}")
 	private List<SeatType> flightclasses;
 
 	private SeatType selectedFlightClass;
-	
-	//@NotNull(message="Date of departure needs to be filled in!")
-	//@Future(message="Date of depature needs to be in the future")
+
+	// @NotNull(message="Date of departure needs to be filled in!")
+	// @Future(message="Date of depature needs to be in the future")
 	private Date dateOfDeparture;
-	
+
 	private Date dateOfReturn;
-	
+
 	private List<PaymentMethod> paymentMethods;
-	
+
 	private PaymentMethod selectedPaymentMethod;
-	
+
 	private Long selectedFlightId;
 	
+	private Long selectedReturnFlightId;
+
 	private List<Airport> airports;
-	
+	@NotNull
 	private Airport selectedDestination;
 	@NotNull
 	private Airport selectedDeparture;
-	
+
 	private List<GlobalRegion> globalRegions;
-	
+
 	private GlobalRegion selectedGlobalRegion;
 	@NotNull
 	private int numberOfSeats;
 
-	
+	private boolean returnDate;
+
+	public boolean getIsReturnDate() {
+		System.out.println("returnDate " + returnDate);
+		return returnDate;
+	}
+
+	public void setReturnDate(boolean returnDate) {
+		this.returnDate = returnDate;
+	}
+
 	public Long getSelectedFlightId() {
 		return selectedFlightId;
 	}
-	
+
 	private Partner selectedPartner;
-	
 
 	public SeatType getSelectedFlightClass() {
 		return selectedFlightClass;
 	}
-	
 
 	public void setSelectedFlightClass(SeatType selectedFlightClass) {
 		this.selectedFlightClass = selectedFlightClass;
@@ -141,17 +150,16 @@ public class SearchBean implements Serializable {
 	}
 
 	private List<Partner> partners;
-	
 
 	public void setSelectedFlightId(Long selectedFlightId) {
+		System.out.println("selectedFlight altered");
 		this.selectedFlightId = selectedFlightId;
 	}
-	
+
 	@PostConstruct
 	public void init() {
 		globalRegions = new ArrayList<GlobalRegion>();
-		for(GlobalRegion gr : GlobalRegion.values())
-		{
+		for (GlobalRegion gr : GlobalRegion.values()) {
 			globalRegions.add(gr);
 		}
 		setNumberOfSeats(1);
@@ -160,33 +168,34 @@ public class SearchBean implements Serializable {
 		setFlights(new ArrayList<Flight>());
 		setFlights(entityManager.createQuery("select f from Flight f", Flight.class).getResultList());
 		flightclasses = new ArrayList<SeatType>();
-		for(SeatType st : SeatType.values())
-		{
+		for (SeatType st : SeatType.values()) {
 			flightclasses.add(st);
 		}
-		
+
 		setPartners(new ArrayList<Partner>());
 		setPartners(partnerRepository.findAll());
 		paymentMethods = new ArrayList<PaymentMethod>();
-		for(PaymentMethod p : PaymentMethod.values())
-		{
+		for (PaymentMethod p : PaymentMethod.values()) {
 			paymentMethods.add(p);
 		}
 	}
-	
-	public String checkFlightData(Long id)
-	{
+
+	public String checkFlightData(Long id) {
 		setSelectedFlightId(id);
 		System.out.println(getSelectedFlightId() + "selected flight Id");
 		return "booking.xhtml";
 	}
 	
-	public void clearAll()
-	{
+	public String checkFlightData() {
+		return "booking.xhtml";
+	}
+
+	public void clearAll() {
 		setSelectedDeparture(null);
 		setSelectedDestination(null);
 		setSelectedFlightClass(null);
 		setSelectedFlightId(null);
+		setSelectedReturnFlightId(null);
 		setSelectedGlobalRegion(null);
 		setSelectedPartner(null);
 		setSelectedPaymentMethod(null);
@@ -194,66 +203,78 @@ public class SearchBean implements Serializable {
 		setDateOfReturn(null);
 		setNumberOfSeats(1);
 		setFlights(null);
+		setReturnFlights(null);
+		setDateOfReturn(null);
 	}
-	
-	public String edit()
-	{
+
+	public String edit() {
 		return "index?faces-redirect=true";
 	}
-	
-	public String bookFlight()
-	{	
-		if (loginBean.getUserIsCustomer())
-		{	
+
+	public String bookFlight() {
+		if (loginBean.getUserIsCustomer()) {
 			System.out.println(selectedFlightId + " Flight Id");
 			PaymentStatus ps;
-			if(getSelectedPaymentMethod()==PaymentMethod.CreditCard)
-			{
-				ps=PaymentStatus.SUCCESS;
-			}
-			else
-			{
-				ps=PaymentStatus.PENDING;
+			if (getSelectedPaymentMethod() == PaymentMethod.CreditCard) {
+				ps = PaymentStatus.SUCCESS;
+			} else {
+				ps = PaymentStatus.PENDING;
 			}
 
 			Customer c = null;
-			Booking booking = new Booking(ps,loginBean.getUser());
+			Booking booking = new Booking(ps, loginBean.getUser());
 			System.err.println("Booking: 2");
 			bookingRepository.save(booking);
 			System.err.println("Booking: 3");
 			Flight f = flightRepository.findById(selectedFlightId);
-			System.out.println(f.getNumberOfSeatForType(getSelectedFlightClass())+ " free seats before booking");
-			HashMap<SeatType,Integer> hm =	new HashMap<SeatType,Integer>();
+			HashMap<SeatType, Integer> hm = new HashMap<SeatType, Integer>();
 			hm.put(getSelectedFlightClass(), getNumberOfSeats());
-			
-			//TODO: HERE ADD DISCOUNT IF ps == PaymentStatus.SUCCESS on each BookingOfFlight
-				// or give it as an extra discount in addBookingOfFlight
-			
 			booking = f.addBooking(hm, booking);
-			
-			// TODO: THIS with f2 the retour flight to add it to the booking (normally)
-			//booking = f2.addBooking(hm, booking);
-			
-			//bookingRepository.update(booking);
-			
-		//	bookingRepository.update(booking);
 			flightRepository.update(f);
-			System.out.println(f.getNumberOfSeatForType(getSelectedFlightClass())+ " free seats after booking");
-			if(loginBean.getUserIsCustomer())
+			if(getSelectedReturnFlightId() != null)
 			{
-				c =(Customer)loginBean.getUser();
+				Flight f2 = flightRepository.findById(selectedReturnFlightId);
+				booking = f2.addBooking(hm, booking);
+				flightRepository.update(f2);
 			}
-			String [] addresses= {c.getEmail()};
+			
+			System.out.println(f.getNumberOfSeatForType(getSelectedFlightClass()) + " free seats before booking");
+			
+
+			// TODO: HERE ADD DISCOUNT IF ps == PaymentStatus.SUCCESS on each
+			// BookingOfFlight
+			// or give it as an extra discount in addBookingOfFlight
+
+			
+
+			// TODO: THIS with f2 the retour flight to add it to the booking
+			// (normally)
+			
+
+			// bookingRepository.update(booking);
+
+			// bookingRepository.update(booking);
+			
+			System.out.println(f.getNumberOfSeatForType(getSelectedFlightClass()) + " free seats after booking");
+			if (loginBean.getUserIsCustomer()) {
+				c = (Customer) loginBean.getUser();
+			}
+			String[] addresses = { c.getEmail() };
 			Email.sendMailStandardSender(addresses, "Booking Confirmation", booking.printBooking());
 			clearAll();
 
 			bookingBean.setUrlCode(booking.getId());
 			return "invoice.xhtml";
-		}
-		else 
-		{
+		} else {
 			return "login.xhtml?nouser=true";
 		}
+	}
+	
+	public String returnBack()
+	{
+		//setSelectedFlightId(null);
+		//setSelectedReturnFlightId(null);
+		return "index.xhtml";
 	}
 
 	public List<Flight> getFlights() {
@@ -264,7 +285,7 @@ public class SearchBean implements Serializable {
 		this.flights = flights;
 	}
 
-	//@NotNull
+	// @NotNull
 	public Date getDateOfDeparture() {
 		return dateOfDeparture;
 	}
@@ -276,26 +297,21 @@ public class SearchBean implements Serializable {
 	public Date getDateOfReturn() {
 		return dateOfReturn;
 	}
-	//REMOVE
-	/*private Date removeTimeFromDate(Date d)
-	{
-		calendar.clear();
-		calendar.setTime(d);
-	    calendar.set(Calendar.MINUTE, 0);
-	    calendar.set(Calendar.SECOND, 0);
-	    calendar.set(Calendar.MILLISECOND, 0);
-		Date date = calendar.getTime();	
-		return date;
-	}*/
-	
+	// REMOVE
+	/*
+	 * private Date removeTimeFromDate(Date d) { calendar.clear();
+	 * calendar.setTime(d); calendar.set(Calendar.MINUTE, 0);
+	 * calendar.set(Calendar.SECOND, 0); calendar.set(Calendar.MILLISECOND, 0);
+	 * Date date = calendar.getTime(); return date; }
+	 */
+
 	public void setDateOfReturn(Date dateOfReturn) {
+		if(dateOfReturn != null)
+		{
+			setReturnDate(true);
+		}
 		this.dateOfReturn = dateOfReturn;
 	}
-
-	public SeatType getSelectedFlightclass() {
-		return selectedFlightClass;
-	}
-
 
 	public List<SeatType> getFlightclasses() {
 		return flightclasses;
@@ -305,9 +321,7 @@ public class SearchBean implements Serializable {
 		this.flightclasses = flightclasses;
 	}
 
-	
-	public String goToSearchPage()
-	{
+	public String goToSearchPage() {
 		return null;
 	}
 
@@ -326,14 +340,20 @@ public class SearchBean implements Serializable {
 	public void setSelectedPaymentMethod(PaymentMethod selectedPaymentMethod) {
 		this.selectedPaymentMethod = selectedPaymentMethod;
 	}
-	
-	public String search()
-	{
+
+	public String search() {
 		System.out.println("called search from searchbean");
-		setFlights(flightRepository.findByParams(getSelectedFlightclass(), getSelectedPartner(), getDateOfDeparture(),getSelectedDestination(),getSelectedDeparture(),getSelectedGlobalRegion(),getNumberOfSeats()));
+		setFlights(flightRepository.findByParams(getSelectedFlightClass(), getSelectedPartner(), getDateOfDeparture(),
+				getSelectedDestination(), getSelectedDeparture(), getSelectedGlobalRegion(), getNumberOfSeats()));
+		setReturnFlights(flightRepository.findByParams(getSelectedFlightClass(), getSelectedPartner(), getDateOfReturn(),
+				getSelectedDeparture(), getSelectedDestination(), null, getNumberOfSeats()));
 		return "search.xhtml";
 	}
 
+	/*public void someListener(SelectEvent event) {  
+	    selectedFlightId=(Flight)event.   ;  // cast "Object" to "Foo" 
+	} */ 
+	
 	public Partner getSelectedPartner() {
 		return selectedPartner;
 	}
@@ -349,12 +369,12 @@ public class SearchBean implements Serializable {
 	public void setPartners(List<Partner> partners) {
 		this.partners = partners;
 	}
-	
-	public int getNumberOfSeats(){
+
+	public int getNumberOfSeats() {
 		return numberOfSeats;
 	}
-	
-	public void setNumberOfSeats(int numberOfSeats){
+
+	public void setNumberOfSeats(int numberOfSeats) {
 		this.numberOfSeats = numberOfSeats;
 	}
 
@@ -364,6 +384,22 @@ public class SearchBean implements Serializable {
 
 	public void setSelectedGlobalRegion(GlobalRegion selectedGlobalRegion) {
 		this.selectedGlobalRegion = selectedGlobalRegion;
+	}
+
+	public List<Flight> getReturnFlights() {
+		return returnFlights;
+	}
+
+	public void setReturnFlights(List<Flight> returnFlights) {
+		this.returnFlights = returnFlights;
+	}
+
+	public Long getSelectedReturnFlightId() {
+		return selectedReturnFlightId;
+	}
+
+	public void setSelectedReturnFlightId(Long selectedReturnFlightId) {
+		this.selectedReturnFlightId = selectedReturnFlightId;
 	}
 
 }

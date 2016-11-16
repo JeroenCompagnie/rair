@@ -19,7 +19,7 @@
 					value="You have selected the following flight options:" />
 			</f:facet>
 			<b:panelGrid colSpans="6,6" size="xs">
-				
+
 				<h:panelGroup>
 					<h:outputText span="8" value="The number of seats you selected is " />
 				</h:panelGroup>
@@ -30,7 +30,7 @@
 					<h:outputText span="8" value="The flightClass you selected is " />
 				</h:panelGroup>
 				<h:panelGroup>
-					<b:label text="#{search.selectedFlightclass}" />
+					<b:label text="#{search.selectedFlightClass}" />
 				</h:panelGroup>
 				<h:panelGroup>
 					<h:outputText value="The airline you selected is " />
@@ -68,12 +68,22 @@
 					<b:label text="#{search.selectedGlobalRegion}" />
 				</h:panelGroup>
 			</b:panelGrid>
-		</b:jumbotron>
+		</b:jumbotron>	
 
 
 		<b:dataTable value="#{search.flights}" var="flight" id="flightId"
-			fixedHeader="true" scroll-size="400px" scroll-x="false"
-			responsive="true" searching="false">
+			selectionMode="single" select="true" fixedHeader="true"
+			scroll-size="400px" scroll-x="false" responsive="true"
+			searching="false">
+			<f:facet name="header">
+				<h:outputText value="Flights" />
+			</f:facet>
+
+			<b:dataTableColumn value="#{flight.id}">
+				<f:facet name="header">
+					<h:outputText value="FlightId" />
+				</f:facet>
+			</b:dataTableColumn>
 			<b:dataTableColumn value="#{flight.partner.name}">
 				<f:facet name="header">
 					<h:outputText value="Airline" />
@@ -99,17 +109,77 @@
 					<h:outputText value="Available seats" />
 				</f:facet>
 			</b:dataTableColumn>
-			<b:dataTableColumn>
+			<b:dataTableColumn rendered="#{not search.isReturnDate}">
 				<f:facet name="header">
 					<h:outputText value="Book now" />
 				</f:facet>
-				<b:navLink value="Book now" outcome="#{search.checkFlightData(flight.id)}">
+				<b:navLink value="Book now" rendered="#{not search.isReturnDate}"
+					outcome="#{search.checkFlightData(flight.id)}">
 					<f:param name="selectedFlightId" value="#{flight.id}" />
 				</b:navLink>
 			</b:dataTableColumn>
 		</b:dataTable>
-		
-		<b:button look="info" iconAwesome="arrow-left" type="button" outcome="index.xhtml" value="Back" />
+
+		<b:dataTable rendered="#{search.isReturnDate}"
+			value="#{search.returnFlights}" var="returnFlight"
+			selectionMode="single" select="true" id="returnFlightId"
+			fixedHeader="true" scroll-size="400px" scroll-x="false"
+			responsive="true" searching="false">
+
+			<f:facet name="header">
+				<h:outputText value="returnFlights" />
+			</f:facet>
+			<b:dataTableColumn value="#{returnFlight.id}">
+				<f:facet name="header">
+					<h:outputText value="Flight Id" />
+				</f:facet>
+			</b:dataTableColumn>
+			<b:dataTableColumn value="#{returnFlight.partner.name}">
+				<f:facet name="header">
+					<h:outputText value="Airline" />
+				</f:facet>
+			</b:dataTableColumn>
+			<b:dataTableColumn
+				value="#{returnFlight.departureAirport.airportName}">
+				<f:facet name="header">
+					<h:outputText value="From" />
+				</f:facet>
+			</b:dataTableColumn>
+			<b:dataTableColumn
+				value="#{returnFlight.destinationAirport.airportName}">
+				<f:facet name="header">
+					<h:outputText value="To" />
+				</f:facet>
+			</b:dataTableColumn>
+			<b:dataTableColumn value="#{returnFlight.dateOfDeparture}">
+				<f:facet name="header">
+					<h:outputText value="Departure date" />
+				</f:facet>
+			</b:dataTableColumn>
+			<b:dataTableColumn value="#{returnFlight.getSeatsLeft()}">
+				<f:facet name="header">
+					<h:outputText value="Available seats" />
+				</f:facet>
+			</b:dataTableColumn>
+		</b:dataTable>
+		<h:form>
+			<h:outputText value="Enter the flight id"
+				rendered="#{search.isReturnDate}" />
+			<b:inputText rendered="#{search.isReturnDate}" id="custFlightId"
+				value="#{search.selectedFlightId}" type="number"
+				styleClass="datePicker" />
+			<h:outputText rendered="#{search.isReturnDate}"
+				value="Enter the return flight id" />
+			<b:inputText rendered="#{search.isReturnDate}"
+				id="custReturnFlightId" value="#{search.selectedReturnFlightId}"
+				type="number" styleClass="datePicker" />
+			<b:button look="info" iconAwesome="arrow-left" type="button"
+				outcome="#{search.returnBack()}" value="Back" />
+			<b:commandButton rendered="#{search.isReturnDate}" value="Book Now"
+				iconAwesome="arrow-right" action="#{search.checkFlightData}"
+				look="info"></b:commandButton>
+		</h:form>
+
 	</ui:define>
 </ui:composition>
 </html>

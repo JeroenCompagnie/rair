@@ -39,17 +39,20 @@ public class FlightRepository {
 	EntityManager em;
 
 	public Flight save(Flight flight) {
+		System.out.println("flight saved");
 		em.persist(flight);
 		return flight;
 	}
 	
 	public Flight update(Flight flight)
 	{
+		System.out.println("flight updated");
 		em.merge(flight);
 		return flight;
 	}
 
 	public Flight create(Flight flight) {
+		System.out.println("flight persisted");
 		em.persist(flight);
 		return flight;
 	}

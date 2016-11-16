@@ -433,10 +433,16 @@ public class persistenceDatabaseTest extends JpaPersistenceTest {
 		Airport a6 = getAirportByCode(em, "VCB");
 		assertNotNull(a6);
 		Flight fl1;
+		Flight fl2;
 
 		fl1 = new Flight(partner, a5, a6, new Date(), Duration.ofMinutes(120));
 		em.persist(fl1);
 		assertNotNull(fl1.getId());
+		
+
+		fl2 = new Flight(partner, a6, a5, new Date(), Duration.ofMinutes(120));
+		em.persist(fl2);
+		assertNotNull(fl2.getId());
 
 		for (int i = 1; i < 120; i++) {
 			if (i <= 60) {
@@ -445,19 +451,34 @@ public class persistenceDatabaseTest extends JpaPersistenceTest {
 				em.persist(seat);
 				assertNotNull(seat.getId());
 				fl1.addSeat(seat);
+				
+				Seat seat2 = new Seat(SeatType.Business, 999.99);
+				em.persist(seat2);
+				assertNotNull(seat2.getId());
+				fl2.addSeat(seat2);
 			} else if (i <= 90) {
 				Seat seat = new Seat(SeatType.FirstClass, 567.99);
 				em.persist(seat);
 				assertNotNull(seat.getId());
 				fl1.addSeat(seat);
-			} else {
+				
+				Seat seat2 = new Seat(SeatType.FirstClass, 567.99);
+				em.persist(seat2);
+				assertNotNull(seat2.getId());
+				fl2.addSeat(seat2);
+			} else {		
 				Seat seat = new Seat(SeatType.Economy, 237.99);
 				em.persist(seat);
 				assertNotNull(seat.getId());
 				fl1.addSeat(seat);
 				
+				Seat seat2 = new Seat(SeatType.Economy, 237.99);
+				em.persist(seat2);
+				assertNotNull(seat2.getId());
+				fl2.addSeat(seat2);
 			}
 			em.merge(fl1);
+			em.merge(fl2);
 		}
 
 		
