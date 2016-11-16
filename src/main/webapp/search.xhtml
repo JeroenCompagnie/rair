@@ -72,7 +72,7 @@
 
 
 		<b:dataTable value="#{search.flights}" var="flight" id="flightId"
-			selectionMode="single" select="true" fixedHeader="true"
+			fixedHeader="true"
 			scroll-size="400px" scroll-x="false" responsive="true"
 			searching="false">
 			<f:facet name="header">
@@ -122,7 +122,7 @@
 
 		<b:dataTable rendered="#{search.isReturnDate}"
 			value="#{search.returnFlights}" var="returnFlight"
-			selectionMode="single" select="true" id="returnFlightId"
+			id="returnFlightId"
 			fixedHeader="true" scroll-size="400px" scroll-x="false"
 			responsive="true" searching="false">
 

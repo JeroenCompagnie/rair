@@ -3,6 +3,7 @@ package com.realdolmen.domain;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +15,7 @@ import javax.persistence.TypedQuery;
 import org.junit.Test;
 
 import com.realdolmen.course.utilities.persistence.JpaPersistenceTest;
+import com.realdolmen.dateConverter.DateConverter;
 import com.realdolmen.domain.flight.Airport;
 import com.realdolmen.domain.flight.Booking;
 import com.realdolmen.domain.flight.BookingOfFlight;
@@ -40,7 +42,7 @@ public class persistenceDatabaseTest extends JpaPersistenceTest {
 		Address a = new Address("1", 1, 1, "1", "1");
 		em.persist(a);
 
-		Customer customer = new Customer(a, "1@gmail.com", "12345678", "12345678", "12345678", "123");
+		Customer customer = new Customer(a, "thomas.simons@realdolmen.com", "12345678", "12345678", "12345678", "123");
 		Partner partner = new Partner("partner", "partner", "partner", "partner", "12345678");
 		Employee employee = new Employee("employee", "employee", "12345678", "employee");
 
@@ -238,16 +240,17 @@ public class persistenceDatabaseTest extends JpaPersistenceTest {
 		 * Make bookingsofflights for 9 seats, 3 of each seattype;
 		 * 	add it to a booking
 		 */
+			
 
 		for (int y = 1; y <= 10; y++) {
-
+			Date d = DateConverter.getDateXDaysAfterToday(y);
 			Flight f;
 			if (y <= 5) {
-				f = new Flight(partner, a1, a2, new Date(), Duration.ofMinutes(120 * y));
+				f = new Flight(partner, a1, a2, d, Duration.ofMinutes(120 * y));
 				em.persist(f);
 				assertNotNull(f.getId());
 			} else {
-				f = new Flight(partner, a3, a4, new Date(), Duration.ofMinutes(120 * y));
+				f = new Flight(partner, a3, a4, d, Duration.ofMinutes(120 * y));
 				em.persist(f);
 				assertNotNull(f.getId());
 
