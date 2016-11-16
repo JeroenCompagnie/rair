@@ -256,7 +256,7 @@ public class SearchBean implements Serializable {
 			String [] addresses= {c.getEmail()};
 			Email.sendMailStandardSender(addresses, "Booking Confirmation", booking.printBooking());
 			clearAll();
-
+			
 			bookingBean.setUrlCode(booking.getId());
 			bookingBean.setAfterBooking(true);
 			return "invoice.xhtml";

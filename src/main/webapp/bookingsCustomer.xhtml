@@ -17,6 +17,7 @@
 		<h:form rendered="#{loginBean.userIsCustomer}">
 			<b:dataTable value="#{customerBookingBean.bookingsList}" var="b">
 				<b:dataTableColumn value="#{b.id}" label="code" />
+				<b:dataTableColumn value="€#{b.totalPrice}" label="Total price"/>
 				<b:dataTableColumn value="#{b.paymentStatus}" label="Payment status"/>
 				<b:dataTableColumn value="#{b.dateOfReservation}" label="Date of reservation"/>
 				<b:dataTableColumn label="Details link" >

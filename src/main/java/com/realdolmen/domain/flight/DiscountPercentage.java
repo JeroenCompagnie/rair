@@ -47,7 +47,5 @@ public class DiscountPercentage extends DiscountSuper implements Serializable{
 	public String getString() {
 		return toString();
 	}	
-	
-	
 }
 

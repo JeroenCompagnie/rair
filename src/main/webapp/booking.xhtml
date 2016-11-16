@@ -13,29 +13,29 @@
 
 	<ui:define name="content">
 		<b:jumbotron>
-			<h:outputLabel value="# of seats:">
+			<h:outputLabel value="# of seats: ">
 			</h:outputLabel>
 			<h:outputText value="#{search.numberOfSeats}"></h:outputText>
 			<br />
-			<h:outputLabel value="Selected Class:" />
+			<h:outputLabel value="Selected Class: " />
 			<h:outputText value="#{search.selectedFlightclass}"></h:outputText>
 			<br />
-			<h:outputLabel value="Prefered Airline:" />
+			<h:outputLabel value="Prefered Airline: " />
 			<h:outputText value="#{search.selectedPartner}"></h:outputText> 
 			<br />
-			<h:outputLabel value="Selected Day Of Departure:"></h:outputLabel>
+			<h:outputLabel value="Selected Day Of Departure: "></h:outputLabel>
 			<h:outputText value="#{search.dateOfDeparture}"><f:convertDateTime pattern="dd-MM-yyyy" /></h:outputText>
 			<br />
-			<h:outputLabel value="Selected Day Of Return:"></h:outputLabel>
+			<h:outputLabel value="Selected Day Of Return: "></h:outputLabel>
 			<h:outputText value="#{search.dateOfReturn}"><f:convertDateTime pattern="dd-MM-yyyy" /></h:outputText>
 			<br />
-			<h:outputLabel value="Selected Global Region:"></h:outputLabel>
+			<h:outputLabel value="Selected Global Region: "></h:outputLabel>
 			<h:outputText value="#{search.selectedGlobalRegion}"></h:outputText>
 			<br />
-			<h:outputLabel value="Selected Departure Airport:"></h:outputLabel>
+			<h:outputLabel value="Selected Departure Airport: "></h:outputLabel>
 			<h:outputText value="#{search.selectedDeparture}"></h:outputText>
 			<br />
-			<h:outputLabel value="Selected Destination Airport:"></h:outputLabel>
+			<h:outputLabel value="Selected Destination Airport: "></h:outputLabel>
 			<h:outputText value="#{search.selectedDestination}"></h:outputText>
 			<br />
 		</b:jumbotron>

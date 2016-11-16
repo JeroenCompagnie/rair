@@ -17,21 +17,21 @@
 		<h:form rendered="#{loginBean.userIsPartner}">
 			<b:panelGrid colSpans="6,6" size="lg">
 				<h:panelGroup>
-					<b:inputText placeholder="Search airport departure"
+					<b:inputText placeholder="Search country departure"
 						value="#{partnerBean.searchCriteriaCountryDeparture}"
 						styleClass="partnerModuleInputBox" rows="2">
 						<f:facet name="prepend">
-							<b:commandButton value="Search" look="success"
+							<b:commandButton value="Search" look="info"
 								action="#{partnerBean.searchAirportDepartureCountry}" />
 						</f:facet>
 					</b:inputText>
 				</h:panelGroup>
 				<h:panelGroup>
-					<b:inputText placeholder="Search airport destination"
+					<b:inputText placeholder="Search country destination"
 						value="#{partnerBean.searchCriteriaCountryDestination}"
 						styleClass="partnerModuleInputBox" rows="2">
 						<f:facet name="prepend">
-							<b:commandButton value="Search" look="success"
+							<b:commandButton value="Search" look="info"
 								action="#{partnerBean.searchAirportDestinationCountry}" />
 						</f:facet>
 					</b:inputText>
@@ -128,9 +128,8 @@
 
 				<h:panelGroup>
 					<h:outputLabel value="Flight duration" />
-					<b:inputText value="#{partnerBean.flightDuration}"
-						styleClass="datePicker" type="number">
-						<f:facet name="prepend">
+					<b:inputText value="#{partnerBean.flightDuration}" type="number" styleClass="partnerModuleInputBox">
+						<f:facet name="prepend" >
 							<b:icon name="dashboard" size=""></b:icon>
 						</f:facet>
 					</b:inputText>
@@ -138,9 +137,9 @@
 
 				<h:panelGroup>
 					<h:outputLabel value="Departure date" />
-					<b:dateTimePicker value="#{partnerBean.dateOfDeparture}"
+					<b:dateTimePicker value="#{partnerBean.dateOfDeparture}" styleClass="partnerModuleInputBox"
 						id="departure" mode="toggle-icon" show-date="true"
-						show-time="true" styleClass="datePicker" />
+						show-time="true"/>
 				</h:panelGroup>
 
 			</b:panelGrid>

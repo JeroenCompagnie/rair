@@ -147,18 +147,20 @@ public class BookingOfFlight implements Serializable{
 			result += "with discount(s): ";
 			if(discountsPercentages != 0.0){
 //				discs.add(discountsPercentages);
-				result += discountsPercentages + "% &";
+				result += discountsPercentages + "% & ";
 			}
 			if(discountsRealvalues != 0.0){
 //				discs.add(discountsRealvalues);
-				result += "€" + discountsRealvalues +" &";
+				result += "€" + discountsRealvalues +" & ";
 			}
 			if(extraDiscount != 0.0){
 //				discs.add(extraDiscount);
 				result += extraDiscount + "% ";
 			}
 			if(result != null && result.length() > 0 && 
-					result.charAt(result.length()-1) == '&'){
+					result.charAt(result.length()-2) == '&' &&
+					result.charAt(result.length()-2) == ' '){
+				result = result.substring(0,result.length()-1);
 				result = result.substring(0,result.length()-1);
 			}
 			
@@ -166,6 +168,61 @@ public class BookingOfFlight implements Serializable{
 		else{
 			result += "No discounts.";
 		}
+		return result;
+	}
+	
+	public String getDiscountsForHtml(){
+		String result = "";
+		if(discountsPercentages != 0.0 || discountsRealvalues != 0.0 || extraDiscount != 0.0){
+//			ArrayList<Double> discs = new ArrayList<Double>();
+//			result += "with discount(s): ";
+			if(discountsPercentages != 0.0){
+//				discs.add(discountsPercentages);
+				result += discountsPercentages + "% & ";
+			}
+			if(discountsRealvalues != 0.0){
+//				discs.add(discountsRealvalues);
+				result += "&euro;" + discountsRealvalues +" & ";
+			}
+			if(extraDiscount != 0.0){
+//				discs.add(extraDiscount);
+				result += extraDiscount + "% ";
+			}
+			if(result != null && result.length() > 0 && 
+					result.charAt(result.length()-2) == '&' &&
+					result.charAt(result.length()-2) == ' '){
+				result = result.substring(0,result.length()-1);
+				result = result.substring(0,result.length()-1);
+			}
+			
+		}
+		else{
+			result += "No discounts.";
+		}
+		return result;
+	}
+
+	public String printBookingOfFlight() {
+		String result = "";
+		result += "Seat " + numberInBooking + ":";
+		result += "<br/>";
+		result += "Seat type: " + seat.getType();
+		result += "<br/>";
+		result += "Price of seat: &euro;" + Flight.round(price, 2);
+		result += "<br/>";
+		result += "Discounts on seat: "+ getDiscountsForHtml();
+		result += "<br/>";
+		
+		return result;
+	}
+	
+	public String getPrintBookingOfFlightInvoiceOnline() {
+		String result = "";
+		result += "Seat: " + numberInBooking + ":\n";
+		result += "Seat type: " + seat.getType()+"\n";
+		result += "Price of seat: €" + Flight.round(price, 2)+"\n";
+		result += "Discounts on seat: "+ getDiscountsForHtml()+"\n\n";
+		
 		return result;
 	}
 }

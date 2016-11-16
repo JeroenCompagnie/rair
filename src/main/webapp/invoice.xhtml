@@ -15,65 +15,73 @@
 	<ui:define name="title">Invoice</ui:define>
 
 	<ui:define name="content">
-	
+
 		<h:panelGroup layout="block" rendered="#{bookingBean.bookingIsNull}">
-			<h:outputLabel value ="Something went wrong. Either the code is not correct
-				or the correct user is not logged in! #{bookingBean.urlCode}"/>
-		 	<br/>
+			<h:outputLabel
+				value="Something went wrong. Either the code is not correct
+				or the correct user is not logged in! #{bookingBean.urlCode}" />
+			<br />
 		</h:panelGroup>
-		
+
 		<!--  <h:link outcome="invoicePrint" value = "Print version" includeViewParams="true" rendered="#{not bookingBean.bookingIsNull}"><f:param name="urlCode" value="#{bookingBean.urlCode}"/></h:link> -->
-		
-		<h:panelGroup layout="block" rendered="#{not bookingBean.bookingIsNull}">
-			<h:outputLabel value="Invoice with number #{bookingBean.urlCode}"/>
-			<br/>
-			<h:outputLabel value="Tickets booked:" rendered="#{not bookingBean.bookingIsNull}"/>
-			<b:dataTable value="#{bookingBean.booking.bookingOfFlightList}" var="bof">
-				<b:dataTableColumn value="#{bof.numberInBooking}" label="#"/>
-				<b:dataTableColumn value="#{bof.flight.partner.name}" label="Flight company"/>
-				<b:dataTableColumn value="€#{bof.price}" label="Ticket price"/>
-				<b:dataTableColumn value="#{bof.discounts}" label="Discounts"/>
-				
+
+		<h:panelGroup layout="block"
+			rendered="#{not bookingBean.bookingIsNull}">
+			<h:outputLabel value="Invoice with number #{bookingBean.urlCode}" />
+			<br />
+			<h:outputLabel value="Tickets booked:"
+				rendered="#{not bookingBean.bookingIsNull}" />
+			<b:dataTable value="#{bookingBean.booking.bookingOfFlightList}"
+				var="bof">
+				<b:dataTableColumn value="#{bof.numberInBooking}" label="#" />
+				<b:dataTableColumn value="#{bof.flight.partner.name}"
+					label="Flight company" />
+				<b:dataTableColumn value="€#{bof.price}" label="Ticket price" />
+				<b:dataTableColumn value="#{bof.discounts}" label="Discounts" />
+
 			</b:dataTable>
 		</h:panelGroup>
-		
+
 		<!-- FOR PRINTING -->
-		
+
 		<script>
 			function printDiv(divName) {
-			     var printContents = document.getElementById(divName).innerHTML;
-			     var originalContents = document.body.innerHTML;
-			
-			     document.body.innerHTML = printContents;
-			
-			     window.print();
-			
-			     document.body.innerHTML = originalContents;
+				var printContents = document.getElementById(divName).innerHTML;
+				var originalContents = document.body.innerHTML;
+
+				document.body.innerHTML = printContents;
+
+				window.print();
+
+				document.body.innerHTML = originalContents;
 			}
 		</script>
-		
+
 		<div id="printableArea" style="display: none;">
 			<h:outputLabel
 				value="Something went wrong. Either the code is not correct
 					or the correct user is not logged in!"
 				rendered="#{bookingBean.bookingIsNull}" />
-			<c:forEach items="#{bookingBean.booking.bookingOfFlightList}" var="bof">
-					Ticket number : #{bof.numberInBooking}	 
-					<br />
-					Price: € #{bof.price}
-					<br />
-					Discounts: #{bof.discounts}
-					<br />
-					Flight company: #{bof.flight.partner.name}
-					<br />
-				<br />
+			<h:outputLabel
+				value="Your total price for this booking was: €#{bookingBean.booking.totalPrice}"
+				rendered="#{not bookingBean.bookingIsNull}" />
+				<br/>
+			<c:forEach items="#{bookingBean.booking.bookingOfFlightList}"
+				var="bof">
+					Seat: #{bof.numberInBooking} <br/>
+					Seat type:  #{bof.seat.type} <br/>
+					Price of seat: €#{bof.price} <br/>
+					Discounts on seat: #{bof.discounts} <br/>
 			</c:forEach>
+			<br/>
 		</div>
-	
-	<b:button iconAwesome="print" type="button" onclick="printDiv('printableArea')" 
-	value="Print this page!" rendered="#{not bookingBean.bookingIsNull}"/>
-	<b:button iconAwesome="arrow-right" look="info" type="button" 
-	rendered = "#{bookingBean.afterBooking}" value="Continue" outcome="thankyou?faces-redirect=true"/>
+
+		<b:button iconAwesome="print" look="info" type="button"
+			onclick="printDiv('printableArea')" value="Print this page!"
+			rendered="#{not bookingBean.bookingIsNull}" />
+		<b:button iconAwesome="arrow-right" look="success" type="button"
+			rendered="#{bookingBean.afterBooking}" value="Continue"
+			outcome="thankyou?faces-redirect=true" />
 
 
 	</ui:define>
